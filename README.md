@@ -39,9 +39,8 @@ $$
 
 For each bin, can not exceed density constraint. (BinMaxUtil). Or might lose some score due to penality.
 
-<div align="center">
-  ![Image]([image_url](https://hackmd.io/_uploads/Hywlm5R06.png))
-</div>
+![image](https://hackmd.io/_uploads/HJk1u5A0p.png)
+
 
 
 
@@ -61,6 +60,7 @@ We need to discuss optimization techniques for merging communication between dif
 1. Graceful Register Clustering by Effective Mean Shift Algorithm for Power and Timing Balancing.
 
     [Paper] (https://waynelin567.github.io/files/meanshift.pdf)
+    
     [Github] (https://github.com/waynelin567/Register_Clustering)
 
 2.  Flip-flop clustering by weighted K-means algorithm
