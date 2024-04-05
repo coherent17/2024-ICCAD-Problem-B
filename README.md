@@ -1,5 +1,14 @@
 # 2024 ICCAD Problem B
+
+An IU a day keeps the bad code away.
+Contributed by Cheng
+![iu](https://hackmd.io/_uploads/Hy8f4Ec1R.gif)
 [TOC]
+
+
+
+
+
 ## 1. Introduction
 Using multibit flip-flops (FFs) to replace multiple single-bit FFs offers several advantages:
 
@@ -66,8 +75,84 @@ We need to discuss optimization techniques for merging communication between dif
     
 [Video](https://www.youtube.com/watch?v=QHa1iKkk0uo&list=PL6-vor2YamECt-qVQRoyxEXguR2RmP-kF&index=3)
 
+* 演算法流程
+![image](https://hackmd.io/_uploads/HyfsYmiy0.png)
+藍色部分為此篇的創新演算法
 
-### 1. Graceful Register Clustering by Effective Mean Shift Algorithm for Power and Timing Balancing.
+1. Window-Based Adaptive Interval Graph Construction
+
+    為了避免某些FF的feasible region較大造成cluster後的displacement過大在最開始先設定window大小由左至右、由下至上掃過一整個chip
+    ![image](https://hackmd.io/_uploads/BkYwn7oJ0.png)
+
+2. Coordinate transform
+    
+    先計算在window內的FFs的feasible region，若有overlap則代表有機會cluster，可以將feaible region overlap的關聯性變成intersection graph
+    ![image](https://hackmd.io/_uploads/ryCuCQsyC.png)
+    此intersection graph的關係可以用X,Y的兩個sequence來表示，先將所有矩形順時針轉45度並產生新的X'Y'座標，根據矩形X'座標與Y'座標的start point(S)與end point(E)可以獲得不同FF的先後關係資訊
+    ![image](https://hackmd.io/_uploads/B175yEj1A.png)
+
+3. Finding possible merged FFs & Maximal Clique Extraction
+    
+    在X' sequence中的S,E交界處插入decision point(D)，在這邊會把X'Y'座標中S與E相鄰的FF remove，因為代表此FF沒有與其他FF overlap。接下來每一個decision point會做一次判斷，看哪些FF可以cluster，它將S在D前的FF設為related FF，接著從Y'的sequence中找出由related FFs所組成的max clique(Partial Y')
+    ![image](https://hackmd.io/_uploads/rkUrWEj10.png)
+    
+4. Candidate Choose
+    
+    找E在previous and current decision point中間 & S在next and current decision point 中間的    
+    ->這兩種都是FF的feasible region與related FF較近的    
+    同時會計算每個candidate FF最大的feasible region，即從connected path中可借到的最多salck，若此region與maximal clique的overlapping region未overlap則從candidate中移除
+    ![image](https://hackmd.io/_uploads/rkWIUOhk0.png)
+    
+    這篇採用inclusion force來決定要選擇哪個candidate    
+    (larger means less slack borrowing and smaller impact on original maximal clique)
+    
+    ![image](https://hackmd.io/_uploads/S12Ww_3yC.png)
+    
+    :::success 
+    Fatt (Attractive factor) : 考慮feasible region與maximal clique的overlap region的xy距離遠近    
+    ![image](https://hackmd.io/_uploads/SklE_Oh1A.png)
+    :::
+    :::success 
+    Frep (Repulsive factor) : 受到目前的maximal clique與candidate FF本身所屬的maximal clique size差異影響
+    
+    ![image](https://hackmd.io/_uploads/SkW9__nkR.png)
+    
+    SMFFj代表candidate FFj所屬的maximal clique的size
+    
+    ![image](https://hackmd.io/_uploads/HkX_Kd2J0.png)
+    代表不小於SMFFj的FF perfect size
+    
+    ![image](https://hackmd.io/_uploads/B15jFd2y0.png)
+    代表比SMFFj小的FF perfect size
+    
+    第一、二條式子代表SMFFj比perfect size更大、小的情況    
+    從第三條式子可以看出若SMFFj剛好為perfect size則Frep=0
+    :::
+    計算完inclusion force後根據大小排序，從最高force的candidate加入maximal clique並更新overlapping region，直到clique size達到perfect size或沒有candidate後停止。
+    
+    *決定好哪些FF要cluster後要將其移除X' sequence
+5. MBFF Generation and Placement (這篇沒有提到如何決定MBFF位置) 
+6. Slack Release
+
+    在當前iteration clustering的FF，其diamond region可以壓縮到僅包圍MBFF的矩形，並將多餘的slack分給其他connected and unclustered的FFs
+    
+7. Iteratively Back to Step2
+    
+    repeat直到所有decision points and FFs visited
+
+* 資料結構
+
+    因為需要一直做slack redistribution，X'中FF的順序會一直改變，因此儲存X'Y' sequence用red-black tree可以快速delete and insert
+
+:::info
+check for other data structure that has better time complexity for insertion and deletion
+:::
+
+* 實驗結果比較
+    
+    與mean shift algorithm相比在timing的部分稍顯退步，但在power的結果較好，rumtime部分也比採用平行運算的mean shift algorithm快一點點
+
+### 1.Graceful Register Clustering by Effective Mean Shift Algorithm for Power and Timing Balancing.
 
 [from iccad 2015 problem c](https://iccad-contest.org/2015/problem_C/default.html)
 
@@ -204,15 +289,27 @@ $$
 :::
 
 
-### 2.  Flip-flop clustering by weighted K-means algorithm
+### 2.Flip-flop clustering by weighted K-means algorithm
 
 [Paper] https://home.engineering.iastate.edu/~cnchu/pubs/c88.pdf
 
-### 3.  Generation of Mixed-Driving Multi-Bit Flip-Flops for Power Optimization
-[Paper] https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10069663
+### 3.Generation of Mixed-Driving Multi-Bit Flip-Flops for Power Optimization
+[Paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10069663)
     
 考慮MBFF留有空的pin ex:3個
 1-bit FF 合成4bit，一個位置留空
+
+### 4.INTEGRA: Fast Multibit Flip-Flop Clustering forClock Power Saving
+[Paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=6132648)
+
+### 5.Post-Placement Power Optimization with Multi-Bit Flip-Flops
+[Paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5654155)
+
+
+### 6.FF-Bond: Multi-bit Flip-flop Bonding at Placement
+[Paper](https://www.ispd.cc/slides/2013/8_tsai.pdf)
+
+用化學鍵結來解??
 
 ## Taskflow Simple Usage & Install
 By Claire
@@ -258,12 +355,6 @@ pros:displacement小
 
 cons:易受初始狀態及outlier影響、cluster數量要預先設定
 
-ㄟ好難喔XD 但是蠻好玩的
-真的 paper一知半解哈哈哈 好多待解決問題
-答對了 你太強了 我想要看多一點東西 而且我這時間醒著超正常
-
-
-為啥你這時間還醒著 怕明天沒東西討論喔XD 我也是 哈哈
 
 ### SVM
 
@@ -282,3 +373,54 @@ cons:易受初始狀態及outlier影響、cluster數量要預先設定
 2. Different cluster merge優化方法
 3. 單一cluster內banking/debanking
 4. Taskflow usage
+5. 最近jemalloc好夯，去研究遺下這是啥鬼 (Done smth @ compile time)
+6. 研究若不是在直角坐標，若是在極座標，漣漪演算法的可行性?
+7. MTFF Library technology mapping?
+![image](https://hackmd.io/_uploads/HkdE-IuJA.png)
+8. Legalization Algorithm help? Min Sum of the displacement??
+9. check for boost geometry
+10. cpp linter [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html)
+
+    Please also help me confirm whether this .clang-format work for the linter.
+
+    .clang-format:
+    ```bash=
+    BasedOnStyle: Chromium
+    Language: Cpp
+    MaxEmptyLinesToKeep: 3
+    IndentCaseLabels: false
+    AllowShortIfStatementsOnASingleLine: false
+    AllowShortCaseLabelsOnASingleLine: false
+    AllowShortLoopsOnASingleLine: false
+    DerivePointerAlignment: false
+    PointerAlignment: Right
+    SpaceAfterCStyleCast: true
+    TabWidth: 4
+    UseTab: Never
+    IndentWidth: 4
+    BreakBeforeBraces: Linux
+    AccessModifierOffset: -4
+    ```
+
+12. static analysis [cppcheck](https://cppcheck.sourceforge.io/)
+13. ci to run the testcase & verifier after commit [CI](https://medium.com/%E6%8A%80%E8%A1%93%E7%AD%86%E8%A8%98/%E4%BD%95%E8%AC%82-ci-cd-%E5%88%A9%E7%94%A8-github-actions-%E5%81%9A%E4%B8%80%E5%80%8B%E7%B0%A1%E5%96%AE%E7%9A%84-ci-cd-2d55e6dabeed)
+
+13. Simple git usage
+*    [Download](https://git-scm.com/downloads)
+```bash=
+# replace with your own info & type in cmd (first use only)
+$ git config --global user.name "Coherent17"
+$ git config --global user.email mnb51817@gmail.com
+```
+
+*    fork the repo (can use this repo to practice: https://github.com/coherent17/test_repo)
+*    git clone from your forked repo
+*    write code, commit & push
+*    pull request and wait for merge
+*    pull after admin merge
+*    [reference video](https://youtu.be/x24fOAPclL4?si=tInV83pWkKSUbM1Q)
+
+
+14. Topological sort based legalization from秀儒?
+
+15. Meeting per 2 weeks?
