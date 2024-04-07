@@ -51,6 +51,8 @@ $$
 
 For each bin, can not exceed density constraint. (BinMaxUtil). Or might lose some score due to penality.
 
+切bin是為了估placement density，才可以去預估routing difficulty...
+
 ![image](https://hackmd.io/_uploads/HJk1u5A0p.png)
 
 
@@ -268,6 +270,10 @@ $$
 因此$h_i$便是$x$的變數了，因此在計算gradient的時候便需要考慮該項。
 :::
 
+:::danger
+除了displacement delay，能否把$Delay_{D2Q}$也納入考量?
+:::
+
 所以綜合以上$h_i$的調整及整合$KNN$，新的density function為:
 
 $$ 
@@ -305,11 +311,95 @@ $$
 ### 5.Post-Placement Power Optimization with Multi-Bit Flip-Flops
 [Paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5654155)
 
+:::info
+基本上這篇演算法流程可以分為:  
+*    用progressive window sliding找到可以被merge在一起的多個FF
+*    建立TSFG(timing slack free group)，透過B&B找到哪些bit合起來比較好的候選人
+*    接著從這些候選人中找到independent set來確認哪些FF要合在一起
+*    最後透過考慮placement density及HPWL找到該MBFF要放在哪個bin上
+:::
+
+*    a.Progressive window sliding & expansion
+![image](https://hackmd.io/_uploads/Bk87Jqyl0.png)
+
+(a)是2x2 bins來找到局部最佳解，比起整個電路flatten下去解，透過只考慮框框內做最佳化會比較好，為了找到更好的解，會再把windows size調大(b)。而後續再做FF cluster & placement時只會考慮到該框框內的所有FF。
+
+*    b.建立TSFR & TSFG
+        *    TSFR(timing slack free region)
+        
+        ![image](https://hackmd.io/_uploads/rJfwxcylR.png)
+        *    TSFG(timing slack free group)
+        
+        ![image](https://hackmd.io/_uploads/HyORx5yxC.png)
+        
+        f1 & f2因為TSFR有重疊，因此可以構成一個TSFG，也就是如果f1跟f2 bank在一起，放在這個重疊區域不會有timing violation的問題。便可以將f1 & f2視為一個TSFG
+
+        ![image](https://hackmd.io/_uploads/B1LwZqyeC.png)
+
+將每個FF視為一個node，如果兩個FF間的TSFR有重疊，那就將他們之間加一個edge。當這個intersetion graph建好之後，如果要找m-bit的FF cluster，便可以將問題變為找到所有的m-clique的問題，可以透過branch & bound來解。
+
+:::info
+補充: What is clique?  
+就是一個graph的subgraph，且對於subgraph中的所有vertex，任兩點都會有一條邊。
+:::
+
+因此上圖可以找到兩個4-clique:
+*    $G^4=(g^4_1,g^4_2)= {(n1,n2,n3,n4),(n1,n3,n4,n6)}$
+
+那究竟要將哪個合為4-bit FF呢?找到TSFG的independent set(IS)。
+
+*    IS(independent set)
+接著，為了將前一步找到的TSFG進一步分類為哪些FF要合在一起，因為有些FF會重複出現在不同的clique中，因此這邊需要決定該FF要跟誰合在一起，因為該FF不會影分身之術，可以一次存在兩個cluster中。這邊他提出的演算法是考慮了Area及HPWL來greedy的做決定，而非DP來解optimal solution。
+
+![image](https://hackmd.io/_uploads/SJvrcqkl0.png)
+
+因此他便會先去排序剛剛$G^m$中所有組合的面積減HPWL後，而後$F^\prime$為記錄已拜訪過的FF，然後$G^m_{IS}$則為那些不重複的$g^m_i$
+
+舉例:
+假設4-clique問題:
+$G^4=(g^4_1,g^4_2,g^4_3)= {(n1,n2,n3,n4),(n1,n3,n4,n6),(n6,n7,n8,n9)}$
+
+$i=1$:$F^\prime$={n1,n2,n3,n4},$G^4_{IS}=(g^4_1)$  
+$i=2$:$g^4_2$中有元素與$F^\prime$重複，skip  
+$i=3$:$F^\prime$={n1,n2,n3,n4,n6,n7,n8,n9},$G^4_{IS}=(g^4_1,g^4_3)$
+
+因此共可以合出兩個4-bit FF
+
+*    MBFF placement
+這邊在placement的時候有兩個考量:
+        *    1. Placement Density  
+            基本上就是將MBFF擺在前面圈起來那些FF的intersetion中的bin，挑bin density小的擺
+        *    2. Interconnecting Wirelength  
+             找到這些FF原始座標的中位數，找到與前面intersecton重疊的部分，如果找不到就往附近的座標外擴
+
+![image](https://hackmd.io/_uploads/BkW4yiylA.png)
+
 
 ### 6.FF-Bond: Multi-bit Flip-flop Bonding at Placement
 [Paper](https://www.ispd.cc/slides/2013/8_tsai.pdf)
 
-用化學鍵結來解??
+:::success
+用化學鍵結來解??  
+這群人太有創意了，用來解Reference Paper 0所提到的斥力問題，用於決定要cluster pre-defined MBFF library成幾個bit......
+:::
+
+:::info
+能否整合原子半徑的問題，與前面mean shift所提到的視野bandwidth $h$來做呢?
+
+eg:  
+MBFF Library = 元素週期表  
+FF = 價電子  
+動態的$h$ = 原子半徑  
+正比於當下cluster了多少FF，用於決定現在的視野要多大?
+
+![image](https://hackmd.io/_uploads/rJ4wSEayR.png)
+
+
+能否結合熱力學第二定律:系統會朝熵增(最大亂度，最低能量)的方向前進? 非退火而是analytical的方式去找到熵增的方向?
+:::
+
+![image](https://hackmd.io/_uploads/S1ts1VpJA.png)
+
 
 ## Taskflow Simple Usage & Install
 By Claire
@@ -420,7 +510,14 @@ $ git config --global user.email mnb51817@gmail.com
 *    pull after admin merge
 *    [reference video](https://youtu.be/x24fOAPclL4?si=tInV83pWkKSUbM1Q)
 
+:::danger
+禁止直接commit到mater branch
+:::
 
 14. Topological sort based legalization from秀儒?
 
 15. Meeting per 2 weeks?
+
+16. check post placement vs logic synthesis兩個階段對於MBFF cluster的作法有何不同之處?
+
+17. How to deal with the pre-place MBFF to cluster with other 1-bit FF?
