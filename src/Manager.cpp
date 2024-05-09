@@ -23,5 +23,16 @@ void Manager::print(){
         cout << pair.first << ":" << pair.second << endl;
     }
 
+    cout << "#################### Cell Library ##################" << endl;
     cout << cell_library << endl;
+
+    cout << "#################### FF Instance ##################" << endl;
+    for(const auto &pair: FF_Map){
+        cout << pair.second << endl;
+    }
+
+    cout << "#################### Gate Instance ##################" << endl;
+    for(const auto &pair: Gate_Map){
+        cout << pair.second << endl;
+    }
 }

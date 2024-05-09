@@ -72,21 +72,23 @@ const Coor &Cell::getPinCoor(const string &pinName)const{
 
 ostream &operator<<(ostream &out, const Cell &c){
     if(c.isFF){
-        out << "FlipFlop:" << endl;
-        out << "\tNumber of bits: " << c.bits << endl;
-        out << "\tWidth: " << c.w << endl;
-        out << "\tHeight: " << c.h << endl;
-        out << "\tPin Count: " << c.pinCount << endl;
+        out << "CellName: " << c.cellName << endl;
+        out << "IsFF: " << c.isFF << endl;
+        out << "Number of bits: " << c.bits << endl;
+        out << "Width: " << c.w << endl;
+        out << "Height: " << c.h << endl;
+        out << "Pin Count: " << c.pinCount << endl;
     }
     else{
-        out << "Gate:" << endl;
-        out << "\tWidth: " << c.w << endl;
-        out << "\tHeight: " << c.h << endl;
-        out << "\tPin Count: " << c.pinCount << endl;
+        out << "CellName: " << c.cellName << endl;
+        out << "IsFF: " << c.isFF << endl;
+        out << "Width: " << c.w << endl;
+        out << "Height: " << c.h << endl;
+        out << "Pin Count: " << c.pinCount << endl;
     }
 
     for(const auto &pair : c.pinCoorMap){
-        out << "\t\t" << pair.first << " " << pair.second << endl;
+        out << "\t" << pair.first << " " << pair.second << endl;
     }
     return out;
 }

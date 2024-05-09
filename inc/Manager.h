@@ -24,7 +24,11 @@ private:
     unordered_map<string, Coor> Input_Map;
     unordered_map<string, Coor> Output_Map;
 
+    // Cell library
     Cell_Library cell_library;
+
+    // Instance
+    int NumInstances;
     unordered_map<string, FF> FF_Map;
     unordered_map<string, Gate> Gate_Map;
 

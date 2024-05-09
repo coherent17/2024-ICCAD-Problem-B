@@ -23,6 +23,7 @@ private:
     void readDieBorder(Manager &);
     void readIOCoordinate(Manager &);
     void readCellLibrary(Manager &);
+    void readInstance(Manager &);
 };
 
 #endif

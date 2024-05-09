@@ -55,6 +55,3 @@ check:
 
 clean:
 	rm -rf $(OBJDIR) $(BIN)
-
-calc:
-	find . -name '*.cpp' -o -name '*.h' -o -name '*.hpp' -o -name '*.c' -o -name '*.cc' -o -name '*.cxx' | xargs wc -l

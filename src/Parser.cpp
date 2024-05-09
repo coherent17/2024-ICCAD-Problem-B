@@ -14,6 +14,7 @@ void Parser::parse(Manager &mgr){
     readDieBorder(mgr);
     readIOCoordinate(mgr);
     readCellLibrary(mgr);
+    readInstance(mgr);
 }
 
 void Parser::readWeight(Manager &mgr){
@@ -79,5 +80,32 @@ void Parser::readCellLibrary(Manager &mgr){
             c.addPinCoor(pinName, coor);
         }
         mgr.cell_library.addCell(cellName, c);
+    }
+}
+
+void Parser::readInstance(Manager &mgr){
+    fin >> mgr.NumInstances;
+    string _, instanceName, cellType;
+    double cell_coor_x, cell_coor_y;
+    Coor coor;
+    for(int i = 0; i < mgr.NumInstances; i++){
+        fin >> _ >> instanceName >> cellType >> cell_coor_x >> cell_coor_y;
+        coor = make_pair(cell_coor_x, cell_coor_y);
+        if(mgr.cell_library.isFF(cellType)){
+            FF ff;
+            ff.setInstanceName(instanceName);
+            ff.setCellName(cellType);
+            ff.setCoor(coor);
+            ff.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            mgr.FF_Map[instanceName] = ff;
+        }
+        else{
+            Gate gate;
+            gate.setInstanceName(instanceName);
+            gate.setCellName(cellType);
+            gate.setCoor(coor);
+            gate.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            mgr.Gate_Map[instanceName] = gate;
+        }
     }
 }
