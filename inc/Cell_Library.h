@@ -10,6 +10,9 @@ private:
 public:
     Cell_Library();
     ~Cell_Library();
+    void addCell(const string &, const Cell &);
+
+    friend ostream &operator<<(ostream &, const Cell_Library &);
 };
 
 #endif

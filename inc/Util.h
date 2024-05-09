@@ -7,9 +7,12 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
+#include <unordered_map>
+#include <utility>
 
-typedef std::pair<double, double> Coor;
-
+using namespace std;
+typedef pair<double, double> Coor;
+ostream &operator<<(ostream &os, const Coor &coor);
 // math function define in here:
 // Square Euclidean Distance
 // Manhanttan Distance
