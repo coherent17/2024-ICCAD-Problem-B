@@ -5,6 +5,7 @@
 #include "FF.h"
 #include "Gate.h"
 #include "Parser.h"
+#include "Net.h"
 
 class Manager{
 private:
@@ -31,6 +32,11 @@ private:
     int NumInstances;
     unordered_map<string, FF> FF_Map;
     unordered_map<string, Gate> Gate_Map;
+
+    // Netlist
+    int NumNets;
+    unordered_map<string, Net> Net_Map;
+
 
 public:
     Manager();

@@ -15,6 +15,7 @@ void Parser::parse(Manager &mgr){
     readIOCoordinate(mgr);
     readCellLibrary(mgr);
     readInstance(mgr);
+    readNet(mgr);
 }
 
 void Parser::readWeight(Manager &mgr){
@@ -107,5 +108,21 @@ void Parser::readInstance(Manager &mgr){
             gate.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
             mgr.Gate_Map[instanceName] = gate;
         }
+    }
+}
+
+void Parser::readNet(Manager &mgr){
+    string _;
+    fin >> _ >> mgr.NumNets;
+    Net net;
+    string netName;
+    int numPins;
+    for(int i = 0; i < mgr.NumNets; i++){
+        fin >> _ >> netName >> numPins;
+        for(int j = 0; j < numPins; j++){
+            getline(fin, _);
+        }
+        Net net;
+        mgr.Net_Map[netName] = net;
     }
 }

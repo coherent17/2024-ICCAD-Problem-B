@@ -24,6 +24,7 @@ private:
     void readIOCoordinate(Manager &);
     void readCellLibrary(Manager &);
     void readInstance(Manager &);
+    void readNet(Manager &);
 };
 
 #endif
