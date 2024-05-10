@@ -16,6 +16,7 @@ void Parser::parse(Manager &mgr){
     readCellLibrary(mgr);
     readInstance(mgr);
     readNet(mgr);
+    readBin(mgr);
 }
 
 void Parser::readWeight(Manager &mgr){
@@ -125,4 +126,31 @@ void Parser::readNet(Manager &mgr){
         Net net;
         mgr.Net_Map[netName] = net;
     }
+}
+
+void Parser::readBin(Manager &mgr){
+    string _;
+    fin >> _ >> mgr.BinWidth;
+    fin >> _ >> mgr.BinHeight;
+    fin >> _ >> mgr.BinMaxUtil;
+}
+
+void Parser::readPlacementRows(Manager &mgr){
+    string _;
+    while(fin >> _){
+        if(_ != "PlacementRows") break;
+        getline(fin, _);
+    }
+}
+
+void Parser::readQpinDelay(Manager &){
+
+}
+
+void Parser::readTimingSlack(Manager &){
+
+}
+
+void Parser::readGatePower(Manager &){
+
 }

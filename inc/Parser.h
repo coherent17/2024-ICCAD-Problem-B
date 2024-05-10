@@ -25,6 +25,11 @@ private:
     void readCellLibrary(Manager &);
     void readInstance(Manager &);
     void readNet(Manager &);
+    void readBin(Manager &);
+    void readPlacementRows(Manager &);
+    void readQpinDelay(Manager &);
+    void readTimingSlack(Manager &);
+    void readGatePower(Manager &);
 };
 
 #endif

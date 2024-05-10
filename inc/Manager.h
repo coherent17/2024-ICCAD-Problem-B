@@ -6,6 +6,7 @@
 #include "Gate.h"
 #include "Parser.h"
 #include "Net.h"
+#include "Die.h"
 
 class Manager{
 private:
@@ -16,6 +17,7 @@ private:
     double lambda;
     
     // die coordinate
+    Die die;
     Coor DieOrigin;
     Coor DieBorder;
 
@@ -36,6 +38,11 @@ private:
     // Netlist
     int NumNets;
     unordered_map<string, Net> Net_Map;
+
+    // Bin
+    double BinWidth;
+    double BinHeight;
+    double BinMaxUtil;
 
 
 public:
