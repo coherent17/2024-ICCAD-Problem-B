@@ -15,7 +15,8 @@ void Manager::Read_InputFile(const string &filename){
 
 void Manager::print(){
     cout << alpha << " " << beta << " " << gamma << " " << lambda << endl;
-    cout << DieOrigin << " " << DieBorder << endl;
+    cout << "#################### Die Info ##################" << endl;
+    cout << die << endl;
     for(const auto &pair : Input_Map){
         cout << pair.first << ":" << pair.second << endl;
     }

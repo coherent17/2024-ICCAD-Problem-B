@@ -20,4 +20,6 @@ ostream &operator<<(ostream &os, const Coor &coor);
 // Gaussian (for ff density surface)
 // Downstream (for comb cell density surface)
 
+#define DEBUG_MSG(message) cout << "[DEBUG: " << message << "]" << endl;
+
 #endif

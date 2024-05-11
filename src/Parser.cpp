@@ -17,6 +17,10 @@ void Parser::parse(Manager &mgr){
     readInstance(mgr);
     readNet(mgr);
     readBin(mgr);
+    readPlacementRows(mgr);
+    readQpinDelay(mgr);
+    readTimingSlack(mgr);
+    readGatePower(mgr);
 }
 
 void Parser::readWeight(Manager &mgr){
@@ -28,8 +32,10 @@ void Parser::readDieBorder(Manager &mgr){
     string _;
     double origin_x, origin_y, border_x, border_y;
     fin >> _ >> origin_x >> origin_y >> border_x >> border_y;
-    mgr.DieOrigin = make_pair(origin_x, origin_y);
-    mgr.DieBorder = make_pair(border_x, border_y);
+    Coor DieOrigin = make_pair(origin_x, origin_y);
+    Coor DieBorder = make_pair(border_x, border_y);
+    mgr.die.setDieOrigin(DieOrigin);
+    mgr.die.setDieBorder(DieBorder);
 }
 
 void Parser::readIOCoordinate(Manager &mgr){
@@ -115,42 +121,79 @@ void Parser::readInstance(Manager &mgr){
 void Parser::readNet(Manager &mgr){
     string _;
     fin >> _ >> mgr.NumNets;
-    Net net;
-    string netName;
-    int numPins;
     for(int i = 0; i < mgr.NumNets; i++){
+        Net net;
+        string netName;
+        int numPins;
         fin >> _ >> netName >> numPins;
         for(int j = 0; j < numPins; j++){
-            getline(fin, _);
+            fin >> _ >> _;
         }
-        Net net;
         mgr.Net_Map[netName] = net;
     }
 }
 
 void Parser::readBin(Manager &mgr){
     string _;
-    fin >> _ >> mgr.BinWidth;
-    fin >> _ >> mgr.BinHeight;
-    fin >> _ >> mgr.BinMaxUtil;
+    double BinWidth, BinHeight, BinMaxUtil;
+    fin >> _ >> BinWidth;
+    fin >> _ >> BinHeight;
+    fin >> _ >> BinMaxUtil;
+    mgr.die.setBinWidth(BinWidth);
+    mgr.die.setBinHeight(BinHeight);
+    mgr.die.setBinMaxUtil(BinMaxUtil);
 }
 
 void Parser::readPlacementRows(Manager &mgr){
     string _;
     while(fin >> _){
-        if(_ != "PlacementRows") break;
-        getline(fin, _);
+        if(_ != "PlacementRows"){
+            break;
+        }
+        PlacementRow placementrow;
+        double startX, startY, siteWidth, siteHeight;
+        int NumOfSites;
+        Coor startCoor = make_pair(startX, startY);
+        fin >> startX >> startY >> siteWidth >> siteHeight >> NumOfSites;
+        placementrow.startCoor = startCoor;
+        placementrow.siteWidth = siteWidth;
+        placementrow.siteHeight = siteHeight;
+        placementrow.NumOfSites = NumOfSites;
+        mgr.die.addPlacementRow(placementrow);
     }
 }
 
-void Parser::readQpinDelay(Manager &){
-
+void Parser::readQpinDelay(Manager &mgr){
+    string _, cellName;
+    double QpinDelay;
+    fin >> mgr.DisplacementDelay;
+    while(fin >> _){
+        if(_ != "QpinDelay"){
+            break;
+        }
+        fin >> cellName >> QpinDelay;
+        Cell *cell = mgr.cell_library.getCell(cellName);
+        cell->setQpinDelay(QpinDelay);
+    }
 }
 
-void Parser::readTimingSlack(Manager &){
-
+void Parser::readTimingSlack(Manager &mgr){
+    string _, instanceName;
+    double TimingSlack;
+    do{
+        fin >> instanceName >> _ >> TimingSlack;
+        mgr.FF_Map[instanceName].setTimingSlack(TimingSlack);
+        fin >> _;
+    }while(_ == "TimingSlack");
 }
 
-void Parser::readGatePower(Manager &){
-
+void Parser::readGatePower(Manager &mgr){
+    string _, cellName;
+    double GatePower;
+    do{
+        fin >> cellName >> GatePower;
+        Cell *cell = mgr.cell_library.getCell(cellName);
+        cell->setGatePower(GatePower);
+        fin >> _;
+    }while(_ == "GatePower" && !fin.eof());
 }

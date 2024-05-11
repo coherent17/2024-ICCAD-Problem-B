@@ -43,7 +43,19 @@ void Cell::addPinCoor(const string &pinName, Coor &coor){
     this->pinCoorMap[pinName] = coor;
 }
 
+void Cell::setQpinDelay(double QpinDelay){
+    this->QpinDelay = QpinDelay;
+}
+
+void Cell::setGatePower(double GatePower){
+    this->GatePower = GatePower;
+}
+
 // getter
+const string &Cell::getCellName()const{
+    return cellName;
+}
+
 bool Cell::getisFF()const{
     return isFF;
 }
@@ -70,6 +82,16 @@ const Coor &Cell::getPinCoor(const string &pinName)const{
     return it->second;
 }
 
+double Cell::getQpinDelay(){
+    assert(isFF);
+    return QpinDelay;
+}
+
+double Cell::getGatePower(){
+    assert(isFF);
+    return GatePower;
+}
+
 ostream &operator<<(ostream &out, const Cell &c){
     if(c.isFF){
         out << "CellName: " << c.cellName << endl;
@@ -78,6 +100,8 @@ ostream &operator<<(ostream &out, const Cell &c){
         out << "Width: " << c.w << endl;
         out << "Height: " << c.h << endl;
         out << "Pin Count: " << c.pinCount << endl;
+        out << "QpinDelay: " << c.QpinDelay << endl;
+        out << "GatePower: " << c.GatePower << endl;
     }
     else{
         out << "CellName: " << c.cellName << endl;

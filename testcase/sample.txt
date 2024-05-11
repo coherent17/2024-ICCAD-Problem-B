@@ -29,7 +29,7 @@ Inst C1 FF1 20.0 0.0
 Inst C2 FF1 20.0 10.0
 Inst C3 FF1 20.0 20.0
 Inst C4 G1 10.0 10.0
-NumNets 4
+NumNets 7
 Net N1 3
 Pin INPUT0
 Pin C1/D

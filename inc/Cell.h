@@ -12,6 +12,8 @@ private:
     double h;
     int pinCount;
     unordered_map<string, Coor> pinCoorMap;
+    double QpinDelay;
+    double GatePower;
 
 public:
     Cell();
@@ -25,14 +27,19 @@ public:
     void setH(double);
     void setPinCount(int);
     void addPinCoor(const string &, Coor &);
+    void setQpinDelay(double);
+    void setGatePower(double);
 
     // getter
+    const string &getCellName()const;
     bool getisFF()const;
     int getBit()const;
     double getW()const;
     double getH()const;
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
+    double getQpinDelay();
+    double getGatePower();
 
     friend ostream &operator<<(ostream &, const Cell &);
 };

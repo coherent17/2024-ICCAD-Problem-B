@@ -15,11 +15,10 @@ private:
     double beta;
     double gamma;
     double lambda;
+    double DisplacementDelay;
     
-    // die coordinate
+    // die info
     Die die;
-    Coor DieOrigin;
-    Coor DieBorder;
 
     // I/O pin coordinate
     int NumInput;
@@ -38,11 +37,6 @@ private:
     // Netlist
     int NumNets;
     unordered_map<string, Net> Net_Map;
-
-    // Bin
-    double BinWidth;
-    double BinHeight;
-    double BinMaxUtil;
 
 
 public:

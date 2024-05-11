@@ -9,9 +9,7 @@ private:
     string cellName;
     Coor coor;
     Cell *cellLibraryPtr;
-    double QpinDelay;
     double TimingSlack;
-    double GatePower;
 
 public:
     FF();
@@ -22,6 +20,7 @@ public:
     void setCellName(const string &);
     void setCoor(Coor &);
     void setCellLibraryPtr(Cell *);
+    void setTimingSlack(double);
 
     // getter
     int getBits()const;
@@ -29,6 +28,7 @@ public:
     double getH()const;
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
+    double getTimingSlack()const;
 
     friend ostream &operator<<(ostream &, const FF &);
 };

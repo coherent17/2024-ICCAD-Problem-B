@@ -1,7 +1,7 @@
 # 2024 ICCAD Problem B
 
-*   refactor die class and FF class
-*   think how to parse netlist structure
+*   make coor also a class?
+*   think how to setup netlist structure
 
 Current Process:
 
