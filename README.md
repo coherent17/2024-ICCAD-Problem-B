@@ -2,6 +2,7 @@
 
 *   make coor also a class?
 *   think how to setup netlist structure
+*   need to refactor net class(also create a pin class?)
 
 Current Process:
 
