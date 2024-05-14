@@ -3,6 +3,12 @@
 *   make coor also a class?
 *   think how to setup netlist structure
 *   need to refactor net class(also create a pin class?)
+*   solve the gcc link problem:
+
+```
+# perhaps solve by ln or conda?
+./sanity: /lib64/libstdc++.so.6: version `GLIBCXX_3.4.26' not found (required by ./sanity)
+```
 
 Current Process:
 
