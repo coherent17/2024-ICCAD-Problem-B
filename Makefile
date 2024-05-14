@@ -48,7 +48,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 	$(Q)$(CXX) $(WARNINGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
 
 run:
-	./$(BIN) testcase/sample.txt
+	./$(BIN) testcase/sampleCase
 
 check:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN)

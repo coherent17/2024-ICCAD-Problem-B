@@ -1,0 +1,15 @@
+CellInst 2
+Inst reg5 SVT_FF_2 5952 3600 
+Inst reg6 SVT_FF_2 1278 3600 
+reg1/D map reg5/D0
+reg1/Q map reg5/Q0
+reg1/CLK map reg5/CLK
+reg2/D map reg5/D1
+reg2/Q map reg5/Q1
+reg2/CLK map reg5/CLK
+reg3/D map reg6/D0
+reg3/Q map reg6/Q0
+reg3/CLK map reg6/CLK
+reg4/D map reg6/D1
+reg4/Q map reg6/Q1
+reg4/CLK map reg6/CLK
