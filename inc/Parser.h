@@ -2,10 +2,7 @@
 #define _PARSER_H_
 
 #include "Manager.h"
-#include <fstream>
-#include <string>
-#include <cassert>
-using namespace std;
+#include "Util.h"
 
 class Manager;
 

@@ -1,6 +1,7 @@
 #ifndef _MANAGER_H_
 #define _MANAGER_H_
 
+#include "Util.h"
 #include "Cell_Library.h"
 #include "FF.h"
 #include "Gate.h"

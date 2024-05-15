@@ -47,8 +47,11 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 	$(VECHO) "	CC\t$@\n"
 	$(Q)$(CXX) $(WARNINGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
 
-run:
+run1:
 	./$(BIN) testcase/sampleCase
+
+run2:
+	./$(BIN) testcase/sample.txt
 
 check:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN)

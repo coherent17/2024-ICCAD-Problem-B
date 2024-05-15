@@ -32,8 +32,8 @@ void Parser::readDieBorder(Manager &mgr){
     string _;
     double origin_x, origin_y, border_x, border_y;
     fin >> _ >> origin_x >> origin_y >> border_x >> border_y;
-    Coor DieOrigin = make_pair(origin_x, origin_y);
-    Coor DieBorder = make_pair(border_x, border_y);
+    Coor DieOrigin = Coor(origin_x, origin_y);
+    Coor DieBorder = Coor(border_x, border_y);
     mgr.die.setDieOrigin(DieOrigin);
     mgr.die.setDieBorder(DieBorder);
 }
@@ -47,14 +47,14 @@ void Parser::readIOCoordinate(Manager &mgr){
     fin >> _ >> mgr.NumInput;
     for(int i = 0; i < mgr.NumInput; i++){
         fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
-        mgr.Input_Map[pinName] = make_pair(pin_coor_x, pin_coor_y);
+        mgr.Input_Map[pinName] = Coor(pin_coor_x, pin_coor_y);
     }
 
     // Output pin
     fin >> _ >> mgr.NumOutput;
     for(int i = 0; i < mgr.NumOutput; i++){
         fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
-        mgr.Output_Map[pinName] = make_pair(pin_coor_x, pin_coor_y);
+        mgr.Output_Map[pinName] = Coor(pin_coor_x, pin_coor_y);
     }
 }
 
@@ -84,7 +84,7 @@ void Parser::readCellLibrary(Manager &mgr){
         double pin_coor_x, pin_coor_y;
         for(int i = 0; i < pinCount; i++){
             fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
-            Coor coor = make_pair(pin_coor_x, pin_coor_y);
+            Coor coor = Coor(pin_coor_x, pin_coor_y);
             c.addPinCoor(pinName, coor);
         }
         mgr.cell_library.addCell(cellName, c);
@@ -98,7 +98,7 @@ void Parser::readInstance(Manager &mgr){
     Coor coor;
     for(int i = 0; i < mgr.NumInstances; i++){
         fin >> _ >> instanceName >> cellType >> cell_coor_x >> cell_coor_y;
-        coor = make_pair(cell_coor_x, cell_coor_y);
+        coor = Coor(cell_coor_x, cell_coor_y);
         if(mgr.cell_library.isFF(cellType)){
             FF ff;
             ff.setInstanceName(instanceName);
@@ -153,7 +153,7 @@ void Parser::readPlacementRows(Manager &mgr){
         PlacementRow placementrow;
         double startX, startY, siteWidth, siteHeight;
         int NumOfSites;
-        Coor startCoor = make_pair(startX, startY);
+        Coor startCoor = Coor(startX, startY);
         fin >> startX >> startY >> siteWidth >> siteHeight >> NumOfSites;
         placementrow.startCoor = startCoor;
         placementrow.siteWidth = siteWidth;
