@@ -1,7 +1,7 @@
 #include "Gate.h"
 
 Gate::Gate(){
-    cellLibraryPtr = nullptr;
+    ;
 }
 
 Gate::~Gate(){
@@ -21,35 +21,39 @@ void Gate::setCoor(Coor &coor){
     this->coor = coor;
 }
 
-void Gate::setCellLibraryPtr(Cell *cell){
-    this->cellLibraryPtr = cell;
+void Gate::setCell(const Cell &cell){
+    this->cell = cell;
 }
 
 // getter
+const string &Gate::getInstanceName()const{
+    return instanceName;
+}
+
+const string &Gate::getCellName()const{
+    return cellName;
+}
+
 double Gate::getW()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getW();
+    return cell.getW();
 }
 
 double Gate::getH()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getH();
+    return cell.getH();
 }
 
 
 int Gate::getPinCount()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getPinCount();
+    return cell.getPinCount();
 }
 
 const Coor &Gate::getPinCoor(const string &pinName)const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getPinCoor(pinName);
+    return cell.getPinCoor(pinName);
 }
 
 ostream &operator<<(ostream &out, const Gate &gate){
     out << "Instance Name: " << gate.instanceName << endl;
     out << "Coor: " << gate.coor << endl;
-    out << *gate.cellLibraryPtr << endl;
+    out << gate.cell << endl;
     return out;
 }

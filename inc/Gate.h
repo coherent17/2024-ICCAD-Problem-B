@@ -8,7 +8,7 @@ private:
     string instanceName;
     string cellName;
     Coor coor;
-    Cell *cellLibraryPtr;
+    Cell cell;
 
 public:
     Gate();
@@ -18,9 +18,11 @@ public:
     void setInstanceName(const string &);
     void setCellName(const string &);
     void setCoor(Coor &);
-    void setCellLibraryPtr(Cell *);
+    void setCell(const Cell &);
 
     // getter
+    const string &getInstanceName()const;
+    const string &getCellName()const;
     double getW()const;
     double getH()const;
     int getPinCount()const;

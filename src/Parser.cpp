@@ -104,7 +104,7 @@ void Parser::readInstance(Manager &mgr){
             ff.setInstanceName(instanceName);
             ff.setCellName(cellType);
             ff.setCoor(coor);
-            ff.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            //ff.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
             mgr.FF_Map[instanceName] = ff;
         }
         else{
@@ -112,7 +112,7 @@ void Parser::readInstance(Manager &mgr){
             gate.setInstanceName(instanceName);
             gate.setCellName(cellType);
             gate.setCoor(coor);
-            gate.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            //gate.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
             mgr.Gate_Map[instanceName] = gate;
         }
     }
@@ -126,8 +126,21 @@ void Parser::readNet(Manager &mgr){
         string netName;
         int numPins;
         fin >> _ >> netName >> numPins;
+        net.setNetName(netName);
+        net.setNumPins(numPins);
         for(int j = 0; j < numPins; j++){
-            fin >> _ >> _;
+            Pin pin;
+            string pinName;
+            fin >> _ >> pinName;
+            pin.setIsIOPin(mgr.isIOPin(pinName));
+            if(!mgr.isIOPin(pinName)){
+                pin.setPinName(getSubStringAfterSlash(pinName));
+                pin.setInstanceName(getSubStringBeforeSlash(pinName));
+            }
+            else{
+                pin.setPinName(pinName);
+            }
+            net.addPins(pin);
         }
         mgr.Net_Map[netName] = net;
     }
@@ -172,8 +185,7 @@ void Parser::readQpinDelay(Manager &mgr){
             break;
         }
         fin >> cellName >> QpinDelay;
-        Cell *cell = mgr.cell_library.getCell(cellName);
-        cell->setQpinDelay(QpinDelay);
+        mgr.cell_library.getCellRef(cellName).setQpinDelay(QpinDelay);
     }
 }
 
@@ -192,8 +204,25 @@ void Parser::readGatePower(Manager &mgr){
     double GatePower;
     do{
         fin >> cellName >> GatePower;
-        Cell *cell = mgr.cell_library.getCell(cellName);
-        cell->setGatePower(GatePower);
+        mgr.cell_library.getCellRef(cellName).setGatePower(GatePower);
         fin >> _;
     }while(_ == "GatePower" && !fin.eof());
+}
+
+string Parser::getSubStringAfterSlash(const string &str){
+    size_t pos = str.find_last_of('/');
+    if (pos != std::string::npos) {
+        return str.substr(pos + 1); // Return substring after the last "/"
+    }
+    // If no "/" found, return the original string
+    return str;
+}
+
+string Parser::getSubStringBeforeSlash(const string &str){
+    size_t pos = str.find_first_of('/');
+    if (pos != std::string::npos) {
+        return str.substr(0, pos); // Return substring before the first "/"
+    }
+    // If no "/" found, return the original string
+    return str;
 }

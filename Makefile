@@ -54,7 +54,7 @@ run2:
 	./$(BIN) testcase/sample.txt
 
 check:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN)
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/sample.txt
 
 clean:
 	rm -rf $(OBJDIR) $(BIN)

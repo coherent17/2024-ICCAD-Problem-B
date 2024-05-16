@@ -27,6 +27,8 @@ private:
     void readQpinDelay(Manager &);
     void readTimingSlack(Manager &);
     void readGatePower(Manager &);
+    string getSubStringAfterSlash(const string &);
+    string getSubStringBeforeSlash(const string &);
 };
 
 #endif

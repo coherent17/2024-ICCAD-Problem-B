@@ -15,7 +15,8 @@ public:
     void addCell(const string &, const Cell &);
     
     // getter
-    Cell *getCell(const string &);
+    Cell &getCellRef(const string &);
+    Cell getCellCopy(const string &)const;
 
     //helper function
     bool isFF(const string &);

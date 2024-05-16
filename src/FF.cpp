@@ -1,7 +1,7 @@
 #include "FF.h"
 
 FF::FF(){
-    cellLibraryPtr = nullptr;
+    ;
 }
 
 FF::~FF(){
@@ -21,8 +21,8 @@ void FF::setCoor(Coor &coor){
     this->coor = coor;
 }
 
-void FF::setCellLibraryPtr(Cell *cell){
-    this->cellLibraryPtr = cell;
+void FF::setCell(const Cell &cell){
+    this->cell = cell;
 }
 
 void FF::setTimingSlack(double TimingSlack){
@@ -30,29 +30,32 @@ void FF::setTimingSlack(double TimingSlack){
 }
 
 // getter
+const string &FF::getInstanceName()const{
+    return instanceName;
+}
+
+const string &FF::getCellName()const{
+    return cellName;
+}
+
 int FF::getBits()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getBit();
+    return cell.getBit();
 }
 
 double FF::getW()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getW();
+    return cell.getW();
 }
 
 double FF::getH()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getH();
+    return cell.getH();
 }
 
 int FF::getPinCount()const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getPinCount();
+    return cell.getPinCount();
 }
 
 const Coor &FF::getPinCoor(const string &pinName)const{
-    assert(cellLibraryPtr != nullptr);
-    return cellLibraryPtr->getPinCoor(pinName);
+    return cell.getPinCoor(pinName);
 }
 
 double FF::getTimingSlack()const{
@@ -63,6 +66,6 @@ ostream &operator<<(ostream &out, const FF &ff){
     out << "Instance Name: " << ff.instanceName << endl;
     out << "Coor: " << ff.coor << endl;
     out << "TimingSlack: " << ff.TimingSlack << endl;
-    out << "CellType: " << ff.cellLibraryPtr->getCellName() << endl;
+    out << ff.cell << endl;
     return out;
 }

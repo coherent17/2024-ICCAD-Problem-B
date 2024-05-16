@@ -45,8 +45,12 @@ public:
     ~Manager();
 
     void Read_InputFile(const string &);
+    void Technology_Mapping();
     void print();
     friend class Parser;
+
+private:
+    bool isIOPin(const string &);
 };
 
 #endif

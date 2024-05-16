@@ -8,7 +8,7 @@ private:
     string instanceName;
     string cellName;
     Coor coor;
-    Cell *cellLibraryPtr;
+    Cell cell;
     double TimingSlack;
 
 public:
@@ -19,10 +19,12 @@ public:
     void setInstanceName(const string &);
     void setCellName(const string &);
     void setCoor(Coor &);
-    void setCellLibraryPtr(Cell *);
+    void setCell(const Cell &);
     void setTimingSlack(double);
 
     // getter
+    const string &getInstanceName()const;
+    const string &getCellName()const;
     int getBits()const;
     double getW()const;
     double getH()const;
