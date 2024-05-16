@@ -153,8 +153,8 @@ void Parser::readPlacementRows(Manager &mgr){
         PlacementRow placementrow;
         double startX, startY, siteWidth, siteHeight;
         int NumOfSites;
-        Coor startCoor = Coor(startX, startY);
         fin >> startX >> startY >> siteWidth >> siteHeight >> NumOfSites;
+        Coor startCoor = Coor(startX, startY);
         placementrow.startCoor = startCoor;
         placementrow.siteWidth = siteWidth;
         placementrow.siteHeight = siteHeight;
