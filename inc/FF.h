@@ -11,6 +11,11 @@ private:
     Cell cell;
     double TimingSlack;
 
+    // for find optimal location
+    Cell* prev_cell;
+    FF* prev_ff;
+
+    int idx;
 public:
     FF();
     ~FF();
@@ -21,13 +26,16 @@ public:
     void setCoor(Coor &);
     void setCell(const Cell &);
     void setTimingSlack(double);
-
+    void setIdx(int i){this->idx = i;}
     // getter
     const string &getInstanceName()const;
     const string &getCellName()const;
+    const Cell& getCell()const;
     int getBits()const;
     double getW()const;
     double getH()const;
+    Coor getCoor(){return this->coor;}
+    int getIdx(){return this->idx;}
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
     double getTimingSlack()const;

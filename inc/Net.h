@@ -23,6 +23,7 @@ public:
     // getter
     const string &getNetName()const;
     int getNumPins()const;
+    const Pin& getPin(int)const;
     
     friend ostream &operator<<(ostream &, const Net &);
 };

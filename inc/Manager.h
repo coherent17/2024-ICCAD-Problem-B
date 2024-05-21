@@ -10,7 +10,7 @@
 #include "Die.h"
 
 class Manager{
-private:
+public:
     // cost function weight
     double alpha;
     double beta;

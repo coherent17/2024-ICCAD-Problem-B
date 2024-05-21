@@ -5,7 +5,7 @@
 using namespace std;
 
 class Coor{
-private:
+public:
     double x;
     double y;
 

@@ -25,6 +25,7 @@ public:
     const string &getCellName()const;
     double getW()const;
     double getH()const;
+    Coor getCoor(){return this->coor;}
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
 

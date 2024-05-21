@@ -38,6 +38,10 @@ const string &FF::getCellName()const{
     return cellName;
 }
 
+const Cell& FF::getCell()const{
+    
+}
+
 int FF::getBits()const{
     return cell.getBit();
 }
