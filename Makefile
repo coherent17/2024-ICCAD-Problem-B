@@ -53,6 +53,9 @@ run1:
 run2:
 	./$(BIN) testcase/sample.txt
 
+run3:
+	./$(BIN) testcase/testcase1.txt
+
 check:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/sample.txt
 
