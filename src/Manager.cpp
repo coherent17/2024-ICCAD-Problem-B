@@ -1,5 +1,5 @@
 #include "Manager.h"
-
+#include "OptimalLocation.h"
 Manager::Manager(){
     ;
 }
@@ -58,4 +58,26 @@ bool Manager::isIOPin(const string &pinName){
     if(Input_Map.find(pinName) != Input_Map.end()) return true;
     if(Output_Map.find(pinName) != Output_Map.end()) return true;
     return false;
+}
+
+void Manager::optimal_FF_location(){
+    // create FF logic
+    vector<Coor> c(FF_Map.size());
+    int i=0;
+    for(auto&FF_m : FF_Map){ // initial location and set index
+        FF_m.second.setIdx(i);
+        c[i].x = FF_m.second.getCoor().x;
+        c[i].y = FF_m.second.getCoor().y;
+        i++;
+    }
+
+    obj_function obj(*this);
+    const double kAlpha = 0.01;
+    Gradient optimizer(obj, c, kAlpha);
+
+    for(i=0;i<25;i++){
+        optimizer.Step();
+        // CAL new slack
+
+    }
 }

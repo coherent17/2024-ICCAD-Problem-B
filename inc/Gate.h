@@ -3,6 +3,8 @@
 
 #include "Cell.h"
 
+class Cell;
+
 class Gate{
 private:
     string instanceName;

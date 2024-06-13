@@ -2,10 +2,6 @@
 #define OPTIMAL_LOCATION_H
 
 #include "Manager.h"
-#include "Coor.h"
-#include "Net.h"
-#include "Pin.h"
-#include <vector>
 using namespace std;
 
 class obj_function{
@@ -50,14 +46,14 @@ class Gradient{
     // Data members
     /////////////////////////////////
 
-    std::vector<Coor> grad_prev_;  // Gradient of the objective function at the previous
+    vector<Coor> grad_prev_;  // Gradient of the objective function at the previous
                                              // step, i.e., g_{k-1} in the NTUPlace3 paper
-    std::vector<Coor> dir_prev_;   // Direction of the previous step,
+    vector<Coor> dir_prev_;   // Direction of the previous step,
                                              // i.e., d_{k-1} in the NTUPlace3 paper
     size_t step_;                            // Current step number
     double alpha_;                           // Step size
     obj_function &obj_;                 // Objective function to optimize
-    std::vector<Coor> &var_;  // Variables to optimize
+    vector<Coor> &var_;  // Variables to optimize
 };
 
 

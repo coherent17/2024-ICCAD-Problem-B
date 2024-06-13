@@ -46,6 +46,7 @@ public:
 
     void Read_InputFile(const string &);
     void Technology_Mapping();
+    void optimal_FF_location();
     void print();
     friend class Parser;
 

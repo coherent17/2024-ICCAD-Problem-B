@@ -39,7 +39,7 @@ const string &FF::getCellName()const{
 }
 
 const Cell& FF::getCell()const{
-    
+    return cell;
 }
 
 int FF::getBits()const{

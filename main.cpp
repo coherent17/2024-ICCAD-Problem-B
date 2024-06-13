@@ -5,6 +5,7 @@ int main(int argc, char *argv[]){
     mgr.Read_InputFile(argv[1]);
     mgr.Technology_Mapping();
     mgr.print();
-    optimal_FF_location(mgr);
+    // mgr.preprocess();
+    // mgr.optimal_FF_location();
     return 0;
 }

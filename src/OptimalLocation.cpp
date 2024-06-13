@@ -33,7 +33,7 @@ double obj_function::forward(vector<Coor>& in){
 }
 
 vector<Coor>& obj_function::backward(){
-    for(int i=0;i<grad_.size();i++){
+    for(size_t i=0;i<grad_.size();i++){
         grad_[i].x = 0;
         grad_[i].y = 0;
     }
@@ -43,7 +43,6 @@ vector<Coor>& obj_function::backward(){
         for(int j=0;j<n.getNumPins();j++){
             const Pin& p = n.getPin(j);
             string instName = p.getInstanceName();
-            double x, y;
             if(mgr.FF_Map.count(instName)){
                 int id = mgr.FF_Map[instName].getIdx();
                 grad_[id].x += (exp(input_[id].x / gamma) / x_pos[i]) - (exp(-input_[id].x / gamma) / x_neg[i]);
