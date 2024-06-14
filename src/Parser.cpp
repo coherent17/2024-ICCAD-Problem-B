@@ -85,6 +85,7 @@ void Parser::readCellLibrary(Manager &mgr){
         for(int i = 0; i < pinCount; i++){
             fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
             Coor coor = Coor(pin_coor_x, pin_coor_y);
+            c.addPinName(pinName);
             c.addPinCoor(pinName, coor);
         }
         mgr.cell_library.addCell(cellName, c);
@@ -191,10 +192,11 @@ void Parser::readQpinDelay(Manager &mgr){
 
 void Parser::readTimingSlack(Manager &mgr){
     string _, instanceName;
+    string pinName;
     double TimingSlack;
     do{
-        fin >> instanceName >> _ >> TimingSlack;
-        mgr.FF_Map[instanceName].setTimingSlack(TimingSlack);
+        fin >> instanceName >> pinName >> TimingSlack;
+        mgr.FF_Map[instanceName].setTimingSlack(TimingSlack, pinName);
         fin >> _;
     }while(_ == "TimingSlack");
 }

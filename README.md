@@ -42,3 +42,7 @@ $ make check
 0515:
     *   Net structure? Should be convenient & efficient for calculating the slack
     *   Negative slack elimination??
+
+
+* update log:
+    * Finish debanking, but need logic FF naming rule(?).

@@ -60,6 +60,38 @@ bool Manager::isIOPin(const string &pinName){
     return false;
 }
 
+void Manager::Build_Logic_FF(){
+    // debank and save all the FF in logic_FF;
+    // which is all one bit ff without technology mapping(no cell library)
+    for(auto& mbff_m : FF_Map){
+        FF& cur_ff = mbff_m.second;
+        const string& cur_name = mbff_m.first;
+        const Cell& cur_cell = cur_ff.getCell();
+        for(int i=0;i<cur_ff.getPinCount();i++){
+            string pinName = cur_cell.getPinName(i);
+            if(pinName[0] == 'D'){ // Assume all ff D pin start with D
+                logicFF temp;
+                Coor c = cur_ff.getPinCoor(cur_cell.getPinName(i)) + cur_ff.getCoor();
+                double slack = cur_ff.getTimingSlack(pinName);
+                temp.setCoor(c);
+                temp.setTimingSlack(slack);
+                logicFFs.push_back(temp);
+                logicFF_Map[cur_name+'/'+pinName] = logicFFs.size()-1;
+            }
+        }
+    }
+
+    /* for checking
+    for(auto& lm : logicFF_Map){
+        logicFF temp = logicFFs[lm.second];
+        cout << lm.first << " map to logic ff " << temp.getInstanceName() << endl;
+        cout << "With timing slacke : " << temp.getTimingSlack() << " And Coor : " << temp.getCoor() << endl;
+        cout << endl;
+    }
+    */
+}
+
+
 void Manager::optimal_FF_location(){
     // create FF logic
     vector<Coor> c(FF_Map.size());

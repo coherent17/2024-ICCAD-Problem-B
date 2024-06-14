@@ -80,6 +80,10 @@ int Cell::getPinCount()const{
     return pinCount;
 }
 
+const string &Cell::getPinName(const int& i) const{
+    return this->pinName[i];
+}
+
 const Coor &Cell::getPinCoor(const string &pinName)const{
     auto it = pinCoorMap.find(pinName);
     assert(it != pinCoorMap.end());

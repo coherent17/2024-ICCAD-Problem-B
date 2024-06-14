@@ -11,7 +11,7 @@ private:
     double w;
     double h;
     int pinCount;
-    vector<string> pinNames;
+    vector<string> pinName;
     unordered_map<string, Coor> pinCoorMap;
     double QpinDelay;
     double GatePower;
@@ -39,6 +39,7 @@ public:
     double getW()const;
     double getH()const;
     int getPinCount()const;
+    const string &getPinName(const int&)const;
     const Coor &getPinCoor(const string &)const;
     double getQpinDelay();
     double getGatePower();

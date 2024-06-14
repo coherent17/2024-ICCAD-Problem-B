@@ -26,7 +26,7 @@ public:
     int NumOutput;
     unordered_map<string, Coor> Input_Map;
     unordered_map<string, Coor> Output_Map;
-
+    
     // Cell library
     Cell_Library cell_library;
 
@@ -34,6 +34,8 @@ public:
     int NumInstances;
     unordered_map<string, FF> FF_Map;
     unordered_map<string, Gate> Gate_Map;
+    vector<logicFF> logicFFs;
+    unordered_map<string, int> logicFF_Map;
 
     // Netlist
     int NumNets;
@@ -46,6 +48,7 @@ public:
 
     void Read_InputFile(const string &);
     void Technology_Mapping();
+    void Build_Logic_FF();
     void optimal_FF_location();
     void print();
     friend class Parser;

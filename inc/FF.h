@@ -11,7 +11,7 @@ private:
     string cellName;
     Coor coor;
     Cell cell;
-    double TimingSlack;
+    unordered_map<string, double> TimingSlack;
 
     // for find optimal location
     Cell* prev_cell;
@@ -27,7 +27,7 @@ public:
     void setCellName(const string &);
     void setCoor(Coor &);
     void setCell(const Cell &);
-    void setTimingSlack(double);
+    void setTimingSlack(double, const string&);
     void setIdx(int i){this->idx = i;}
     // getter
     const string &getInstanceName()const;
@@ -40,9 +40,31 @@ public:
     int getIdx(){return this->idx;}
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
-    double getTimingSlack()const;
+    double getTimingSlack(const string&);
 
     friend ostream &operator<<(ostream &, const FF &);
+};
+
+
+class logicFF{
+private:
+    string instanceName; // wait to set
+    Coor coor;          // simple x,y location, without technology info, ie Dpin == Qpin
+    double TimingSlack;
+    logicFF *prev, *next;
+    int idx;
+
+public:
+    logicFF();
+    ~logicFF();
+    
+    void setInstanceName(const string&);
+    void setCoor(Coor &);
+    void setTimingSlack(double);
+
+    const string &getInstanceName()const;
+    const Coor &getCoor()const;
+    double getTimingSlack()const;
 };
 
 #endif
