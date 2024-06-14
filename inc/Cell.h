@@ -11,6 +11,7 @@ private:
     double w;
     double h;
     int pinCount;
+    vector<string> pinNames;
     unordered_map<string, Coor> pinCoorMap;
     double QpinDelay;
     double GatePower;
@@ -27,6 +28,7 @@ public:
     void setH(double);
     void setPinCount(int);
     void addPinCoor(const string &, Coor &);
+    void addPinName(const string &);
     void setQpinDelay(double);
     void setGatePower(double);
 

@@ -43,6 +43,10 @@ void Cell::addPinCoor(const string &pinName, Coor &coor){
     this->pinCoorMap[pinName] = coor;
 }
 
+void Cell::addPinName(const string &pinName){
+    this->pinName.push_back(pinName);
+}
+
 void Cell::setQpinDelay(double QpinDelay){
     this->QpinDelay = QpinDelay;
 }
