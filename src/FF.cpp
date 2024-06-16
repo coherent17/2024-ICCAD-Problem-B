@@ -74,37 +74,3 @@ ostream &operator<<(ostream &out, const FF &ff){
     out << ff.cell << endl;
     return out;
 }
-
-
-//-------------------------Logic FF----------------------//
-logicFF::logicFF(){
-
-}
-
-logicFF::~logicFF(){
-
-}
-
-void logicFF::setInstanceName(const string& s){
-    this->instanceName = s;
-}
-
-void logicFF::setCoor(Coor &c){
-    this->coor = c;
-}
-
-void logicFF::setTimingSlack(double t){
-    this->TimingSlack = t;
-}
-
-const string &logicFF::getInstanceName()const{
-    return this->instanceName;
-}
-
-const Coor& logicFF::getCoor()const{
-    return this->coor;
-} 
-
-double logicFF::getTimingSlack()const{
-    return this->TimingSlack;
-}

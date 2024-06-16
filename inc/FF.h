@@ -46,25 +46,4 @@ public:
 };
 
 
-class logicFF{
-private:
-    string instanceName; // wait to set
-    Coor coor;          // simple x,y location, without technology info, ie Dpin == Qpin
-    double TimingSlack;
-    logicFF *prev, *next;
-    int idx;
-
-public:
-    logicFF();
-    ~logicFF();
-    
-    void setInstanceName(const string&);
-    void setCoor(Coor &);
-    void setTimingSlack(double);
-
-    const string &getInstanceName()const;
-    const Coor &getCoor()const;
-    double getTimingSlack()const;
-};
-
 #endif

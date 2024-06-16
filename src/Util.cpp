@@ -8,6 +8,11 @@ double MangattanDistance(const Coor &p1, const Coor &p2){
     return abs(p1.getX() - p2.getX()) + abs(p1.getY() - p2.getY());
 }
 
+string getNewFFName(const string& prefix, const int& count){
+    assert("number of FF exceed INT_MAX, pls modify counter datatype" && count != INT_MAX);
+    return prefix + to_string(count);
+}
+
 /*
 double HPWL(const Net& n, vector<Coor>& c, Manager& mgr){
     // get the HPWL of current Net

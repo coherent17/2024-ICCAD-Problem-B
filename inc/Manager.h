@@ -34,8 +34,8 @@ public:
     int NumInstances;
     unordered_map<string, FF> FF_Map;
     unordered_map<string, Gate> Gate_Map;
-    vector<logicFF> logicFFs;
-    unordered_map<string, int> logicFF_Map;
+    vector<FF> FF_list; // list of all FF, in one bit without physical info.
+    unordered_map<string, int> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list_index
 
     // Netlist
     int NumNets;

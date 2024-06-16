@@ -46,3 +46,6 @@ $ make check
 
 * update log:
     * Finish debanking, but need logic FF naming rule(?).
+    * Get name function. (in util using counter, prefix = "FF_").
+    * prev FF pointer currently fixed point to largest initial HPWL.
+    * Parser check whether to run preprocessing. (gradient to get all slack positive).

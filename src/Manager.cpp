@@ -70,22 +70,24 @@ void Manager::Build_Logic_FF(){
         for(int i=0;i<cur_ff.getPinCount();i++){
             string pinName = cur_cell.getPinName(i);
             if(pinName[0] == 'D'){ // Assume all ff D pin start with D
-                logicFF temp;
+                FF temp;
                 Coor c = cur_ff.getPinCoor(cur_cell.getPinName(i)) + cur_ff.getCoor();
                 double slack = cur_ff.getTimingSlack(pinName);
+                temp.setInstanceName(getNewFFName("FF_", FF_list.size()));
                 temp.setCoor(c);
-                temp.setTimingSlack(slack);
-                logicFFs.push_back(temp);
-                logicFF_Map[cur_name+'/'+pinName] = logicFFs.size()-1;
+                temp.setTimingSlack(slack, "D0");
+                FF_list.push_back(temp);
+                FF_list_Map[cur_name+'/'+pinName] = FF_list.size()-1;
             }
         }
     }
 
-    /* for checking
-    for(auto& lm : logicFF_Map){
-        logicFF temp = logicFFs[lm.second];
+    cout << "Total number of FF : " << FF_list.size() << endl;
+    /* for debug
+    for(auto& lm : FF_list_Map){
+        FF temp = FF_list[lm.second];
         cout << lm.first << " map to logic ff " << temp.getInstanceName() << endl;
-        cout << "With timing slacke : " << temp.getTimingSlack() << " And Coor : " << temp.getCoor() << endl;
+        cout << "With timing slacke : " << temp.getTimingSlack("D0") << " And Coor : " << temp.getCoor() << endl;
         cout << endl;
     }
     */

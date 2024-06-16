@@ -20,5 +20,6 @@ using namespace std;
 
 double EuclideanDistance(const Coor &, const Coor &);
 double MangattanDistance(const Coor &, const Coor &);
+string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);
 #endif
