@@ -4,10 +4,10 @@ Gamma 0.0000002
 Lambda 10
 DieSize 0 0 23475 23280
 NumInput 2
-Input in 8344 22840
+Input INPUT 8344 22840
 Input clk 0 1970
 NumOutput 1
-Output out 23075 11410
+Output OUTPUT 23075 11410
 FlipFlop 1 SVT_FF_1 741 480 3
 Pin D 152 30 
 Pin CLK 494 30 
@@ -35,9 +35,9 @@ Pin reg3/Q
 Pin reg4/D
 Net out 2
 Pin reg4/Q
-Pin out
+Pin OUTPUT
 Net in 2
-Pin in
+Pin INPUT
 Pin reg1/D
 Net clk 5
 Pin CLK
