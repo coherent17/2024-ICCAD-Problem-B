@@ -13,6 +13,10 @@ string getNewFFName(const string& prefix, const int& count){
     return prefix + to_string(count);
 }
 
+double HPWL(const Coor& c1, const Coor& c2){
+    return abs(c1.x - c2.x) + abs(c1.y - c2.y);
+}
+
 /*
 double HPWL(const Net& n, vector<Coor>& c, Manager& mgr){
     // get the HPWL of current Net

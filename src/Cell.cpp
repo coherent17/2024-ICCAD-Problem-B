@@ -91,12 +91,12 @@ const Coor &Cell::getPinCoor(const string &pinName)const{
     return it->second;
 }
 
-double Cell::getQpinDelay(){
+double Cell::getQpinDelay() const{
     assert(isFF);
     return QpinDelay;
 }
 
-double Cell::getGatePower(){
+double Cell::getGatePower() const{
     assert(isFF);
     return GatePower;
 }
@@ -151,6 +151,22 @@ void Instance::setCell(const Cell &cell){
     this->cell = cell;
 }
 
+void Instance::setLargestInput(Instance* input){
+    this->largetInput = input;
+}
+
+void Instance::setLargestOutput(Instance* output){
+    this->largestOutput = output;
+}
+
+void Instance::addInput(const string& s){
+    this->inputInstance.push_back(s);
+}
+
+void Instance::addOutput(const string& s){
+    this->outputInstance.push_back(s);
+}
+
 // getter
 const string &Instance::getInstanceName()const{
     return instanceName;
@@ -183,4 +199,20 @@ int Instance::getPinCount()const{
 
 const Coor &Instance::getPinCoor(const string &pinName)const{
     return cell.getPinCoor(pinName);
+}
+
+const Instance* Instance::getLargestInput()const{
+    return (this->largetInput);
+}
+
+const Instance* Instance::getLargestOutput()const{
+    return (this->largestOutput);
+}
+
+const vector<string>& Instance::getInput()const{
+    return inputInstance;
+}
+
+const vector<string>& Instance::getOutput()const{
+    return outputInstance;
 }

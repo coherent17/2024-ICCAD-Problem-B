@@ -9,10 +9,6 @@ class FF : public Instance{
 private:
     unordered_map<string, double> TimingSlack;
 
-
-    // for circuit gragh
-    vector<string> inputIO; // contain all input cells/FFs/IOs
-    vector<string> outputIO; // contain all output cells/FFs/IOs
     // for find optimal location
     Cell* prev_cell;
     FF* prev_ff;

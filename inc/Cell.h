@@ -41,8 +41,8 @@ public:
     int getPinCount()const;
     const string &getPinName(const int&)const;
     const Coor &getPinCoor(const string &)const;
-    double getQpinDelay();
-    double getGatePower();
+    double getQpinDelay() const;
+    double getGatePower() const;
 
     friend ostream &operator<<(ostream &, const Cell &);
 };
@@ -54,9 +54,12 @@ protected:
     Coor coor;
     Cell cell;
 
+    Instance* largetInput;
+    Instance* largestOutput;
+
     // for circuit gragh
-    vector<string> inputIO; // contain all input cells/FFs/IOs
-    vector<string> outputIO; // contain all output cells/FFs/IOs
+    vector<string> inputInstance; // contain all input cells/FFs/IOs
+    vector<string> outputInstance; // contain all output cells/FFs/IOs
 
 public:
     Instance();
@@ -67,6 +70,10 @@ public:
     void setCellName(const string &);
     void setCoor(Coor &);
     void setCell(const Cell &);
+    void setLargestInput(Instance*);
+    void setLargestOutput(Instance*);
+    void addInput(const string&);
+    void addOutput(const string&);
 
     // getter
     const string &getInstanceName()const;
@@ -77,6 +84,10 @@ public:
     Coor getCoor()const;
     int getPinCount()const;
     const Coor &getPinCoor(const string &)const;
+    const Instance* getLargestInput() const;
+    const Instance* getLargestOutput() const;
+    const vector<string>& getInput() const;
+    const vector<string>& getOutput() const;
 };
 
 #endif

@@ -48,6 +48,10 @@ void Parser::readIOCoordinate(Manager &mgr){
     for(int i = 0; i < mgr.NumInput; i++){
         fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
         mgr.Input_Map[pinName] = Coor(pin_coor_x, pin_coor_y);
+        Instance input;
+        input.setInstanceName(pinName);
+        input.setCoor(mgr.Input_Map[pinName]);
+        mgr.IO_Map[pinName] = input;
     }
 
     // Output pin
@@ -55,6 +59,10 @@ void Parser::readIOCoordinate(Manager &mgr){
     for(int i = 0; i < mgr.NumOutput; i++){
         fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
         mgr.Output_Map[pinName] = Coor(pin_coor_x, pin_coor_y);
+        Instance output;
+        output.setInstanceName(pinName);
+        output.setCoor(mgr.Output_Map[pinName]);
+        mgr.IO_Map[pinName] = output;
     }
 }
 
@@ -140,6 +148,7 @@ void Parser::readNet(Manager &mgr){
             }
             else{
                 pin.setPinName(pinName);
+                pin.setInstanceName(pinName);
             }
             net.addPins(pin);
         }
