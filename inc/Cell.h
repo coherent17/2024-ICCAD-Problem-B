@@ -47,4 +47,36 @@ public:
     friend ostream &operator<<(ostream &, const Cell &);
 };
 
+class Instance{
+protected:
+    string instanceName;
+    string cellName;
+    Coor coor;
+    Cell cell;
+
+    // for circuit gragh
+    vector<string> inputIO; // contain all input cells/FFs/IOs
+    vector<string> outputIO; // contain all output cells/FFs/IOs
+
+public:
+    Instance();
+    ~Instance();
+
+    // setter
+    void setInstanceName(const string &);
+    void setCellName(const string &);
+    void setCoor(Coor &);
+    void setCell(const Cell &);
+
+    // getter
+    const string &getInstanceName()const;
+    const string &getCellName()const;
+    const Cell& getCell()const;
+    double getW()const;
+    double getH()const;
+    Coor getCoor()const;
+    int getPinCount()const;
+    const Coor &getPinCoor(const string &)const;
+};
+
 #endif

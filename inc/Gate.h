@@ -5,31 +5,12 @@
 
 class Cell;
 
-class Gate{
+class Gate : public Instance{
 private:
-    string instanceName;
-    string cellName;
-    Coor coor;
-    Cell cell;
 
 public:
     Gate();
     ~Gate();
-
-    // setter
-    void setInstanceName(const string &);
-    void setCellName(const string &);
-    void setCoor(Coor &);
-    void setCell(const Cell &);
-
-    // getter
-    const string &getInstanceName()const;
-    const string &getCellName()const;
-    double getW()const;
-    double getH()const;
-    Coor getCoor(){return this->coor;}
-    int getPinCount()const;
-    const Coor &getPinCoor(const string &)const;
 
     friend ostream &operator<<(ostream &, const Gate &);
 };

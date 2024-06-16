@@ -60,6 +60,7 @@ const string &Cell::getCellName()const{
     return cellName;
 }
 
+
 bool Cell::getisFF()const{
     return isFF;
 }
@@ -123,4 +124,63 @@ ostream &operator<<(ostream &out, const Cell &c){
         out << "\t" << pair.first << " " << pair.second << endl;
     }
     return out;
+}
+
+Instance::Instance(){
+    ;
+}
+
+Instance::~Instance(){
+    ;
+}
+
+// setter
+void Instance::setInstanceName(const string &instanceName){
+    this->instanceName = instanceName;
+}
+
+void Instance::setCellName(const string &cellName){
+    this->cellName = cellName;
+}
+
+void Instance::setCoor(Coor &coor){
+    this->coor = coor;
+}
+
+void Instance::setCell(const Cell &cell){
+    this->cell = cell;
+}
+
+// getter
+const string &Instance::getInstanceName()const{
+    return instanceName;
+}
+
+const string &Instance::getCellName()const{
+    return cellName;
+}
+
+const Cell& Instance::getCell()const{
+    return cell;
+}
+
+double Instance::getW()const{
+    return cell.getW();
+}
+
+double Instance::getH()const{
+    return cell.getH();
+}
+
+
+Coor Instance::getCoor()const{
+    return coor;
+}
+
+int Instance::getPinCount()const{
+    return cell.getPinCount();
+}
+
+const Coor &Instance::getPinCoor(const string &pinName)const{
+    return cell.getPinCoor(pinName);
 }
