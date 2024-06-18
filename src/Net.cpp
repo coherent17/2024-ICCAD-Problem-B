@@ -30,6 +30,10 @@ int Net::getNumPins()const{
     return this->numPins;
 }
 
+const Pin& Net::getPin(int i)const{
+    return this->pins[i];
+}
+
 ostream &operator<<(ostream &out, const Net &net){
     out << "NetName: " << net.netName << endl;
     out << "NumPins: " << net.numPins << endl;

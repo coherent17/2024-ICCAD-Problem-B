@@ -40,3 +40,10 @@ std::ostream &operator<<(std::ostream &out, const Coor &coor){
     out << "(" << coor.x << ", " << coor.y << ")";
     return out;
 }
+
+Coor Coor::operator+(const Coor& c) const{
+    Coor temp;
+    temp.x = this->x + c.x;
+    temp.y = this->y + c.y;
+    return temp;
+}

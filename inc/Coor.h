@@ -5,7 +5,7 @@
 using namespace std;
 
 class Coor{
-private:
+public:
     double x;
     double y;
 
@@ -23,6 +23,9 @@ public:
     double getX()const;
     double getY()const;
     friend ostream &operator<<(ostream &, const Coor &);
+
+    // 
+    Coor operator+(const Coor&) const;
 };
 
 #endif

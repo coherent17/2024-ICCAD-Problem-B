@@ -10,7 +10,7 @@
 #include "Die.h"
 
 class Manager{
-private:
+public:
     // cost function weight
     double alpha;
     double beta;
@@ -26,6 +26,7 @@ private:
     int NumOutput;
     unordered_map<string, Coor> Input_Map;
     unordered_map<string, Coor> Output_Map;
+    unordered_map<string, Instance> IO_Map;
 
     // Cell library
     Cell_Library cell_library;
@@ -34,6 +35,8 @@ private:
     int NumInstances;
     unordered_map<string, FF> FF_Map;
     unordered_map<string, Gate> Gate_Map;
+    unordered_map<string, FF> FF_list; // list of all FF, in one bit without physical info.
+    unordered_map<string, string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
 
     // Netlist
     int NumNets;
@@ -46,6 +49,9 @@ public:
 
     void Read_InputFile(const string &);
     void Technology_Mapping();
+    void Build_Logic_FF();
+    void Build_Circuit_Gragh();
+    void optimal_FF_location();
     void print();
     friend class Parser;
 

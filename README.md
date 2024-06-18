@@ -42,3 +42,14 @@ $ make check
 0515:
     *   Net structure? Should be convenient & efficient for calculating the slack
     *   Negative slack elimination??
+
+
+* update log:
+    * Finish debanking, but need logic FF naming rule(?). -> solved
+    * Get name function. (in util using counter, prefix = "FF_"). -> solved
+    * prev FF pointer currently fixed point to largest initial HPWL. -> solved
+    * Parser check whether to run preprocessing. (gradient to get all slack positive).
+
+* log 06/17:
+    * Output floating problem.
+    * FF input doesn't come from IO or other FF, ie come from std cell and this std cell is floating input.

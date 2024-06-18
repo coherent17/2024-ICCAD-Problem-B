@@ -43,6 +43,10 @@ void Cell::addPinCoor(const string &pinName, Coor &coor){
     this->pinCoorMap[pinName] = coor;
 }
 
+void Cell::addPinName(const string &pinName){
+    this->pinName.push_back(pinName);
+}
+
 void Cell::setQpinDelay(double QpinDelay){
     this->QpinDelay = QpinDelay;
 }
@@ -55,6 +59,7 @@ void Cell::setGatePower(double GatePower){
 const string &Cell::getCellName()const{
     return cellName;
 }
+
 
 bool Cell::getisFF()const{
     return isFF;
@@ -76,18 +81,22 @@ int Cell::getPinCount()const{
     return pinCount;
 }
 
+const string &Cell::getPinName(const int& i) const{
+    return this->pinName[i];
+}
+
 const Coor &Cell::getPinCoor(const string &pinName)const{
     auto it = pinCoorMap.find(pinName);
     assert(it != pinCoorMap.end());
     return it->second;
 }
 
-double Cell::getQpinDelay(){
+double Cell::getQpinDelay() const{
     assert(isFF);
     return QpinDelay;
 }
 
-double Cell::getGatePower(){
+double Cell::getGatePower() const{
     assert(isFF);
     return GatePower;
 }
@@ -115,4 +124,95 @@ ostream &operator<<(ostream &out, const Cell &c){
         out << "\t" << pair.first << " " << pair.second << endl;
     }
     return out;
+}
+
+Instance::Instance(){
+    ;
+}
+
+Instance::~Instance(){
+    ;
+}
+
+// setter
+void Instance::setInstanceName(const string &instanceName){
+    this->instanceName = instanceName;
+}
+
+void Instance::setCellName(const string &cellName){
+    this->cellName = cellName;
+}
+
+void Instance::setCoor(Coor &coor){
+    this->coor = coor;
+}
+
+void Instance::setCell(const Cell &cell){
+    this->cell = cell;
+}
+
+void Instance::setLargestInput(Instance* input){
+    this->largetInput = input;
+}
+
+void Instance::setLargestOutput(Instance* output){
+    this->largestOutput = output;
+}
+
+void Instance::addInput(const string& s){
+    this->inputInstance.push_back(s);
+}
+
+void Instance::addOutput(const string& s){
+    this->outputInstance.push_back(s);
+}
+
+// getter
+const string &Instance::getInstanceName()const{
+    return instanceName;
+}
+
+const string &Instance::getCellName()const{
+    return cellName;
+}
+
+const Cell& Instance::getCell()const{
+    return cell;
+}
+
+double Instance::getW()const{
+    return cell.getW();
+}
+
+double Instance::getH()const{
+    return cell.getH();
+}
+
+
+Coor Instance::getCoor()const{
+    return coor;
+}
+
+int Instance::getPinCount()const{
+    return cell.getPinCount();
+}
+
+const Coor &Instance::getPinCoor(const string &pinName)const{
+    return cell.getPinCoor(pinName);
+}
+
+const Instance* Instance::getLargestInput()const{
+    return (this->largetInput);
+}
+
+const Instance* Instance::getLargestOutput()const{
+    return (this->largestOutput);
+}
+
+const vector<string>& Instance::getInput()const{
+    return inputInstance;
+}
+
+const vector<string>& Instance::getOutput()const{
+    return outputInstance;
 }
