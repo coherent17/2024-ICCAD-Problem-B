@@ -59,5 +59,9 @@ run3:
 check:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/sample.txt
 
+cppcheck:
+	cppcheck --enable=all --inconclusive --std=c++11 --language=c++ --suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction --suppress=unreadVariable --suppress=unmatchedSuppression -I$(INCDIR) $(SRCDIR) main.cpp $(INCDIR)/*.h
+
+
 clean:
 	rm -rf $(OBJDIR) $(BIN)
