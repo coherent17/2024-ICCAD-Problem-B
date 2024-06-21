@@ -1,39 +1,35 @@
 #include "Cell_Library.h"
 
-Cell_Library::Cell_Library(){
-    ;
-}
+Cell_Library::Cell_Library(){}
 
 Cell_Library::~Cell_Library(){
-    ;
-}
-
-void Cell_Library::addCell(const string &cellName, const Cell &c){
-    Cell_Map[cellName] = c;
-}
-
-Cell &Cell_Library::getCellRef(const string &cellName){
-    return Cell_Map[cellName];
-}
-
-Cell Cell_Library::getCellCopy(const string &cellName)const{
-    auto it = Cell_Map.find(cellName);
-    if (it != Cell_Map.end()) {
-        return it->second; // Return a copy of the found cell
-    } else {
-        // Handle case where the cell name is not found
-        // For now, returning a default-constructed Cell
-        return Cell();
+    for(auto &pair : cellMap){
+        delete pair.second;
     }
 }
 
-bool Cell_Library::isFF(const string &cellName){
-    return Cell_Map[cellName].getisFF();
+// Setter
+void Cell_Library::addCell(const std::string &cellName, Cell *cell){
+    cellMap[cellName] = cell;
 }
 
-ostream &operator<<(ostream &out, const Cell_Library &c){
-    for(const auto &pair : c.Cell_Map){
-        out << pair.second << endl;
+// Getter
+Cell *const Cell_Library::getCell(const std::string &cellName)const{
+    auto it = cellMap.find(cellName);
+    if (it == cellMap.end()) {
+        throw std::out_of_range("Cell name not found");
     }
-    return out;
+    return it->second;
+}
+
+bool Cell_Library::isFF(const std::string &cellName){
+    return (cellMap[cellName]->getType() == Cell_Type::FF);
+}
+
+std::ostream &operator<<(std::ostream &os, const Cell_Library &cell_library){
+    os << "Cell Library: \n";
+    for (const auto& pair : cell_library.cellMap) {
+        os << *(pair.second) << "\n";
+    }
+    return os;
 }

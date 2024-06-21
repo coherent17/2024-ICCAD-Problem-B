@@ -1,15 +1,11 @@
 #include "Net.h"
 
-Net::Net(){
-    ;
-}
+Net::Net() : netName(""), numPins(0){}
 
-Net::~Net(){
-    ;
-}
+Net::~Net(){}
 
-// setter
-void Net::setNetName(const string &netName){
+// Setters
+void Net::setNetName(const std::string &netName){
     this->netName = netName;
 }
 
@@ -21,8 +17,8 @@ void Net::addPins(const Pin &pin){
     this->pins.push_back(pin);
 }
 
-// getter
-const string &Net::getNetName()const{
+// Getters
+const std::string &Net::getNetName()const{
     return this->netName;
 }
 
@@ -30,16 +26,16 @@ int Net::getNumPins()const{
     return this->numPins;
 }
 
-const Pin& Net::getPin(int i)const{
-    return this->pins[i];
+const Pin &Net::getPin(int pinIdx)const{
+    return this->pins[pinIdx];
 }
 
-ostream &operator<<(ostream &out, const Net &net){
-    out << "NetName: " << net.netName << endl;
-    out << "NumPins: " << net.numPins << endl;
+std::ostream &operator<<(std::ostream &os, const Net &net){
+    os << "NetName: " << net.netName << std::endl;
+    os << "NumPins: " << net.numPins << std::endl;
     for(size_t i = 0; i < net.pins.size(); i++){
-        out << net.pins[i];
+        os << net.pins[i];
     }
-    out << endl;
-    return out;
+    os << std::endl;
+    return os;
 }

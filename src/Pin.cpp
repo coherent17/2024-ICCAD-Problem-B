@@ -1,15 +1,11 @@
 #include "Pin.h"
 
-Pin::Pin(){
-    ;
-}
+Pin::Pin() : pinName(""), isIOPin(false), instanceName(""){}
 
-Pin::~Pin(){
-    ;
-}
+Pin::~Pin(){}
 
-// setter
-void Pin::setPinName(const string &pinName){
+// Setters
+void Pin::setPinName(const std::string &pinName){
     this->pinName = pinName;
 }
 
@@ -17,12 +13,12 @@ void Pin::setIsIOPin(bool isIOPin){
     this->isIOPin = isIOPin;
 }
 
-void Pin::setInstanceName(const string &instanceName){
+void Pin::setInstanceName(const std::string &instanceName){
     this->instanceName = instanceName;
 }
 
-// getter
-const string &Pin::getPinName()const{
+// Getters
+const std::string &Pin::getPinName()const{
     return this->pinName;
 }
 
@@ -30,16 +26,16 @@ bool Pin::getIsIOPin()const{
     return this->isIOPin;
 }
 
-const string &Pin::getInstanceName()const{
+const std::string &Pin::getInstanceName()const{
     return instanceName;
 }
 
-ostream &operator<<(ostream &out, const Pin &pin){
+std::ostream &operator<<(std::ostream &os, const Pin &pin){
     if(!pin.isIOPin){
-        out << pin.instanceName << "/" << pin.pinName << " ";
+        os << pin.instanceName << "/" << pin.pinName << " ";
     }
     else{
-        out << pin.pinName << " ";
+        os << pin.pinName << " ";
     }
-    return out;
+    return os;
 }

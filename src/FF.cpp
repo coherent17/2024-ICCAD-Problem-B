@@ -1,29 +1,28 @@
 #include "FF.h"
 
-FF::FF(){
-    ;
+FF::FF(){}
+
+FF::~FF(){}
+
+// Setter
+void FF::setTimingSlack(const std::string &pinName, double slack){
+    TimingSlack[pinName] = slack;
 }
 
-FF::~FF(){
-    ;
+// Getter
+double FF::getTimingSlack(const std::string &pinName)const{
+    auto it = TimingSlack.find(pinName);
+    if (it == TimingSlack.end()) {
+        throw std::out_of_range("Pin name not found");
+    }
+    return it->second;
 }
 
-// setter
-
-void FF::setTimingSlack(double TimingSlack, const string& pinName){
-    this->TimingSlack[pinName] = TimingSlack;
-}
-
-// getter
-double FF::getTimingSlack(const string& pinName){
-    return TimingSlack[pinName];
-}
-
-ostream &operator<<(ostream &out, const FF &ff){
-    out << "Instance Name: " << ff.instanceName << endl;
-    out << "Coor: " << ff.coor << endl;
-    for(auto& s : ff.TimingSlack)
-        out << "Pin: " << s.first << "TimingSlack: " << s.second << endl;
-    out << ff.cell << endl;
-    return out;
+std::ostream &operator<<(std::ostream &os, const FF &ff){
+    os << "Instance Name: " << ff.instanceName << std::endl;
+    os << "Coor: " << ff.coor << std::endl;
+    os << "CellName: " << ff.getCell()->getCellName() << std::endl;
+    for(auto &pair : ff.TimingSlack)
+        os << "Pin[" << pair.first << "] Slack: " << pair.second << std::endl;
+    return os;
 }

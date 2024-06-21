@@ -1,26 +1,25 @@
 #include "Cell.h"
 
 // constructor & destructor
-Cell::Cell(){
-    this->bits = 0;
-    this->cellName = "";
-    this->isFF = false;
-    this->w = 0;
-    this->h = 0;
-    this->pinCount = 0;
-}
+Cell::Cell() : 
+    cellName(""), 
+    type(Cell_Type::UNSET), 
+    bits(0), 
+    w(0), 
+    h(0), 
+    pinCount(0), 
+    QpinDelay(0), 
+    GatePower(0){}
 
-Cell::~Cell(){
-    ;
-}
+Cell::~Cell(){}
 
-// setter
-void Cell::setCellName(const string &cellName){
+// Setters
+void Cell::setCellName(const std::string &cellName){
     this->cellName = cellName;
 }
 
-void Cell::setIsFF(bool isFF){
-    this->isFF = isFF;
+void Cell::setType(Cell_Type type){
+    this->type = type;
 }
 
 void Cell::setBits(int bits){
@@ -39,33 +38,33 @@ void Cell::setPinCount(int pinCount){
     this->pinCount = pinCount;
 }
 
-void Cell::addPinCoor(const string &pinName, Coor &coor){
+void Cell::addPinCoor(const std::string &pinName, const Coor &coor){
     this->pinCoorMap[pinName] = coor;
 }
 
-void Cell::addPinName(const string &pinName){
-    this->pinName.push_back(pinName);
+void Cell::addPinName(const std::string &pinName){
+    this->pinNames.push_back(pinName);
 }
 
-void Cell::setQpinDelay(double QpinDelay){
-    this->QpinDelay = QpinDelay;
+void Cell::setQpinDelay(double delay){
+    this->QpinDelay = delay;
 }
 
-void Cell::setGatePower(double GatePower){
-    this->GatePower = GatePower;
+
+void Cell::setGatePower(double power){
+    this->GatePower = power;
 }
 
-// getter
-const string &Cell::getCellName()const{
+// Getters
+const std::string &Cell::getCellName()const{
     return cellName;
 }
 
-
-bool Cell::getisFF()const{
-    return isFF;
+Cell_Type Cell::getType() const {
+    return type;
 }
 
-int Cell::getBit()const{
+int Cell::getBits()const{
     return bits;
 }
 
@@ -81,138 +80,55 @@ int Cell::getPinCount()const{
     return pinCount;
 }
 
-const string &Cell::getPinName(const int& i) const{
-    return this->pinName[i];
+const std::string &Cell::getPinName(size_t pinIdx) const{
+    if(pinIdx >= pinNames.size()) {
+        throw std::out_of_range("Pin index out of range");
+    }
+    return pinNames[pinIdx];
 }
 
-const Coor &Cell::getPinCoor(const string &pinName)const{
+const Coor &Cell::getPinCoor(const std::string &pinName)const{
     auto it = pinCoorMap.find(pinName);
-    assert(it != pinCoorMap.end());
+    if (it == pinCoorMap.end()) {
+        throw std::out_of_range("Pin name not found");
+    }
     return it->second;
 }
 
 double Cell::getQpinDelay() const{
-    assert(isFF);
+    assert(type == Cell_Type::FF && "Not FF access");
     return QpinDelay;
 }
 
 double Cell::getGatePower() const{
-    assert(isFF);
+    assert(type == Cell_Type::FF && "Not FF access");
     return GatePower;
 }
 
-ostream &operator<<(ostream &out, const Cell &c){
-    if(c.isFF){
-        out << "CellName: " << c.cellName << endl;
-        out << "IsFF: " << c.isFF << endl;
-        out << "Number of bits: " << c.bits << endl;
-        out << "Width: " << c.w << endl;
-        out << "Height: " << c.h << endl;
-        out << "Pin Count: " << c.pinCount << endl;
-        out << "QpinDelay: " << c.QpinDelay << endl;
-        out << "GatePower: " << c.GatePower << endl;
+std::ostream &operator<<(std::ostream &os, const Cell &cell){
+    if(cell.type == Cell_Type::FF){
+        os << "CellName: " << cell.cellName << std::endl;
+        os << "Type: FF" << std::endl;
+        os << "Number of bits: " << cell.bits << std::endl;
+        os << "Width: " << cell.w << std::endl;
+        os << "Height: " << cell.h << std::endl;
+        os << "Pin Count: " << cell.pinCount << std::endl;
+        os << "QpinDelay: " << cell.QpinDelay << std::endl;
+        os << "GatePower: " << cell.GatePower << std::endl;
+    }
+    else if(cell.type == Cell_Type::Gate){
+        os << "CellName: " << cell.cellName << std::endl;
+        os << "Type: Gate" << std::endl;
+        os << "Width: " << cell.w << std::endl;
+        os << "Height: " << cell.h << std::endl;
+        os << "Pin Count: " << cell.pinCount << std::endl;
     }
     else{
-        out << "CellName: " << c.cellName << endl;
-        out << "IsFF: " << c.isFF << endl;
-        out << "Width: " << c.w << endl;
-        out << "Height: " << c.h << endl;
-        out << "Pin Count: " << c.pinCount << endl;
+        os << "[UNSET Cell Detected!]" << std::endl;
     }
 
-    for(const auto &pair : c.pinCoorMap){
-        out << "\t" << pair.first << " " << pair.second << endl;
+    for(const auto &pair : cell.pinCoorMap){
+        os << "\t" << pair.first << " " << pair.second << std::endl;
     }
-    return out;
-}
-
-Instance::Instance(){
-    ;
-}
-
-Instance::~Instance(){
-    ;
-}
-
-// setter
-void Instance::setInstanceName(const string &instanceName){
-    this->instanceName = instanceName;
-}
-
-void Instance::setCellName(const string &cellName){
-    this->cellName = cellName;
-}
-
-void Instance::setCoor(Coor &coor){
-    this->coor = coor;
-}
-
-void Instance::setCell(const Cell &cell){
-    this->cell = cell;
-}
-
-void Instance::setLargestInput(Instance* input){
-    this->largetInput = input;
-}
-
-void Instance::setLargestOutput(Instance* output){
-    this->largestOutput = output;
-}
-
-void Instance::addInput(const string& s){
-    this->inputInstance.push_back(s);
-}
-
-void Instance::addOutput(const string& s){
-    this->outputInstance.push_back(s);
-}
-
-// getter
-const string &Instance::getInstanceName()const{
-    return instanceName;
-}
-
-const string &Instance::getCellName()const{
-    return cellName;
-}
-
-const Cell& Instance::getCell()const{
-    return cell;
-}
-
-double Instance::getW()const{
-    return cell.getW();
-}
-
-double Instance::getH()const{
-    return cell.getH();
-}
-
-
-Coor Instance::getCoor()const{
-    return coor;
-}
-
-int Instance::getPinCount()const{
-    return cell.getPinCount();
-}
-
-const Coor &Instance::getPinCoor(const string &pinName)const{
-    return cell.getPinCoor(pinName);
-}
-
-const Instance* Instance::getLargestInput()const{
-    return (this->largetInput);
-}
-
-const Instance* Instance::getLargestOutput()const{
-    return (this->largestOutput);
-}
-
-const vector<string>& Instance::getInput()const{
-    return inputInstance;
-}
-
-const vector<string>& Instance::getOutput()const{
-    return outputInstance;
+    return os;
 }

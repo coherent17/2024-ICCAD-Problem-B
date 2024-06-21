@@ -1,93 +1,63 @@
 #ifndef _CELL_H_
 #define _CELL_H_
 
-#include "Util.h"
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <cassert>
+#include "Coor.h"
 
+enum class Cell_Type{
+    UNSET = 0,
+    FF = 1,
+    Gate = 2
+};
+
+// The cell will be used in cell_library
 class Cell{
 private:
-    string cellName;
-    bool isFF;
+    std::string cellName;
+    Cell_Type type;
     int bits;
     double w;
     double h;
     int pinCount;
-    vector<string> pinName;
-    unordered_map<string, Coor> pinCoorMap;
+    std::vector<std::string> pinNames;
+    std::unordered_map<std::string, Coor> pinCoorMap;
     double QpinDelay;
     double GatePower;
 
 public:
     Cell();
-    ~Cell();
+    virtual ~Cell();
 
-    // setter
-    void setCellName(const string &);
-    void setIsFF(bool);
-    void setBits(int);
-    void setW(double);
-    void setH(double);
-    void setPinCount(int);
-    void addPinCoor(const string &, Coor &);
-    void addPinName(const string &);
-    void setQpinDelay(double);
-    void setGatePower(double);
+    // Setters
+    void setCellName(const std::string &cellName);
+    void setType(Cell_Type type);
+    void setBits(int bits);
+    void setW(double w);
+    void setH(double h);
+    void setPinCount(int pinCount);
+    void addPinCoor(const std::string &pinName, const Coor &coor);
+    void addPinName(const std::string &pinName);
+    void setQpinDelay(double delay);
+    void setGatePower(double power);
 
-    // getter
-    const string &getCellName()const;
-    bool getisFF()const;
-    int getBit()const;
+    // Getters
+    const std::string &getCellName()const;
+    Cell_Type getType()const;
+    int getBits()const;
     double getW()const;
     double getH()const;
     int getPinCount()const;
-    const string &getPinName(const int&)const;
-    const Coor &getPinCoor(const string &)const;
+    const std::string &getPinName(size_t pinIdx)const;
+    const Coor &getPinCoor(const std::string &pinName)const;
     double getQpinDelay() const;
     double getGatePower() const;
 
-    friend ostream &operator<<(ostream &, const Cell &);
-};
-
-class Instance{
-protected:
-    string instanceName;
-    string cellName;
-    Coor coor;
-    Cell cell;
-
-    Instance* largetInput;
-    Instance* largestOutput;
-
-    // for circuit gragh
-    vector<string> inputInstance; // contain all input cells/FFs/IOs
-    vector<string> outputInstance; // contain all output cells/FFs/IOs
-
-public:
-    Instance();
-    ~Instance();
-
-    // setter
-    void setInstanceName(const string &);
-    void setCellName(const string &);
-    void setCoor(Coor &);
-    void setCell(const Cell &);
-    void setLargestInput(Instance*);
-    void setLargestOutput(Instance*);
-    void addInput(const string&);
-    void addOutput(const string&);
-
-    // getter
-    const string &getInstanceName()const;
-    const string &getCellName()const;
-    const Cell& getCell()const;
-    double getW()const;
-    double getH()const;
-    Coor getCoor()const;
-    int getPinCount()const;
-    const Coor &getPinCoor(const string &)const;
-    const Instance* getLargestInput() const;
-    const Instance* getLargestOutput() const;
-    const vector<string>& getInput() const;
-    const vector<string>& getOutput() const;
+    // Stream Insertion
+    friend std::ostream &operator<<(std::ostream &os, const Cell &cell);
 };
 
 #endif

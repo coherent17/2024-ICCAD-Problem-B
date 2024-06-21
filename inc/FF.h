@@ -1,31 +1,34 @@
 #ifndef _FF_H_
 #define _FF_H_
 
-#include "Cell.h"
-
-class Cell;
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include "Instance.h"
 
 class FF : public Instance{
 private:
-    unordered_map<string, double> TimingSlack;
+    std::unordered_map<std::string, double> TimingSlack;
 
-    // for find optimal location
-    Cell* prev_cell;
-    FF* prev_ff;
+    // // for find optimal location
+    // Cell* prev_cell;
+    // FF* prev_ff;
+    // int idx;
 
-    int idx;
 public:
     FF();
     ~FF();
 
-    // setter
-    void setTimingSlack(double, const string&);
-    void setIdx(int i){this->idx = i;}
-    // getter
-    int getIdx(){return this->idx;}
-    double getTimingSlack(const string&);
+    // Setters
+    void setTimingSlack(const std::string &pinName, double slack);
+    //void setIdx(int i){this->idx = i;}
+    
+    // Getter
+    double getTimingSlack(const std::string &pinName)const;
+    //int getIdx(){return this->idx;}
+    
 
-    friend ostream &operator<<(ostream &, const FF &);
+    friend std::ostream &operator<<(std::ostream &os, const FF &ff);
 };
 
 

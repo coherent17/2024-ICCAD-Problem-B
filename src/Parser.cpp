@@ -1,6 +1,6 @@
 #include "Parser.h"
 
-Parser::Parser(const string &filename){
+Parser::Parser(const std::string &filename){
     fin.open(filename.c_str());
     assert(fin.good());
 }
@@ -24,23 +24,21 @@ void Parser::parse(Manager &mgr){
 }
 
 void Parser::readWeight(Manager &mgr){
-    string _;
+    std::string _;
     fin >> _ >> mgr.alpha >> _ >> mgr.beta >> _ >> mgr.gamma >> _ >> mgr.lambda;
 }
 
 void Parser::readDieBorder(Manager &mgr){
-    string _;
+    std::string _;
     double origin_x, origin_y, border_x, border_y;
     fin >> _ >> origin_x >> origin_y >> border_x >> border_y;
-    Coor DieOrigin = Coor(origin_x, origin_y);
-    Coor DieBorder = Coor(border_x, border_y);
-    mgr.die.setDieOrigin(DieOrigin);
-    mgr.die.setDieBorder(DieBorder);
+    mgr.die.setDieOrigin(Coor(origin_x, origin_y));
+    mgr.die.setDieBorder(Coor(border_x, border_y));
 }
 
 void Parser::readIOCoordinate(Manager &mgr){
-    string _;
-    string pinName;
+    std::string _;
+    std::string pinName;
     double pin_coor_x, pin_coor_y;
 
     // Input pin
@@ -67,34 +65,37 @@ void Parser::readIOCoordinate(Manager &mgr){
 }
 
 void Parser::readCellLibrary(Manager &mgr){
-    string cellType;
+    std::string cellType;
     while(fin >> cellType){
-        Cell c;
+        Cell *c = new Cell();
         int bits = 0;
         int pinCount;
-        string cellName;
+        std::string cellName;
         double w, h;
         if(cellType == "FlipFlop"){
             fin >> bits >> cellName >> w >> h >> pinCount;
-            c.setIsFF(true);
+            c->setType(Cell_Type::FF);
         }
         else if(cellType == "Gate"){
             fin >> cellName >> w >> h >> pinCount;
-            c.setIsFF(false);
+            c->setType(Cell_Type::Gate);
         }
-        else return;
-        c.setBits(bits);
-        c.setCellName(cellName);
-        c.setW(w);
-        c.setH(h);
-        c.setPinCount(pinCount);
-        string _, pinName;
+        else{
+            delete c;
+            return;
+        };
+        c->setBits(bits);
+        c->setCellName(cellName);
+        c->setW(w);
+        c->setH(h);
+        c->setPinCount(pinCount);
+        std::string _, pinName;
         double pin_coor_x, pin_coor_y;
         for(int i = 0; i < pinCount; i++){
             fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
             Coor coor = Coor(pin_coor_x, pin_coor_y);
-            c.addPinName(pinName);
-            c.addPinCoor(pinName, coor);
+            c->addPinName(pinName);
+            c->addPinCoor(pinName, coor);
         }
         mgr.cell_library.addCell(cellName, c);
     }
@@ -102,7 +103,7 @@ void Parser::readCellLibrary(Manager &mgr){
 
 void Parser::readInstance(Manager &mgr){
     fin >> mgr.NumInstances;
-    string _, instanceName, cellType;
+    std::string _, instanceName, cellType;
     double cell_coor_x, cell_coor_y;
     Coor coor;
     for(int i = 0; i < mgr.NumInstances; i++){
@@ -113,7 +114,7 @@ void Parser::readInstance(Manager &mgr){
             ff.setInstanceName(instanceName);
             ff.setCellName(cellType);
             ff.setCoor(coor);
-            //ff.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            ff.setCell(mgr.cell_library.getCell(cellType));
             mgr.FF_Map[instanceName] = ff;
         }
         else{
@@ -121,25 +122,25 @@ void Parser::readInstance(Manager &mgr){
             gate.setInstanceName(instanceName);
             gate.setCellName(cellType);
             gate.setCoor(coor);
-            //gate.setCellLibraryPtr(mgr.cell_library.getCell(cellType));
+            gate.setCell(mgr.cell_library.getCell(cellType));
             mgr.Gate_Map[instanceName] = gate;
         }
     }
 }
 
 void Parser::readNet(Manager &mgr){
-    string _;
+    std::string _;
     fin >> _ >> mgr.NumNets;
     for(int i = 0; i < mgr.NumNets; i++){
         Net net;
-        string netName;
+        std::string netName;
         int numPins;
         fin >> _ >> netName >> numPins;
         net.setNetName(netName);
         net.setNumPins(numPins);
         for(int j = 0; j < numPins; j++){
             Pin pin;
-            string pinName;
+            std::string pinName;
             fin >> _ >> pinName;
             pin.setIsIOPin(mgr.isIOPin(pinName));
             if(!mgr.isIOPin(pinName)){
@@ -157,7 +158,7 @@ void Parser::readNet(Manager &mgr){
 }
 
 void Parser::readBin(Manager &mgr){
-    string _;
+    std::string _;
     double BinWidth, BinHeight, BinMaxUtil;
     fin >> _ >> BinWidth;
     fin >> _ >> BinHeight;
@@ -168,7 +169,7 @@ void Parser::readBin(Manager &mgr){
 }
 
 void Parser::readPlacementRows(Manager &mgr){
-    string _;
+    std::string _;
     while(fin >> _){
         if(_ != "PlacementRows"){
             break;
@@ -187,7 +188,7 @@ void Parser::readPlacementRows(Manager &mgr){
 }
 
 void Parser::readQpinDelay(Manager &mgr){
-    string _, cellName;
+    std::string _, cellName;
     double QpinDelay;
     fin >> mgr.DisplacementDelay;
     while(fin >> _){
@@ -195,45 +196,45 @@ void Parser::readQpinDelay(Manager &mgr){
             break;
         }
         fin >> cellName >> QpinDelay;
-        mgr.cell_library.getCellRef(cellName).setQpinDelay(QpinDelay);
+        mgr.cell_library.getCell(cellName)->setQpinDelay(QpinDelay);
     }
 }
 
 void Parser::readTimingSlack(Manager &mgr){
-    string _, instanceName;
-    string pinName;
+    std::string _, instanceName;
+    std::string pinName;
     double TimingSlack;
     do{
         fin >> instanceName >> pinName >> TimingSlack;
-        mgr.FF_Map[instanceName].setTimingSlack(TimingSlack, pinName);
+        mgr.FF_Map[instanceName].setTimingSlack(pinName, TimingSlack);
         fin >> _;
     }while(_ == "TimingSlack");
 }
 
 void Parser::readGatePower(Manager &mgr){
-    string _, cellName;
+    std::string _, cellName;
     double GatePower;
     do{
         fin >> cellName >> GatePower;
-        mgr.cell_library.getCellRef(cellName).setGatePower(GatePower);
+        mgr.cell_library.getCell(cellName)->setGatePower(GatePower);
         fin >> _;
     }while(_ == "GatePower" && !fin.eof());
 }
 
-string Parser::getSubStringAfterSlash(const string &str){
+std::string Parser::getSubStringAfterSlash(const std::string &str){
     size_t pos = str.find_last_of('/');
     if (pos != std::string::npos) {
-        return str.substr(pos + 1); // Return substring after the last "/"
+        return str.substr(pos + 1); // Return substd::string after the last "/"
     }
-    // If no "/" found, return the original string
+    // If no "/" found, return the original std::string
     return str;
 }
 
-string Parser::getSubStringBeforeSlash(const string &str){
+std::string Parser::getSubStringBeforeSlash(const std::string &str){
     size_t pos = str.find_first_of('/');
     if (pos != std::string::npos) {
-        return str.substr(0, pos); // Return substring before the first "/"
+        return str.substr(0, pos); // Return substd::string before the first "/"
     }
-    // If no "/" found, return the original string
+    // If no "/" found, return the original std::string
     return str;
 }

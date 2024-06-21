@@ -2,7 +2,6 @@
 #define _COOR_H_
 
 #include <iostream>
-using namespace std;
 
 class Coor{
 public:
@@ -11,21 +10,24 @@ public:
 
 public:
     Coor();
-    Coor(double, double);
-    ~Coor();
+    Coor(double x, double y);
+    virtual ~Coor();
 
-    // setter
-    void setX(double);
-    void setY(double);
-    void setXY(double, double);
+    // Setters
+    void setX(double x);
+    void setY(double y);
+    void setXY(double x, double y);
 
-    // getter
+    // Getters
     double getX()const;
     double getY()const;
-    friend ostream &operator<<(ostream &, const Coor &);
 
-    // 
-    Coor operator+(const Coor&) const;
+    // Stream Insertion
+    friend std::ostream &operator<<(std::ostream &os, const Coor &coor);
+
+    // Operator Overloading
+    Coor operator+(const Coor& other) const;
+    Coor operator-(const Coor& other) const;
 };
 
 #endif
