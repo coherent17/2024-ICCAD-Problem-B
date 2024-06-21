@@ -1,34 +1,36 @@
 #ifndef _PARSER_H_
 #define _PARSER_H_
 
+#include <iostream>
+#include <fstream>
+#include <string>
 #include "Manager.h"
-#include "Util.h"
 
 class Manager;
 
 class Parser{
 private:
-    ifstream fin;
+    std::ifstream fin;
 
 public:
-    Parser(const string &);
+    explicit Parser(const std::string &filename);
     ~Parser();
-    void parse(Manager &);
+    void parse(Manager &mgr);
 
 private:
-    void readWeight(Manager &);
-    void readDieBorder(Manager &);
-    void readIOCoordinate(Manager &);
-    void readCellLibrary(Manager &);
-    void readInstance(Manager &);
-    void readNet(Manager &);
-    void readBin(Manager &);
-    void readPlacementRows(Manager &);
-    void readQpinDelay(Manager &);
-    void readTimingSlack(Manager &);
-    void readGatePower(Manager &);
-    string getSubStringAfterSlash(const string &);
-    string getSubStringBeforeSlash(const string &);
+    void readWeight(Manager &mgr);
+    void readDieBorder(Manager &mgr);
+    void readIOCoordinate(Manager &mgr);
+    void readCellLibrary(Manager &mgr);
+    void readInstance(Manager &mgr);
+    void readNet(Manager &mgr);
+    void readBin(Manager &mgr);
+    void readPlacementRows(Manager &mgr);
+    void readQpinDelay(Manager &mgr);
+    void readTimingSlack(Manager &mgr);
+    void readGatePower(Manager &mgr);
+    static std::string getSubStringAfterSlash(const std::string &str);
+    static std::string getSubStringBeforeSlash(const std::string &str);
 };
 
 #endif

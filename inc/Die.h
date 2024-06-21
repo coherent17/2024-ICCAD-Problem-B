@@ -1,7 +1,9 @@
 #ifndef _DIE_H_
 #define _DIE_H_
 
-#include "Util.h"
+#include <iostream>
+#include <vector>
+#include "Coor.h"
 
 struct PlacementRow{
     Coor startCoor;
@@ -17,28 +19,30 @@ private:
     double BinWidth;
     double BinHeight;
     double BinMaxUtil;
-    vector<PlacementRow> PlacementRows;
+    std::vector<PlacementRow> PlacementRows;
 
 public:
     Die();
     ~Die();
 
-    // setter
-    void setDieOrigin(Coor &);
-    void setDieBorder(Coor &);
+    // Setters
+    void setDieOrigin(const Coor &);
+    void setDieBorder(const Coor &);
     void setBinWidth(double);
     void setBinHeight(double);
     void setBinMaxUtil(double);
     void addPlacementRow(const PlacementRow &);
 
-    // getter
+    // Getters
     const Coor &getDieOrigin()const;
     const Coor &getDieBorder()const;
     double getBinWidth()const;
     double getBinHeight()const;
     double getBinMaxUtil()const;
+    const std::vector<PlacementRow>& getPlacementRows() const;
 
-    friend ostream &operator<<(ostream &, const Die &);
+    // Stream Insertion
+    friend std::ostream &operator<<(std::ostream &, const Die &);
 };
 
 #endif

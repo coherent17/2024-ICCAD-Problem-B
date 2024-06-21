@@ -1,9 +1,7 @@
 #include "Coor.h"
 
-Coor::Coor(){
-    x = 0;
-    y = 0;
-}
+Coor::Coor() : x(0), y(0){}
+
 Coor::Coor(double x, double y){
     this->x = x;
     this->y = y;
@@ -13,7 +11,6 @@ Coor::~Coor(){
     ;
 }
 
-// setter
 void Coor::setX(double x){
     this->x = x;
 }
@@ -27,7 +24,6 @@ void Coor::setXY(double x, double y){
     this->y = y;
 }
 
-// getter
 double Coor::getX()const{
     return x;
 }
@@ -41,9 +37,10 @@ std::ostream &operator<<(std::ostream &out, const Coor &coor){
     return out;
 }
 
-Coor Coor::operator+(const Coor& c) const{
-    Coor temp;
-    temp.x = this->x + c.x;
-    temp.y = this->y + c.y;
-    return temp;
+Coor Coor::operator+(const Coor& other) const{
+    return Coor(x + other.x, y + other.y);
+}
+
+Coor Coor::operator-(const Coor& other) const{
+    return Coor(x - other.x, y - other.y);
 }

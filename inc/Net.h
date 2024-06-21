@@ -1,31 +1,32 @@
 #ifndef _NET_H_
 #define _NET_H_
 
-#include "Util.h"
+#include <iostream>
+#include <string>
+#include <vector>
 #include "Pin.h"
-using namespace std;
 
 class Net{
 private:
-    string netName;
+    std::string netName;
     int numPins;
-    vector<Pin> pins;
+    std::vector<Pin> pins;
 
 public:
     Net();
     ~Net();
 
-    // setter
-    void setNetName(const string &);
-    void setNumPins(int);
-    void addPins(const Pin &);
+    // Setters
+    void setNetName(const std::string &netName);
+    void setNumPins(int numPins);
+    void addPins(const Pin &pin);
 
-    // getter
-    const string &getNetName()const;
+    // Getters
+    const std::string &getNetName()const;
     int getNumPins()const;
-    const Pin& getPin(int)const;
+    const Pin &getPin(int pinIdx)const;
     
-    friend ostream &operator<<(ostream &, const Net &);
+    friend std::ostream &operator<<(std::ostream &os, const Net &net);
 };
 
 #endif

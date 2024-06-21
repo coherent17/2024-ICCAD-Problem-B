@@ -3,29 +3,29 @@
 
 #include <iostream>
 #include <string>
-using namespace std;
+
 
 class Pin{
 private:
-    string pinName;
+    std::string pinName;
     bool isIOPin;
-    string instanceName;
+    std::string instanceName;
 
 public:
     Pin();
     ~Pin();
 
     // setter
-    void setPinName(const string &);
+    void setPinName(const std::string &);
     void setIsIOPin(bool);
-    void setInstanceName(const string &);
+    void setInstanceName(const std::string &);
 
     // getter
-    const string &getPinName()const;
+    const std::string &getPinName()const;
     bool getIsIOPin()const;
-    const string &getInstanceName()const;
+    const std::string &getInstanceName()const;
 
-    friend ostream &operator<<(ostream &, const Pin &);
+    friend std::ostream &operator<<(std::ostream &os, const Pin &pin);
 };
 
 #endif

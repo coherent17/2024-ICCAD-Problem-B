@@ -1,4 +1,4 @@
-# ompiler & Linker settings
+# Compiler & Linker settings
 CXX = g++
 CXXFLAGS = -I ./inc -std=c++11
 OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
@@ -7,6 +7,10 @@ WARNINGS = -g -Wall
 # Valgrind for memory issue
 CHECKCC = valgrind
 CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes 
+
+# Cppcheck for static analysis
+CPPCHECKCC = cppcheck
+CPPCHECKFLAGS = --enable=all --inconclusive --std=c++11 --language=c++ --suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction --suppress=unreadVariable --suppress=unmatchedSuppression --suppress=unusedStructMember --suppress=functionConst
 
 # Source files and object files
 SRCDIR = src
@@ -57,10 +61,10 @@ run3:
 	./$(BIN) testcase/testcase1.txt
 
 check:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/sample.txt
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt
 
 cppcheck:
-	cppcheck --enable=all --inconclusive --std=c++11 --language=c++ --suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction --suppress=unreadVariable --suppress=unmatchedSuppression -I$(INCDIR) $(SRCDIR) main.cpp $(INCDIR)/*.h
+	$(CPPCHECKCC) $(CPPCHECKFLAGS) -I$(INCDIR) $(SRCDIR) main.cpp $(INCDIR)/*.h
 
 
 clean:

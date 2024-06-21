@@ -1,13 +1,19 @@
 #ifndef _MANAGER_H_
 #define _MANAGER_H_
 
-#include "Util.h"
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include "Coor.h"
+#include "Instance.h"
+#include "Die.h"
 #include "Cell_Library.h"
 #include "FF.h"
 #include "Gate.h"
-#include "Parser.h"
 #include "Net.h"
-#include "Die.h"
+#include "Parser.h"
+
+class Instance;
 
 class Manager{
 public:
@@ -24,39 +30,43 @@ public:
     // I/O pin coordinate
     int NumInput;
     int NumOutput;
-    unordered_map<string, Coor> Input_Map;
-    unordered_map<string, Coor> Output_Map;
-    unordered_map<string, Instance> IO_Map;
+    std::unordered_map<std::string, Coor> Input_Map;
+    std::unordered_map<std::string, Coor> Output_Map;
+    std::unordered_map<std::string, Instance> IO_Map;
 
     // Cell library
     Cell_Library cell_library;
 
     // Instance
     int NumInstances;
-    unordered_map<string, FF> FF_Map;
-    unordered_map<string, Gate> Gate_Map;
-    unordered_map<string, FF> FF_list; // list of all FF, in one bit without physical info.
-    unordered_map<string, string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
+    std::unordered_map<std::string, FF> FF_Map;
+    std::unordered_map<std::string, Gate> Gate_Map;
 
     // Netlist
     int NumNets;
-    unordered_map<string, Net> Net_Map;
+    std::unordered_map<std::string, Net> Net_Map;
+
+
+    // For debanking
+    // std::unordered_map<std::string, FF> FF_list; // list of all FF, in one bit without physical info.
+    // std::unordered_map<std::string, std::string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
+
+
 
 
 public:
     Manager();
     ~Manager();
 
-    void Read_InputFile(const string &);
-    void Technology_Mapping();
-    void Build_Logic_FF();
-    void Build_Circuit_Gragh();
-    void optimal_FF_location();
+    void Read_InputFile(const std::string &filename);
+    // void Build_Logic_FF();
+    // void Build_Circuit_Gragh();
+    // void optimal_FF_location();
     void print();
     friend class Parser;
 
 private:
-    bool isIOPin(const string &);
+    bool isIOPin(const std::string &pinName);
 };
 
 #endif
