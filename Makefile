@@ -52,13 +52,24 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 	$(Q)$(CXX) $(WARNINGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
 
 run1:
-	./$(BIN) testcase/sampleCase
+	./$(BIN) testcase/sampleCase testcase/sampleCase.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/sampleCase testcase/sampleCase.out
 
 run2:
-	./$(BIN) testcase/sample.txt
+	./$(BIN) testcase/sample.txt testcase/sample.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/sample.txt testcase/sample.txt.out
 
 run3:
-	./$(BIN) testcase/testcase1.txt
+	./$(BIN) testcase/testcase1.txt testcase/testcase1.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/testcase1.txt testcase/testcase1.txt.out
+
+run4:
+	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
 check:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt
@@ -68,4 +79,4 @@ cppcheck:
 
 
 clean:
-	rm -rf $(OBJDIR) $(BIN)
+	rm -rf $(OBJDIR) $(BIN) testcase/*.out

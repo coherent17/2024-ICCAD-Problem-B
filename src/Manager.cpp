@@ -16,7 +16,7 @@ Manager::~Manager(){
     ;
 }
 
-void Manager::Read_InputFile(const std::string &filename){
+void Manager::parse(const std::string &filename){
     Parser parser(filename);
     parser.parse(*this);
 }
@@ -51,6 +51,11 @@ void Manager::print(){
     for(const auto &pair: Net_Map){
         std::cout << pair.second << std::endl;
     }
+}
+
+void Manager::dump(const std::string &filename){
+    Dumper dumper(filename);
+    dumper.dump(*this);
 }
 
 bool Manager::isIOPin(const std::string &pinName){

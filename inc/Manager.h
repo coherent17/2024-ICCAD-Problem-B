@@ -12,8 +12,7 @@
 #include "Gate.h"
 #include "Net.h"
 #include "Parser.h"
-
-class Instance;
+#include "Dumper.h"
 
 class Manager{
 public:
@@ -58,12 +57,14 @@ public:
     Manager();
     ~Manager();
 
-    void Read_InputFile(const std::string &filename);
+    void parse(const std::string &filename);
     // void Build_Logic_FF();
     // void Build_Circuit_Gragh();
     // void optimal_FF_location();
     void print();
+    void dump(const std::string &filename);
     friend class Parser;
+    friend class Dumper;
 
 private:
     bool isIOPin(const std::string &pinName);
