@@ -1,6 +1,6 @@
 # Compiler & Linker settings
 CXX = g++
-CXXFLAGS = -I ./inc -std=c++11
+CXXFLAGS = --static -I ./inc -std=c++11
 OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
 WARNINGS = -g -Wall
 
@@ -77,6 +77,8 @@ check:
 cppcheck:
 	$(CPPCHECKCC) $(CPPCHECKFLAGS) -I$(INCDIR) $(SRCDIR) main.cpp $(INCDIR)/*.h
 
+calc:
+	(find src inc -type f -name "*.cpp" -o -name "*.h" && echo main.cpp) | xargs wc -l | tail -n 1
 
 clean:
 	rm -rf $(OBJDIR) $(BIN) testcase/*.out
