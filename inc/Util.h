@@ -3,7 +3,9 @@
 
 #define DEBUG_MSG(message) cout << "[DEBUG: " << message << "]" << endl;
 #define UNSET_IDX -1
-// #include "Coor.h"
+#define P_PER_NODE 16
+
+#include "Coor.h"
 // #include "Pin.h"
 
 // #include <iostream>
@@ -13,14 +15,14 @@
 // #include <cassert>
 // #include <vector>
 // #include <fstream>
-// #include <cmath>
+#include <cmath>
 // #include <climits>
 // #include <queue>
 // #include <limits.h>
 // using namespace std;
 
-// double EuclideanDistance(const Coor &, const Coor &);
-// double MangattanDistance(const Coor &, const Coor &);
+double EuclideanDistance(const Coor &p1, const Coor &p2);
+double MangattanDistance(const Coor &p1, const Coor &p2);
 // string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 // double HPWL(const Coor&, const Coor&);
 // // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);

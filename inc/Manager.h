@@ -13,6 +13,7 @@
 #include "Net.h"
 #include "Parser.h"
 #include "Dumper.h"
+#include "MeanShift.h"
 
 class Manager{
 public:
@@ -67,6 +68,7 @@ public:
     void print();
     friend class Parser;
     friend class Dumper;
+    friend class MeanShift;
 
 private:
     bool isIOPin(const std::string &pinName);
