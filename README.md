@@ -18,8 +18,10 @@ For graceful cluster:
 
 3. Legalizer + Placer to determine the FF or debanking the FF
 
-為啥class FF跟class Gate不要繼承class Cell?
-因為預期instance的數量會遠比cell library中的cell數量多，如果用繼承的會有很多一樣的資訊，且compiler會需要一直查表，所以用指標指向cell library的位置。若是merge到更大的multi-bit FF則僅需要更改指標指的位址，不需要更新一大堆資訊。
+*   Add Boost Package
+```
+$ make boost
+```
 
 *   Compile
 ```
@@ -30,12 +32,18 @@ $ make or make -j
 ```
 $ make run1
 $ make run2
+$ make run3
+$ make run4
 ```
 
 *   Valgrind
-(need to fix the make pair issue...)
 ```
 $ make check
+```
+
+*   Cppcheck
+```
+$ make cppcheck
 ```
 
 *   Discussion Log:
@@ -53,3 +61,8 @@ $ make check
 * log 06/17:
     * Output floating problem.
     * FF input doesn't come from IO or other FF, ie come from std cell and this std cell is floating input.
+
+* log 0625 init cluster and add script to download boost, run $ make boost first before compile the code...
+    * Cheng help to check if the newest testcase still have output floating problem...
+    * MeanShift: buildRtree > KNN > shiftFF
+    * compile flags, all program should be static-link, otherwise, the program can't be run on TSRI server, see detailed in makefile

@@ -1,6 +1,6 @@
 # Compiler & Linker settings
 CXX = g++
-CXXFLAGS = -static -I ./inc -std=c++11
+CXXFLAGS = -static -I ./inc -std=c++17
 OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
 WARNINGS = -g -Wall
 
@@ -79,6 +79,11 @@ cppcheck:
 
 calc:
 	(find src inc -type f -name "*.cpp" -o -name "*.h" && echo main.cpp) | xargs wc -l | tail -n 1
+
+boost:
+	chmod +x scripts/GetBoost.sh
+	./scripts/GetBoost.sh
+	rm boost_1_84_0.tar.gz
 
 clean:
 	rm -rf $(OBJDIR) $(BIN) testcase/*.out
