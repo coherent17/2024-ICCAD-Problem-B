@@ -3,6 +3,7 @@
 int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
+    mgr.meanshift();
     //mgr.print();
     mgr.dump(argv[2]);
     // mgr.Technology_Mapping();

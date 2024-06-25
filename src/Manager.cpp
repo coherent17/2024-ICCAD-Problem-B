@@ -21,6 +21,16 @@ void Manager::parse(const std::string &filename){
     parser.parse(*this);
 }
 
+void Manager::meanshift(){
+    // do graceful meanshift clustering
+    std::cout << "do graceful meanshift clustering..." << std::endl;
+}
+
+void Manager::dump(const std::string &filename){
+    Dumper dumper(filename);
+    dumper.dump(*this);
+}
+
 void Manager::print(){
     std::cout << alpha << " " << beta << " " << gamma << " " << lambda << std::endl;
     std::cout << "#################### Die Info ##################" << std::endl;
@@ -51,11 +61,6 @@ void Manager::print(){
     for(const auto &pair: Net_Map){
         std::cout << pair.second << std::endl;
     }
-}
-
-void Manager::dump(const std::string &filename){
-    Dumper dumper(filename);
-    dumper.dump(*this);
 }
 
 bool Manager::isIOPin(const std::string &pinName){

@@ -2,7 +2,7 @@
 #define _UTIL_H_
 
 #define DEBUG_MSG(message) cout << "[DEBUG: " << message << "]" << endl;
-
+#define UNSET_IDX -1
 // #include "Coor.h"
 // #include "Pin.h"
 

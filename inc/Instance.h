@@ -24,7 +24,7 @@ protected:
 
 public:
     Instance();
-    ~Instance();
+    virtual ~Instance();
 
     // Setters
     void setInstanceName(const std::string &instanceName);

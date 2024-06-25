@@ -1,6 +1,6 @@
 # Compiler & Linker settings
 CXX = g++
-CXXFLAGS = --static -I ./inc -std=c++11
+CXXFLAGS = -static -I ./inc -std=c++11
 OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
 WARNINGS = -g -Wall
 

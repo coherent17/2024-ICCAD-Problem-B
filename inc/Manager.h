@@ -61,8 +61,10 @@ public:
     // void Build_Logic_FF();
     // void Build_Circuit_Gragh();
     // void optimal_FF_location();
-    void print();
+    
+    void meanshift();
     void dump(const std::string &filename);
+    void print();
     friend class Parser;
     friend class Dumper;
 
