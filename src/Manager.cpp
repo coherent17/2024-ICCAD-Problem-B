@@ -13,7 +13,15 @@ Manager::Manager():
     {}
 
 Manager::~Manager(){
-    ;
+    for(auto &pair : FF_Map){
+        delete pair.second;
+    }
+    FF_Map.clear();
+
+    for(auto &pair : Gate_Map){
+        delete pair.second;
+    }
+    Gate_Map.clear();
 }
 
 void Manager::parse(const std::string &filename){
@@ -24,6 +32,8 @@ void Manager::parse(const std::string &filename){
 void Manager::meanshift(){
     // do graceful meanshift clustering
     std::cout << "do graceful meanshift clustering..." << std::endl;
+    MeanShift meanshift;
+    meanshift.run(*this);
 }
 
 void Manager::dump(const std::string &filename){
@@ -49,17 +59,22 @@ void Manager::print(){
 
     std::cout << "#################### FF Instance ##################" << std::endl;
     for(const auto &pair: FF_Map){
-        std::cout << pair.second << std::endl;
+        std::cout << *pair.second << std::endl;
     }
 
     std::cout << "#################### Gate Instance ##################" << std::endl;
     for(const auto &pair: Gate_Map){
-        std::cout << pair.second << std::endl;
+        std::cout << *pair.second << std::endl;
     }
 
     std::cout << "#################### Netlist ##################" << std::endl;
     for(const auto &pair: Net_Map){
         std::cout << pair.second << std::endl;
+    }
+
+    std::cout << "#################### After MeanShift ##################" << std::endl;
+    for(const auto &pair: FF_Map){
+        std::cout << pair.second->getCoor() << pair.second->getNewCoor() << std::endl;
     }
 }
 

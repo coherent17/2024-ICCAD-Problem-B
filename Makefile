@@ -1,12 +1,12 @@
 # Compiler & Linker settings
 CXX = g++
-CXXFLAGS = -static -I ./inc -std=c++17
-OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
+CXXFLAGS = -I ./inc -std=c++14 -fopenmp
+OPTFLAGS = -march=native -funroll-loops -finline-functions -ffast-math -O3
 WARNINGS = -g -Wall
 
 # Valgrind for memory issue
 CHECKCC = valgrind
-CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes 
+CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes --log-file=valgrind.log
 
 # Cppcheck for static analysis
 CPPCHECKCC = cppcheck
@@ -71,8 +71,9 @@ run4:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
-check:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt
+valgrind:
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt out
+	cat valgrind.log
 
 cppcheck:
 	$(CPPCHECKCC) $(CPPCHECKFLAGS) -I$(INCDIR) $(SRCDIR) main.cpp $(INCDIR)/*.h
@@ -85,5 +86,12 @@ boost:
 	./scripts/GetBoost.sh
 	rm boost_1_84_0.tar.gz
 
+gitlog:
+	git log --graph --decorate --oneline
+
 clean:
-	rm -rf $(OBJDIR) $(BIN) testcase/*.out
+	rm -rf $(OBJDIR) $(BIN) testcase/*.out *.log
+
+
+# TODO, make release to compile with static-linking
+# ref: https://github.com/fbacchus/MaxHS/issues/3 valgrind error when using valgrind

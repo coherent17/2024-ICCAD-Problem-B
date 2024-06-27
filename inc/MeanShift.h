@@ -6,6 +6,8 @@
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/index/rtree.hpp>
 #include <boost/foreach.hpp>
+#include <vector>
+#include <omp.h>
 #include "Util.h"
 #include "FF.h"
 #include "Manager.h"
@@ -26,18 +28,20 @@ typedef bgi::rtree<PointWithID, bgi::quadratic<P_PER_NODE>> RTree;
 class MeanShift{
 private:
     RTree rtree;
+    std::vector<std::pair<int, int>> iterationCount;    // {iteration to coverage, ffidx}
 
 public:
     MeanShift();
     ~MeanShift();
 
     // main driven code for Mean Shift
-    void run();
+    void run(Manager &mgr);
 
 private:
-    void buildRtree();
-    void initKNN();
-    void shiftFFs();
+    void buildRtree(Manager &mgr);
+    void initKNN(Manager &mgr);
+    void shiftFFs(Manager &mgr);
+    void FFrunKNN(const Manager &mgr, int ffidx);
 };
 
 #endif

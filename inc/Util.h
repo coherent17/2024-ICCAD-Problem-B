@@ -1,9 +1,19 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
-#define DEBUG_MSG(message) cout << "[DEBUG: " << message << "]" << endl;
+#define DEBUG_MSG(message) std::cout << "[DEBUG: " << message << "]" << std::endl;
 #define UNSET_IDX -1
 #define P_PER_NODE 16
+
+// Parameter for KNN
+#define MAX_NEIGHBORS 20
+#define MAX_SQUARE_DISPLACEMENT 1000
+#define MAX_BANDWIDTH 1000
+#define BANDWIDTH_SELECTION_NEIGHBOR 4
+#define SHIFT_TOLERANCE 10
+
+// OpenMP parallel CPU core
+#define MAX_THREADS 8
 
 #include "Coor.h"
 // #include "Pin.h"
@@ -21,8 +31,9 @@
 // #include <limits.h>
 // using namespace std;
 
-double EuclideanDistance(const Coor &p1, const Coor &p2);
+double SquareEuclideanDistance(const Coor &p1, const Coor &p2);
 double MangattanDistance(const Coor &p1, const Coor &p2);
+double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth);
 // string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 // double HPWL(const Coor&, const Coor&);
 // // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);

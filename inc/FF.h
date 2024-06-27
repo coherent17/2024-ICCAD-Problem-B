@@ -4,8 +4,12 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
 #include "Instance.h"
+#include "Manager.h"
 #include "Util.h"
+
+class Manager;
 
 class FF : public Instance{
 private:
@@ -15,7 +19,8 @@ private:
     int ffIdx;
     int clusterIdx;
     Coor newCoor;
-
+    double bandwidth;   // used in gaussian kernel function
+    bool isShifting;
     // pair<other ffId, euclidean distance>, store the neighbor ff with their Id and the distance to this FF
     std::vector<std::pair<int, double>> NeighborFFs;
     // ######################################### used in cluster ########################################################
@@ -34,7 +39,9 @@ public:
     void setFFIdx(int ffIdx);
     void setClusterIdx(int clusterIdx);
     void setNewCoor(const Coor &coor);
+    void setBandwidth();
     void addNeighbor(int ffIdx, double euclidean_distance);
+    void setIsShifting(bool shift);
     //void setIdx(int i){this->idx = i;}
     
     // Getter
@@ -42,9 +49,16 @@ public:
     int getFFIdx()const;
     int getClusterIdx()const;
     Coor getNewCoor()const;
+    double getBandwidth()const;
     std::pair<int, double> getNeighbor(int idx)const;
+    int getNeighborSize()const;
+    bool getIsShifting()const;
     //int getIdx(){return this->idx;}
     
+    // ######################################### used in cluster ########################################################
+    void sortNeighbors();
+    double shift(Manager &mgr);     // shift the ff and return the euclidean distance from origin coordinate
+    // ######################################### used in cluster ########################################################
 
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
 };

@@ -15,6 +15,8 @@
 #include "Dumper.h"
 #include "MeanShift.h"
 
+class FF;
+
 class Manager{
 public:
     // cost function weight
@@ -39,8 +41,9 @@ public:
 
     // Instance
     int NumInstances;
-    std::unordered_map<std::string, FF> FF_Map;
-    std::unordered_map<std::string, Gate> Gate_Map;
+    std::unordered_map<std::string, FF *> FF_Map;
+    std::unordered_map<std::string, Gate *> Gate_Map;
+    
 
     // Netlist
     int NumNets;
@@ -51,8 +54,10 @@ public:
     // std::unordered_map<std::string, FF> FF_list; // list of all FF, in one bit without physical info.
     // std::unordered_map<std::string, std::string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
 
-
-
+    // ######################################### used in cluster ########################################################
+    // all should be single bit ff in here.    
+    std::vector<FF *> FFs;
+    // ######################################### used in cluster ########################################################
 
 public:
     Manager();

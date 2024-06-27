@@ -66,3 +66,8 @@ $ make cppcheck
     * Cheng help to check if the newest testcase still have output floating problem...
     * MeanShift: buildRtree > KNN > shiftFF
     * compile flags, all program should be static-link, otherwise, the program can't be run on TSRI server, see detailed in makefile
+
+
+Assign c119cheng:
+*   Debanking
+*   Update Instance::coor for OptimalLocation.

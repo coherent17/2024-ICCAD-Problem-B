@@ -2,7 +2,9 @@
 
 Parser::Parser(const std::string &filename){
     fin.open(filename.c_str());
-    assert(fin.good());
+    if(!fin.is_open()) {
+        throw std::runtime_error("Failed to open file: " + filename);
+    }
 }
 
 Parser::~Parser(){
@@ -89,7 +91,8 @@ void Parser::readCellLibrary(Manager &mgr){
         c->setW(w);
         c->setH(h);
         c->setPinCount(pinCount);
-        std::string _, pinName;
+        std::string _;
+        std::string pinName;
         double pin_coor_x, pin_coor_y;
         for(int i = 0; i < pinCount; i++){
             fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
@@ -103,26 +106,28 @@ void Parser::readCellLibrary(Manager &mgr){
 
 void Parser::readInstance(Manager &mgr){
     fin >> mgr.NumInstances;
-    std::string _, instanceName, cellType;
+    std::string _;
+    std::string instanceName;
+    std::string cellType;
     double cell_coor_x, cell_coor_y;
     Coor coor;
     for(int i = 0; i < mgr.NumInstances; i++){
         fin >> _ >> instanceName >> cellType >> cell_coor_x >> cell_coor_y;
         coor = Coor(cell_coor_x, cell_coor_y);
         if(mgr.cell_library.isFF(cellType)){
-            FF ff;
-            ff.setInstanceName(instanceName);
-            ff.setCellName(cellType);
-            ff.setCoor(coor);
-            ff.setCell(mgr.cell_library.getCell(cellType));
+            FF *ff = new FF();
+            ff->setInstanceName(instanceName);
+            ff->setCellName(cellType);
+            ff->setCoor(coor);
+            ff->setCell(mgr.cell_library.getCell(cellType));
             mgr.FF_Map[instanceName] = ff;
         }
         else{
-            Gate gate;
-            gate.setInstanceName(instanceName);
-            gate.setCellName(cellType);
-            gate.setCoor(coor);
-            gate.setCell(mgr.cell_library.getCell(cellType));
+            Gate *gate = new Gate();
+            gate->setInstanceName(instanceName);
+            gate->setCellName(cellType);
+            gate->setCoor(coor);
+            gate->setCell(mgr.cell_library.getCell(cellType));
             mgr.Gate_Map[instanceName] = gate;
         }
     }
@@ -206,7 +211,7 @@ void Parser::readTimingSlack(Manager &mgr){
     double TimingSlack;
     do{
         fin >> instanceName >> pinName >> TimingSlack;
-        mgr.FF_Map[instanceName].setTimingSlack(pinName, TimingSlack);
+        mgr.FF_Map[instanceName]->setTimingSlack(pinName, TimingSlack);
         fin >> _;
     }while(_ == "TimingSlack");
 }
