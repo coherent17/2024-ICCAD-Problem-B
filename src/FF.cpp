@@ -95,7 +95,7 @@ void FF::sortNeighbors(){
     std::sort(NeighborFFs.begin(), NeighborFFs.end(), FFcmp);
 }
 
-double FF::shift(Manager &mgr){
+double FF::shift(const Manager &mgr){
     double x_shift = 0;
     double y_shift = 0;
     double scale_factor = 0;
@@ -103,6 +103,7 @@ double FF::shift(Manager &mgr){
         FF *ffneighbor = mgr.FFs[NeighborFFs[i].first];
         double bandwidth_i = ffneighbor->getBandwidth();
         double weight = GaussianKernel(coor, ffneighbor->getCoor(), bandwidth_i) / std::pow(bandwidth_i, 4);
+        DEBUG_MSG(weight)
         x_shift += ffneighbor->getCoor().x * weight;
         y_shift += ffneighbor->getCoor().y * weight;
         scale_factor += weight;

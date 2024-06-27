@@ -57,7 +57,7 @@ public:
     
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
-    double shift(Manager &mgr);     // shift the ff and return the euclidean distance from origin coordinate
+    double shift(const Manager &mgr);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
