@@ -7,6 +7,7 @@ from decimal import Decimal
 from shapely import Polygon
 import random
 import math
+import time
 
 
 # read file
@@ -161,16 +162,16 @@ def drawDie(DieSize, BinWidth, BinHeight, SiteRows, gridOff):
     chipHeight = chipYHigh - chipYLow
     chipArea = chipWidth*chipHeight
 
-    # FF & Gate label
+    # FF & Gate color label
     labelX_pos = chipXRight-chipWidth/4
-    labelY_pos = chipYHigh + 1
-    plt.text(labelX_pos,   labelY_pos, "   ",       color='orange',         ha='center',  bbox=dict(boxstyle="square",fc='orange', ec='none'))
+    labelY_pos = chipYHigh + chipYHigh/20
+    plt.text(labelX_pos,   labelY_pos, "   ", size=12,       color='orange',         ha='center',  bbox=dict(boxstyle="square",fc='orange', ec='none'))
     labelX_pos = labelX_pos + chipWidth/20
-    plt.text(labelX_pos,   labelY_pos, " :FF",      color='black',          ha='center')
+    plt.text(labelX_pos,   labelY_pos, " :FF", size=12,      color='black',          ha='center')
     labelX_pos = labelX_pos + chipWidth/16
-    plt.text(labelX_pos,   labelY_pos, "   ",       color='lightseagreen',  ha='center',  bbox=dict(boxstyle="square",fc='lightseagreen',        ec='none'))
+    plt.text(labelX_pos,   labelY_pos, "   ", size=12,       color='lightseagreen',  ha='center',  bbox=dict(boxstyle="square",fc='lightseagreen',        ec='none'))
     labelX_pos = labelX_pos + chipWidth/16
-    plt.text(labelX_pos,   labelY_pos, " :Gate",    color='black',          ha='center')
+    plt.text(labelX_pos,   labelY_pos, " :Gate", size=12,    color='black',          ha='center')
     
 
     
@@ -273,23 +274,27 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
         # draw block pin and IO pin
         if pinOff == False and netOff == True:
             for IO in IOList:
-                plt.text(IOList[IO][1][0], IOList[IO][1][1], "      ", color='cornflowerblue', ha='center', bbox=dict(boxstyle="round",fc='cornflowerblue', ec='none'), size=int(chipArea/500))
+                plt.text(IOList[IO][1][0], IOList[IO][1][1], "      ", color='cornflowerblue', ha='center', bbox=dict(boxstyle="round",fc='cornflowerblue', ec='none'), size=4)
                 # drawIO(chipArea, IOList, 'cornflowerblue')
         instPinList[instName] = {}
         if isFF == True:
+            # draw each FF instance pin
             for PinList in FFPinList[cellName]:
                 pinX = blockX + FFPinList[cellName][PinList][0]
                 pinY = blockY + FFPinList[cellName][PinList][1]
                 instPinList[instName][PinList] = [pinX, pinY]
                 # if pinOff == False and netOff == True:
-                ax.plot(pinX, pinY, marker='*', ms=int(chipArea/200), zorder=3, color='crimson')
+                if pinOff == False:
+                    ax.plot(pinX, pinY, marker='*', ms=8, zorder=3, color='crimson')
         else:
+            # draw each gate instance pin
             for PinList in GatePinList[cellName]:
                 pinX = blockX + GatePinList[cellName][PinList][0]
                 pinY = blockY + GatePinList[cellName][PinList][1]
                 instPinList[instName][PinList] = [pinX, pinY]
                 # if pinOff == False and netOff == True:
-                ax.plot(pinX, pinY, marker='*', ms=int(chipArea/200), zorder=3, color='crimson')
+                if pinOff == False:
+                    ax.plot(pinX, pinY, marker='*', ms=8, zorder=3, color='crimson')
 
         # draw instance name 
         centerX = blockX + blockW/2
@@ -347,20 +352,19 @@ def drawNetList(InstList, instPinList, IOList, NetList):
         # previous_colors = []
         # color = generate_random_color(min_distance=0.3, previous_colors=previous_colors)
         # previous_colors.append(color)
-
         color = randomcolor()
-        # print(net)
-        pinLeft = []
-        pinRight = []
+        
+        pinLeft = []    # record pin at block's left
+        pinRight = []   # record pin at block's right
         for pin in NetList[net]:
             
-            pinSet = pin.split('/')
+            pinSet = pin.split('/') # distinguish pin is IO pin or instance pin 
             # print(pinSet)
-            if len(pinSet) == 1:
+            if len(pinSet) == 1:    # IO pin
                 # plt.plot(Decimal(IOList[pinSet[0]][0]), Decimal(IOList[pinSet[0]][1]), marker='d', ms=int(chipArea/200), zorder=3, color='crimson')
                 IOpinX = IOList[pinSet[0]][1][0]
                 IOpinY = IOList[pinSet[0]][1][1]
-                plt.text(IOList[pinSet[0]][1][0], IOList[pinSet[0]][1][1], "      ", color=color, va='center', ha='center', bbox=dict(boxstyle="round",fc=color, ec='none'), size=int(chipArea/500))
+                plt.text(IOList[pinSet[0]][1][0], IOList[pinSet[0]][1][1], "      ", color=color, va='center', ha='center', bbox=dict(boxstyle="round",fc=color, ec='none'), size=int(4))
                 if IOList[pinSet[0]][0] == "I":
                     pinRight.append([IOpinX, IOpinY])
                 else:
@@ -369,11 +373,10 @@ def drawNetList(InstList, instPinList, IOList, NetList):
                 # draw instance pin 
                 instName = pinSet[0]
                 pinName = pinSet[1]
-                # print(instName)
-                # print(instPinList[instName])
                 pinX = instPinList[instName][pinName][0]
                 pinY = instPinList[instName][pinName][1]
-                plt.plot(pinX, pinY, marker='*', ms=int(chipArea/200), zorder=3, color=color)
+                if pinOff == False:
+                    plt.plot(pinX, pinY, marker='*', ms=int(8), zorder=3, color=color)
 
                 # split net pin in left/right
                 if pinX > InstList[instName][5]:
@@ -381,14 +384,18 @@ def drawNetList(InstList, instPinList, IOList, NetList):
                 else:
                     pinLeft.append([pinX, pinY])
         
+        # find left min and right max pin in netlist
         leftMinX= list(map(min,zip(*pinLeft)))[0]
         rightMaxX= list(map(max,zip(*pinRight)))[0]
 
         maxY= list(map(max,zip(*(pinRight+pinLeft))))[1]
         minY= list(map(min,zip(*(pinRight+pinLeft))))[1]
 
+        # draw verticle net 
         vlineX = (leftMinX + rightMaxX)/2
         plt.vlines(vlineX, minY, maxY, color=color, alpha=1, linewidth=1, zorder=3)
+        
+        # draw horizontal net 
         for pin in pinRight:
             pinX = pin[0]
             pinY = pin[1]
@@ -398,17 +405,13 @@ def drawNetList(InstList, instPinList, IOList, NetList):
             pinY = pin[1]
             plt.hlines(pinY, pinX, vlineX, color=color, alpha=1, linewidth=1, zorder=3)
 
-        # print(net)
-        # print(leftMinX)
-        # print(rightMaxX)
-        # print(pinRight)
-        # print(pinLeft)
-        # print(pinLeft)
-    # print(NetList)
+
 
 if __name__ == "__main__":
 
-    #decide whether to draw grid, pin, netlist
+    start_time = time.time()
+
+    # decide whether to draw grid, pin, netlist
     gridOff = False
     pinOff = False
     netOff = False
@@ -422,11 +425,27 @@ if __name__ == "__main__":
     
     filename = sys.argv[1]
     DieSize, IOList, BinWidth, BinHeight, SiteRows, FFCells, GateCells, FFPinList, GatePinList, InstList, NetList = readFile(filename)
+    
+    # figure size
+    chipXLeft = DieSize[0]
+    chipYLow = DieSize[1]
+    chipXRight = DieSize[2]
+    chipYHigh = DieSize[3]
+    chipWidth = chipXRight - chipXLeft
+    chipHeight = chipYHigh - chipYLow
+    chipRatio = chipHeight/chipWidth
+    plt.figure(figsize=(10,int(10*chipRatio)))
+
     chipArea = drawDie(DieSize, BinWidth, BinHeight, SiteRows, gridOff)
     InstList, instPinList = drawBlocks(chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, InstList, pinOff, netOff)
     if netOff == False:
         drawNetList(InstList, instPinList, IOList, NetList)
     
+    # print runtime
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print("Runtime：", execution_time, "s")
+
     plt.savefig("die_pic.png")
     plt.show()
 
