@@ -108,7 +108,7 @@ double FF::shift(const Manager &mgr){
         y_shift += ffneighbor->getCoor().y * weight;
         scale_factor += weight;
     }
-    assert(std::isnormal(scale_factor));
+    assert(std::isnormal(scale_factor));    //todo
     x_shift /= scale_factor;
     y_shift /= scale_factor;
     double euclidean_distance = std::sqrt(SquareEuclideanDistance({x_shift, y_shift}, coor));
