@@ -1,0 +1,15 @@
+all:
+./drawDie ./testcase/sample.txt
+The result image will in the file "die_pic.png"
+
+You can add some command and these commands can be used simultaneously.
+no bin line & placement row : gridOff
+no pin : pinOff
+no netlist : netOff
+
+
+example:
+./drawDie ./testcase/sample.txt pinOff netOff
+-> The picture will not display pin and netlist
+
+
