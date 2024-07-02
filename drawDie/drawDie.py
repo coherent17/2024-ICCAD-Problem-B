@@ -14,8 +14,8 @@ import time
 
 def parseArgument():
     parser = argparse.ArgumentParser(
-        description='A script that generates a chip image.',
-        usage='%(prog)s -i Input_Name -m Image_Name [-g grid -o overlap -p pin -nl netlist -c cellname_file -n net_file]'
+        description='A script that processes input file or cell list file & net list file to generates a chip image.',
+        usage='%(prog)s -i [Input_Name] -m [Image_Name] [-g -o -p -nl -c cellname_file -n net_file]'
     )
     # Add the argument for input file
     parser.add_argument('-i', '--input', type=str, help='Input file path', required=True)
@@ -24,22 +24,22 @@ def parseArgument():
     parser.add_argument('-m', '--images', type=str, help='Images name', required=True)
 
     # Add the flag for bin line and placement row
-    parser.add_argument('-g', '--grid', action='store_false', help='Image draw bin line and placement row', default=True)
+    parser.add_argument('-g', '--grid', action='store_false', help='Not draw bin line and placement row on image', default=True)
 
     # Add the flag for overlap
-    parser.add_argument('-o', '--overlap', action='store_false', help='Image draw overlap region', default=True)
+    parser.add_argument('-o', '--overlap', action='store_false', help='Not draw overlap region on image', default=True)
 
     # Add the flag for pin
-    parser.add_argument('-p', '--pin', action='store_false', help='Image draw pin', default=True)
+    parser.add_argument('-p', '--pin', action='store_false', help='Not draw pin on image', default=True)
 
     # Add the flag for netlist
-    parser.add_argument('-nl', '--netlist', action='store_false', help='Image draw netlist', default=True)
+    parser.add_argument('-nl', '--netlist', action='store_false', help='Not draw netlist on image', default=True)
 
     # Add the flag for unique cell
-    parser.add_argument('-c', '--cell', type=str, help='Image draw unique net')
+    parser.add_argument('-c', '--cell', type=str, help='Read cell list file and draw unique cell on image')
 
     # Add the flag for unique net
-    parser.add_argument('-n', '--net', type=str, help='Image draw unique net')
+    parser.add_argument('-n', '--net', type=str, help='Read net list file and draw unique net on image')
 
 
     # Parse the command-line arguments
@@ -487,7 +487,7 @@ def draw_unique_net(unique_net, NetList, instPinList):
             uni_net_lst.append(net)
         f.close()
     except FileNotFoundError:
-        print("unique_cell file not exist")
+        print("unique_net file not exist")
 
     if uni_net_lst != []:
         for net in uni_net_lst:

@@ -1,15 +1,18 @@
-all:
-./drawDie ./testcase/sample.txt
-The result image will in the file "die_pic.png"
+usage: ./drawDie -i [Input_Name] -m [Image_Name] [-g -o -p -nl -c cellname_file -n net_file]
 
-You can add some command and these commands can be used simultaneously.
-no bin line & placement row : gridOff
-no pin : pinOff
-no netlist : netOff
+A script that processes input file or cell list file & net list file to generates a chip image.
 
-
-example:
-./drawDie ./testcase/sample.txt pinOff netOff
--> The picture will not display pin and netlist
+options:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Input file path
+  -m IMAGES, --images IMAGES
+                        Images name
+  -g, --grid            Not draw bin line and placement row on image
+  -o, --overlap         Not draw overlap region on image
+  -p, --pin             Not draw pin on image
+  -nl, --netlist        Not draw netlist on image
+  -c CELL, --cell CELL  Read cell list file and draw unique cell on image
+  -n NET, --net NET     Read net list file and draw unique net on image
 
 

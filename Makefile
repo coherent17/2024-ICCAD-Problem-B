@@ -71,6 +71,10 @@ run4:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
+visual:
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i ./drawDie/testcase/testcase1_0614.txt -m die_pic.png -g -p -nl -o -c ./drawDie/testcase/cell_lst2.txt -n ./drawDie/testcase/net_lst2.txt
+
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt out
 	cat valgrind.log
