@@ -14,6 +14,9 @@ int main(int argc, char *argv[]){
     mgr.meanshift();
     mgr.print();
     mgr.dump(argv[2]);
+    if(argc == 4){
+        mgr.dumpVisual(argv[3]);
+    }
     // mgr.Technology_Mapping();
     // mgr.Build_Logic_FF();
     // mgr.Build_Circuit_Gragh();

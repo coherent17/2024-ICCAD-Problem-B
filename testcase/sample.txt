@@ -6,7 +6,7 @@ DieSize 0.0 0.0 50.0 30.0
 NumInput 3
 Input INPUT0 0 5
 Input INPUT1 0 25
-Input CK0 0 15
+Input CLK0 0 15
 NumOutput 3
 Output OUTPUT0 50 5
 Output OUTPUT1 50 15

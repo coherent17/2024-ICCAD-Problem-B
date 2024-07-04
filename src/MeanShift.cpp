@@ -35,6 +35,7 @@ void MeanShift::initKNN(Manager &mgr){
     #pragma omp parallel for num_threads(MAX_THREADS)
     for(size_t i = 0; i < mgr.FFs.size(); i++){
         FF *ff = mgr.FFs[i];
+        ff->setNewCoor(ff->getCoor());
         FFrunKNN(mgr, i);
         
         // no need to shift
@@ -78,10 +79,12 @@ void MeanShift::FFrunKNN(const Manager &mgr, int ffidx){
     std::vector<PointWithID> neighbors;
     rtree.query(bgi::nearest(Point(ff->getCoor().x, ff->getCoor().y), MAX_NEIGHBORS), std::back_inserter(neighbors));
     BOOST_FOREACH(PointWithID const &p, neighbors){
-        FF *ffneighbor = mgr.FFs[p.second];
+        int ffneighbor_idx = p.second;
+        FF *ffneighbor = mgr.FFs[ffneighbor_idx];
         double distance = SquareEuclideanDistance(ff->getCoor(), ffneighbor->getCoor());
         if(distance < MAX_SQUARE_DISPLACEMENT){
-            ff->addNeighbor(ffidx, distance);
+            ff->addNeighbor(ffneighbor_idx, distance);
         }
     }
+    ff->sortNeighbors();
 }

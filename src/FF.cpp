@@ -102,7 +102,7 @@ double FF::shift(const Manager &mgr){
     for(size_t i = 0; i < NeighborFFs.size(); i++){
         FF *ffneighbor = mgr.FFs[NeighborFFs[i].first];
         double bandwidth_i = ffneighbor->getBandwidth();
-        double weight = GaussianKernel(coor, ffneighbor->getCoor(), bandwidth_i) / std::pow(bandwidth_i, 4);
+        double weight = GaussianKernel(newCoor, ffneighbor->getCoor(), bandwidth_i) / std::pow(bandwidth_i, 4);
         DEBUG_MSG(weight)
         x_shift += ffneighbor->getCoor().x * weight;
         y_shift += ffneighbor->getCoor().y * weight;
@@ -111,7 +111,7 @@ double FF::shift(const Manager &mgr){
     assert(std::isnormal(scale_factor));
     x_shift /= scale_factor;
     y_shift /= scale_factor;
-    double euclidean_distance = std::sqrt(SquareEuclideanDistance({x_shift, y_shift}, coor));
+    double euclidean_distance = std::sqrt(SquareEuclideanDistance({x_shift, y_shift}, newCoor));
     setNewCoor({x_shift, y_shift});
     std::cout << Coor(x_shift, y_shift) << std::endl;
     return euclidean_distance;
