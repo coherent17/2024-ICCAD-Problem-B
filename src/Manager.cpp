@@ -41,6 +41,51 @@ void Manager::dump(const std::string &filename){
     dumper.dump(*this);
 }
 
+void Manager::dumpVisual(const std::string &filename){
+    std::ofstream fout;
+    fout.open(filename.c_str());
+    assert(fout.good());
+
+    fout << "Diesize " << die.getDieOrigin().x << " " << die.getDieOrigin().y << " " << die.getDieBorder().x << " " << die.getDieBorder().y << std::endl;
+
+    fout << "NumInput " << Input_Map.size() << std::endl;
+    std::map<std::string, Coor> input_map(Input_Map.begin(), Input_Map.end());
+    for(const auto &pair: input_map){
+        fout << "Input " << pair.first << " " << pair.second.x << " " << pair.second.y << std::endl;
+    }
+    
+    fout << "NumOutput " << Output_Map.size() << std::endl;
+    std::map<std::string, Coor> output_map(Output_Map.begin(), Output_Map.end());
+    for(const auto &pair: output_map){
+        fout << "Output " << pair.first << " " << pair.second.x << " " << pair.second.y << std::endl;
+    }
+
+    // for(cell_library){
+    //     fout << "FlipFlop " << pair.second->
+    // }
+    std::map<std::string, FF *> ff_map(FF_Map.begin(), FF_Map.end());
+    for(const auto &pair: ff_map){
+        fout << "Inst " << pair.first << " " << pair.second->getCellName() << " " << pair.second->getNewCoor().x << " " << pair.second->getNewCoor().y << std::endl;
+    }
+
+    std::map<std::string, Net> net_map(Net_Map.begin(), Net_Map.end());
+    for(const auto &pair: net_map){
+        int pinCout = pair.second.getNumPins();
+        fout << "Net " << pair.second.getNetName() << " " << pinCout << std::endl;
+        for(int i = 0; i < pinCout; i++){
+            Pin pin = pair.second.getPin(i);
+            fout << "Pin ";
+            if(!pin.getIsIOPin()){
+                fout << pin.getInstanceName() << "/";
+            }
+            fout << pin.getPinName() << std::endl;
+        }
+    }
+
+    fout.close();
+
+}
+
 void Manager::print(){
     std::cout << alpha << " " << beta << " " << gamma << " " << lambda << std::endl;
     std::cout << "#################### Die Info ##################" << std::endl;

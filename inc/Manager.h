@@ -2,6 +2,7 @@
 #define _MANAGER_H_
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <unordered_map>
 #include "Coor.h"
@@ -70,6 +71,7 @@ public:
     
     void meanshift();
     void dump(const std::string &filename);
+    void dumpVisual(const std::string &filename);
     void print();
     friend class Parser;
     friend class Dumper;

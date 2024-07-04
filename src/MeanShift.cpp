@@ -35,6 +35,7 @@ void MeanShift::initKNN(Manager &mgr){
     #pragma omp parallel for num_threads(MAX_THREADS)
     for(size_t i = 0; i < mgr.FFs.size(); i++){
         FF *ff = mgr.FFs[i];
+        ff->setNewCoor(ff->getCoor());
         FFrunKNN(mgr, i);
         
         // no need to shift
