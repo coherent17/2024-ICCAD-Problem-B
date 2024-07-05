@@ -14,7 +14,7 @@ class Manager;
 class FF : public Instance{
 private:
     std::unordered_map<std::string, double> TimingSlack;
-
+    
     // ######################################### used in cluster ########################################################
     int ffIdx;
     int clusterIdx;
@@ -30,6 +30,8 @@ private:
     // FF* prev_ff;
     // int idx;
 
+    Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
+
 public:
     FF();
     ~FF();
@@ -42,6 +44,7 @@ public:
     void setBandwidth();
     void addNeighbor(int ffIdx, double euclidean_distance);
     void setIsShifting(bool shift);
+    void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     //void setIdx(int i){this->idx = i;}
     
     // Getter
@@ -53,6 +56,8 @@ public:
     std::pair<int, double> getNeighbor(int idx)const;
     int getNeighborSize()const;
     bool getIsShifting()const;
+    Coor getOriginalD()const;
+    Coor getOriginalQ()const;
     //int getIdx(){return this->idx;}
     
     // ######################################### used in cluster ########################################################

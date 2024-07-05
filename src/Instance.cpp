@@ -5,8 +5,8 @@ Instance::Instance() :
     cellName(""),
     coor(0, 0),
     cell(nullptr),
-    largetInput(nullptr),
-    largestOutput(nullptr)
+    largestInput(nullptr),
+    largestOutput({nullptr, ""})
     {}
 
 Instance::~Instance(){}
@@ -29,19 +29,19 @@ void Instance::setCell(const Cell *cell){
 }
 
 void Instance::setLargestInput(Instance *input){
-    this->largetInput = input;
+    this->largestInput = input;
 }
 
-void Instance::setLargestOutput(Instance *output){
-    this->largestOutput = output;
+void Instance::setLargestOutput(Instance *output, const std::string& pinName){
+    this->largestOutput = {output, pinName};
 }
 
 void Instance::addInput(const std::string& input){
     this->inputInstances.push_back(input);
 }
 
-void Instance::addOutput(const std::string& output){
-    this->outputInstances.push_back(output);
+void Instance::addOutput(const std::string& output, const std::string& pinName){
+    this->outputInstances.push_back({output, pinName});
 }
 
 // Getters
@@ -78,10 +78,10 @@ const Coor &Instance::getPinCoor(const std::string &pinName)const{
 }
 
 const Instance* Instance::getLargestInput()const{
-    return (this->largetInput);
+    return (this->largestInput);
 }
 
-const Instance* Instance::getLargestOutput()const{
+const std::pair<Instance*, std::string> Instance::getLargestOutput()const{
     return (this->largestOutput);
 }
 
@@ -89,6 +89,6 @@ const std::vector<std::string>& Instance::getInputInstances()const{
     return inputInstances;
 }
 
-const std::vector<std::string>& Instance::getOutputInstances()const{
+const std::vector<std::pair<std::string, std::string>>& Instance::getOutputInstances()const{
     return outputInstances;
 }

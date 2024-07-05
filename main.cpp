@@ -11,14 +11,16 @@ int main(int argc, char *argv[]){
 
     Manager mgr;
     mgr.parse(argv[1]);
-    mgr.meanshift();
-    mgr.print();
-    mgr.dump(argv[2]);
-    if(argc == 4){
-        mgr.dumpVisual(argv[3]);
-    }
-    // mgr.Technology_Mapping();
-    // mgr.Build_Logic_FF();
+    mgr.Debank();
+    mgr.Build_Circuit_Gragh();
+    // mgr.meanshift();
+    // mgr.print();
+    // mgr.dump(argv[2]);
+    // if(argc == 4){
+    //     mgr.dumpVisual(argv[3]);
+    // }
+
+
     // mgr.Build_Circuit_Gragh();
     
     // mgr.preprocess();
