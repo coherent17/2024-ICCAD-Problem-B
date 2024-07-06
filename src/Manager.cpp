@@ -159,6 +159,22 @@ void Manager::Debank(){
     }
 
     std::cout << "Total number of FF : " << FF_list.size() << std::endl;
+
+    // map each FF to a single bit cell
+    Cell* targetCell = nullptr;
+    for(auto& cell_m : cell_library.getCellMap()){
+        if(cell_library.isFF(cell_m.first) && cell_m.second->getBits() == 1){
+            if(!targetCell)
+                targetCell = cell_m.second;
+            else if(targetCell->getW() > cell_m.second->getW())
+                targetCell = cell_m.second; 
+        }
+     }
+    for(auto& ff_m : FF_list){
+        FF* cur_ff = ff_m.second;
+        cur_ff->setCell(targetCell);
+        cur_ff->setCellName(targetCell->getCellName());
+    }
     // /* for debug
     // for(auto& lm : FF_list_Map){
     //     FF temp = *FF_list[lm.second];
@@ -368,7 +384,16 @@ void Manager::Build_Circuit_Gragh(){
             }
         }
     }
-    
+    cout << "getNext stageFF" << endl;
+    for(auto& ff_m : FF_list){
+        if(ff_m.second->getLargestInput()){
+            if(FF_list.count(ff_m.second->getLargestInput()->getInstanceName())){
+                FF* input = FF_list[ff_m.second->getLargestInput()->getInstanceName()];
+                input->setNextStageFF(ff_m.second);
+            }
+        }
+    }
+    cout << "Finish get" << endl;
     // for debug
     // for(auto& lm : FF_list_Map){
     //     FF& temp = *FF_list[lm.second];
@@ -419,10 +444,10 @@ void Manager::optimal_FF_location(){
     std::cout << "Initial location " << std::endl;
     for(auto& lm : FF_list_Map){
         FF temp = *FF_list[lm.second];
-        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-        std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
-        std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
-        std::cout << std::endl;
+        // std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+        // std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
+        // std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+        // std::cout << std::endl;
 
         double slack = temp.getTimingSlack("D");
         if(slack < WNS)
@@ -439,94 +464,117 @@ void Manager::optimal_FF_location(){
     std::cout << "\tTotal negative slack : " << TNS << std::endl;
     std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
     std::cout << "\tMaximum slack : " << MAS << std::endl;
-    for(i=0;i<25;i++){
+    for(i=0;i<100;i++){
         std::cout << "step : " << i << std::endl;
         optimizer.Step();
         // CAL new slack
-    }
+        for(auto& ff_m : FF_list){
+            FF* cur_ff = ff_m.second;
 
-    // map each FF to a single bit cell
-    Cell* targetCell = nullptr;
-    for(auto& cell_m : cell_library.getCellMap()){
-        if(cell_library.isFF(cell_m.first) && cell_m.second->getBits() == 1){
-            targetCell = cell_m.second;
-            break;
-        }
-    }
-    for(auto& ff_m : FF_list){
-        FF* cur_ff = ff_m.second;
-        cur_ff->setCell(targetCell);
-        cur_ff->setCellName(targetCell->getCellName());
-    }
-    for(auto& ff_m : FF_list){
-        FF* cur_ff = ff_m.second;
-
-        // update slack for new location
-        double delta_hpwl = 0;
-        double delta_q = 0; // delta q pin delay
-        // D pin delta HPWL
-        std::string inputInstanceName = cur_ff->getInputInstances()[0].first;
-        std::string inputPinName = cur_ff->getInputInstances()[0].second;
-        Coor inputCoor;
-        if(IO_Map.count(inputInstanceName)){
-            inputCoor = IO_Map[inputInstanceName].getCoor();
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
-        }
-        else if(Gate_Map.count(inputInstanceName)){
-            inputCoor = Gate_Map[inputInstanceName]->getCoor() + Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
-        }
-        else{
-            inputCoor = FF_list[inputInstanceName]->getOriginalQ();
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + cur_ff->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
-        }
-
-        // Q pin delta HPWL (prev stage FFs Qpin)
-        if(cur_ff->getLargestInput()){
-            std::string prevInstanceName = cur_ff->getLargestInput()->getInstanceName();
-            Coor originalInput, newInput;
-            if(IO_Map.count(prevInstanceName)){
-                originalInput = IO_Map[prevInstanceName].getCoor();
-                newInput = originalInput;
+            // update slack for new location
+            double delta_hpwl = 0;
+            double delta_q = 0; // delta q pin delay
+            // D pin delta HPWL
+            std::string inputInstanceName = cur_ff->getInputInstances()[0].first;
+            std::string inputPinName = cur_ff->getInputInstances()[0].second;
+            Coor inputCoor;
+            if(IO_Map.count(inputInstanceName)){
+                inputCoor = IO_Map[inputInstanceName].getCoor();
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
             }
-            else if(FF_list.count(prevInstanceName)){
-                originalInput = FF_list[prevInstanceName]->getOriginalQ();
-                newInput = FF_list[prevInstanceName]->getCoor() + FF_list[prevInstanceName]->getPinCoor("Q");
-                delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
+            else if(Gate_Map.count(inputInstanceName)){
+                inputCoor = Gate_Map[inputInstanceName]->getCoor() + Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
+            }
+            else{
+                inputCoor = FF_list[inputInstanceName]->getOriginalQ();
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + FF_list[inputInstanceName]->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
             }
 
-            std::pair<Instance*, std::string> output = cur_ff->getLargestInput()->getLargestOutput();
-            if(output.first){
-                std::string outputInstanceName = output.first->getInstanceName();
-                if(IO_Map.count(outputInstanceName)){
-                    inputCoor = IO_Map[outputInstanceName].getCoor();
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(inputCoor, newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
+            // Q pin delta HPWL (prev stage FFs Qpin)
+            if(cur_ff->getLargestInput()){
+                std::string prevInstanceName = cur_ff->getLargestInput()->getInstanceName();
+                Coor originalInput, newInput;
+                if(IO_Map.count(prevInstanceName)){
+                    originalInput = IO_Map[prevInstanceName].getCoor();
+                    newInput = originalInput;
                 }
-                else if(Gate_Map.count(outputInstanceName)){
-                    inputCoor = Gate_Map[outputInstanceName]->getCoor() + Gate_Map[outputInstanceName]->getPinCoor(output.second);
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(inputCoor, newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
+                else if(FF_list.count(prevInstanceName)){
+                    originalInput = FF_list[prevInstanceName]->getOriginalQ();
+                    newInput = FF_list[prevInstanceName]->getCoor() + FF_list[prevInstanceName]->getPinCoor("Q");
+                    delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
                 }
-                else{
-                    inputCoor = FF_list[outputInstanceName]->getOriginalQ();
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + cur_ff->getPinCoor("D"), newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
+
+                std::pair<Instance*, std::string> output = cur_ff->getLargestInput()->getLargestOutput();
+                if(output.first){
+                    std::string outputInstanceName = output.first->getInstanceName();
+                    if(IO_Map.count(outputInstanceName)){
+                        inputCoor = IO_Map[outputInstanceName].getCoor();
+                        double old_hpwl = HPWL(inputCoor, originalInput);
+                        double new_hpwl = HPWL(inputCoor, newInput);
+                        delta_hpwl += old_hpwl - new_hpwl;
+                    }
+                    else if(Gate_Map.count(outputInstanceName)){
+                        inputCoor = Gate_Map[outputInstanceName]->getCoor() + Gate_Map[outputInstanceName]->getPinCoor(output.second);
+                        double old_hpwl = HPWL(inputCoor, originalInput);
+                        double new_hpwl = HPWL(inputCoor, newInput);
+                        delta_hpwl += old_hpwl - new_hpwl;
+                    }
+                    else{
+                        inputCoor = FF_list[outputInstanceName]->getOriginalD();
+                        double old_hpwl = HPWL(inputCoor, originalInput);
+                        double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + cur_ff->getPinCoor("D"), newInput);
+                        delta_hpwl += old_hpwl - new_hpwl;
+                    }
                 }
             }
+            // get new slack
+            double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + DisplacementDelay * delta_hpwl;
+            cur_ff->setTimingSlack("D", newSlack);
         }
-        // get new slack
-        double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + DisplacementDelay * delta_hpwl;
-        cur_ff->setTimingSlack("D", newSlack);
+        // update original data
+        for(auto& ff_m : FF_list){
+            FF* cur_ff = ff_m.second;
+            cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
+            cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
+        }
+        WNS = DBL_MAX;
+        TNS = 0;
+        AVS = 0; // average slack
+        MAS = -DBL_MAX; // max slack
+        //
+        for(auto& lm : FF_list_Map){
+            FF temp = *FF_list[lm.second];
+            double slack = temp.getTimingSlack("D");
+            if(slack < WNS)
+                WNS = slack;
+            if(slack < 0)
+                TNS += slack;
+            AVS += slack;
+            if(slack > MAS)
+                MAS = slack;
+        }
+
+        std::cout << "Slack statistic after Optimize" << std::endl;
+        std::cout << "\tWorst negative slack : " << WNS << std::endl;
+        std::cout << "\tTotal negative slack : " << TNS << std::endl;
+        std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
+        std::cout << "\tMaximum slack : " << MAS << std::endl;
+
+        // for(auto& lm : FF_list_Map){
+        //     FF temp = *FF_list[lm.second];
+        //     std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+        //     std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
+        //     std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+        //     std::cout << "Current  D&Q coordinate : (" <<temp.getCoor() + temp.getPinCoor("D") << ", " << temp.getCoor() + temp.getPinCoor("Q") << ")" << std::endl;
+        //     std::cout << std::endl;
+        // }
     }
 
     WNS = DBL_MAX;
@@ -536,10 +584,10 @@ void Manager::optimal_FF_location(){
     //
     for(auto& lm : FF_list_Map){
         FF temp = *FF_list[lm.second];
-        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-        std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
-        std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
-        std::cout << std::endl;
+        // std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+        // std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
+        // std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+        // std::cout << std::endl;
         
         double slack = temp.getTimingSlack("D");
         if(slack < WNS)

@@ -15,7 +15,8 @@ protected:
     const Cell *cell;
 
     // the largest neightbor instance(critical path)
-    Instance* largestInput; // IO pin or FF in FF_list
+    Instance* largestInput; // IO pin or FF in FF_list, prev stage FF
+    Instance* nextStageFF; // if nullptr -> its output is not critical path
     std::pair<Instance*, std::string> largestOutput; // output instance with largest HPWL and its pinName
 
     // for circuit gragh
@@ -33,6 +34,7 @@ public:
     void setCell(const Cell *cell);
     void setLargestInput(Instance *input);
     void setLargestOutput(Instance *output, const std::string& pinName);
+    void setNextStageFF(Instance* input);
     void addInput(const std::string &input, const std::string& pinName);
     void addOutput(const std::string &output, const std::string& pinName);
 
@@ -47,6 +49,7 @@ public:
     const Coor &getPinCoor(const std::string &pinName)const;
     const Instance* getLargestInput() const;
     const std::pair<Instance*, std::string>getLargestOutput() const;
+    const Instance* getNextStageFF() const;
     const std::vector<std::pair<std::string, std::string>> &getInputInstances() const;
     const std::vector<std::pair<std::string, std::string>> &getOutputInstances() const;
 };

@@ -6,6 +6,7 @@ Instance::Instance() :
     coor(0, 0),
     cell(nullptr),
     largestInput(nullptr),
+    nextStageFF(nullptr),
     largestOutput({nullptr, ""})
     {}
 
@@ -34,6 +35,10 @@ void Instance::setLargestInput(Instance *input){
 
 void Instance::setLargestOutput(Instance *output, const std::string& pinName){
     this->largestOutput = {output, pinName};
+}
+
+void Instance::setNextStageFF(Instance *input){
+    this->nextStageFF = input;
 }
 
 void Instance::addInput(const std::string& input, const std::string& pinName){
@@ -83,6 +88,10 @@ const Instance* Instance::getLargestInput()const{
 
 const std::pair<Instance*, std::string> Instance::getLargestOutput()const{
     return (this->largestOutput);
+}
+
+const Instance* Instance::getNextStageFF()const{
+    return this->nextStageFF;
 }
 
 const std::vector<std::pair<std::string, std::string>>& Instance::getInputInstances()const{

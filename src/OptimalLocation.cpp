@@ -99,18 +99,48 @@ vector<Coor>& obj_function::backward(){
     for(auto& FF_m : mgr.FF_list){
         FF* cur_ff = FF_m.second;
         int idx = idx_map[cur_ff->getInstanceName()];
+        // weigt by slack
+        double D_weight, Q_weight;
+        double D_slack = cur_ff->getTimingSlack("D");
+        if(cur_ff->getNextStageFF()){
+            FF* nextFF = mgr.FF_list[cur_ff->getNextStageFF()->getInstanceName()];
+            double Q_slack = nextFF->getTimingSlack("D");
+            double sum = D_slack + Q_slack + 0.000001;
+            if(sum > 0){
+                D_weight = Q_slack / sum;
+                Q_weight = D_slack / sum;
+                sum = abs(D_weight) + abs(Q_weight);
+                D_weight = abs(D_weight) / sum;
+                Q_weight = abs(Q_weight) / sum;
+            }
+            else{
+                D_weight = D_slack / sum;
+                Q_weight = Q_slack / sum;
+                sum = abs(D_weight) + abs(Q_weight);
+                D_weight = abs(D_weight) / sum;
+                Q_weight = abs(Q_weight) / sum;
+            }
+            // cout << cur_ff->getInstanceName() << "  " << D_weight << "  " << Q_weight << endl;
+            // cout << D_slack << "  " << Q_slack << endl;
+        }
+        else{
+            D_weight = 1;
+            Q_weight = 0;
+        }
+        // net of D pin
         Coor curCoor = cur_ff->getCoor();
-        grad_[idx].x += (exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]);
-        grad_[idx].y += (exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]);   
+        grad_[idx].x += D_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
+        grad_[idx].y += D_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
         i++;
-
+        // net of Q pin
         Instance* outputInstance = cur_ff->getLargestOutput().first;
         if(outputInstance){
-            grad_[idx].x += (exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]);
-            grad_[idx].y += (exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]); 
+            grad_[idx].x += Q_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
+            grad_[idx].y += Q_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
             i++;
         }
     }
+
     // for(auto& net_m : mgr.Net_Map){
     //     Net& n = net_m.second;
     //     for(int j=0;j<n.getNumPins();j++){
@@ -178,7 +208,7 @@ void Gradient::Step() {
             t1 += t3.x + t3.y;
             t2 += std::abs(g.x) + std::abs(g.y);
         }
-        beta = t1 / (t2 * t2);
+        beta = t1 / (t2 * t2 + 0.00001);
         for (size_t i = 0; i < kNumModule; ++i) {
             dir[i].x = -obj_.grad().at(i).x + beta * dir_prev_.at(i).x;
             dir[i].y = -obj_.grad().at(i).y + beta * dir_prev_.at(i).y;

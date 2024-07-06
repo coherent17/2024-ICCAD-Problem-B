@@ -70,7 +70,7 @@ $ make cppcheck
 
 * log 0706
     * still have floating input/output in testcase1_0614
-    * the result after gradient to find optimal location is worse, should consider slack as weight on gradient.
+    * the result after gradient to find optimal location is worse, the cell assignment after debank is important.
     
 Assign c119cheng:
 *   Debanking, finish
