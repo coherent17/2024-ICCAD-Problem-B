@@ -20,6 +20,7 @@ For graceful cluster:
 
 *   Add Boost Package
 ```
+$ sudo apt-get install libboost-all-dev
 $ make boost
 ```
 
