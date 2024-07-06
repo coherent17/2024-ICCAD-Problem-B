@@ -15,12 +15,13 @@ protected:
     const Cell *cell;
 
     // the largest neightbor instance(critical path)
-    Instance* largetInput;
-    Instance* largestOutput;
+    Instance* largestInput; // IO pin or FF in FF_list, prev stage FF
+    Instance* nextStageFF; // if nullptr -> its output is not critical path
+    std::pair<Instance*, std::string> largestOutput; // output instance with largest HPWL and its pinName
 
     // for circuit gragh
-    std::vector<std::string> inputInstances; // contain all input cells/FFs/IOs
-    std::vector<std::string> outputInstances; // contain all output cells/FFs/IOs
+    std::vector<std::pair<std::string, std::string>> inputInstances; // contain all input cells/FFs/IOs
+    std::vector<std::pair<std::string, std::string>> outputInstances; // contain all output cells/FFs/IOs, pair of (instance name, pin name)
 
 public:
     Instance();
@@ -32,9 +33,10 @@ public:
     void setCoor(const Coor &coor);
     void setCell(const Cell *cell);
     void setLargestInput(Instance *input);
-    void setLargestOutput(Instance *output);
-    void addInput(const std::string &input);
-    void addOutput(const std::string &output);
+    void setLargestOutput(Instance *output, const std::string& pinName);
+    void setNextStageFF(Instance* input);
+    void addInput(const std::string &input, const std::string& pinName);
+    void addOutput(const std::string &output, const std::string& pinName);
 
     // Getters
     const std::string &getInstanceName()const;
@@ -45,10 +47,11 @@ public:
     double getH()const;
     int getPinCount()const;
     const Coor &getPinCoor(const std::string &pinName)const;
-    const Instance *getLargestInput() const;
-    const Instance *getLargestOutput() const;
-    const std::vector<std::string> &getInputInstances() const;
-    const std::vector<std::string> &getOutputInstances() const;
+    const Instance* getLargestInput() const;
+    const std::pair<Instance*, std::string>getLargestOutput() const;
+    const Instance* getNextStageFF() const;
+    const std::vector<std::pair<std::string, std::string>> &getInputInstances() const;
+    const std::vector<std::pair<std::string, std::string>> &getOutputInstances() const;
 };
 
 #endif

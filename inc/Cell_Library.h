@@ -19,7 +19,7 @@ public:
     
     // Getter
     Cell *const getCell(const std::string &cellName)const;
-
+    std::unordered_map<std::string, Cell *> getCellMap() const;
     // helper function
     bool isFF(const std::string &cellName);
 

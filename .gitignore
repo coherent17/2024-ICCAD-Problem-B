@@ -1,6 +1,8 @@
+.gitignore
 cadb0015
 obj/
 .vscode/
 boost_1_84_0/
 *.log
 testcase/*.out
+tmp.txt

@@ -68,6 +68,10 @@ $ make cppcheck
     * compile flags, all program should be static-link, otherwise, the program can't be run on TSRI server, see detailed in makefile
 
 
+* log 0706
+    * still have floating input/output in testcase1_0614
+    * the result after gradient to find optimal location is worse, the cell assignment after debank is important.
+    
 Assign c119cheng:
-*   Debanking
+*   Debanking, finish
 *   Update Instance::coor for OptimalLocation.

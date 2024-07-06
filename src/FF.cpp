@@ -51,6 +51,15 @@ void FF::setIsShifting(bool shift){
     this->isShifting = shift;
 }
 
+void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
+    this->originalD = coorD;
+    this->originalQ = coorQ;
+}
+
+void FF::setOriginalQpinDelay(double in){
+    this->originalQpinDelay = in;
+}
+
 // Getter
 double FF::getTimingSlack(const std::string &pinName)const{
     auto it = TimingSlack.find(pinName);
@@ -86,6 +95,18 @@ int FF::getNeighborSize()const{
 
 bool FF::getIsShifting()const{
     return isShifting;
+}
+
+Coor FF::getOriginalD()const{
+    return originalD;
+}
+
+Coor FF::getOriginalQ()const{
+    return originalQ;
+}
+
+double FF::getOriginalQpinDelay()const{
+    return originalQpinDelay;
 }
 
 void FF::sortNeighbors(){

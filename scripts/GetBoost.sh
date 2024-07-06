@@ -15,3 +15,6 @@ echo "Gen static linking library"
 ./b2
 
 echo "Cloning Boost Package Finished!"
+
+echo "install related package"
+sudo apt-get install libboost-all-dev

@@ -17,7 +17,8 @@
 #include "MeanShift.h"
 
 class FF;
-
+class obj_function;
+class Gradient;
 class Manager{
 public:
     // cost function weight
@@ -51,9 +52,12 @@ public:
     std::unordered_map<std::string, Net> Net_Map;
 
 
+    // for naming
+    std::unordered_map<std::string, int> name_record;
+
     // For debanking
-    // std::unordered_map<std::string, FF> FF_list; // list of all FF, in one bit without physical info.
-    // std::unordered_map<std::string, std::string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
+    std::unordered_map<std::string, FF*> FF_list; // list of all FF, in one bit without physical info.
+    std::unordered_map<std::string, std::string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
 
     // ######################################### used in cluster ########################################################
     // all should be single bit ff in here.    
@@ -65,14 +69,19 @@ public:
     ~Manager();
 
     void parse(const std::string &filename);
-    // void Build_Logic_FF();
-    // void Build_Circuit_Gragh();
-    // void optimal_FF_location();
+
+    void Debank();
+    void Build_Circuit_Gragh();
+    void optimal_FF_location();
     
     void meanshift();
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
+    
+    std::string getNewFFName(const std::string&); // using a prefix string to get new unique FF name
+                                            // suggest prefix for N-bit MBFF -> FF_N_
+
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

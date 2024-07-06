@@ -21,9 +21,9 @@ double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth){
 //     return prefix + to_string(count);
 // }
 
-// double HPWL(const Coor& c1, const Coor& c2){
-//     return abs(c1.x - c2.x) + abs(c1.y - c2.y);
-// }
+double HPWL(const Coor& c1, const Coor& c2){
+    return std::abs(c1.x - c2.x) + std::abs(c1.y - c2.y);
+}
 
 /*
 double HPWL(const Net& n, vector<Coor>& c, Manager& mgr){
