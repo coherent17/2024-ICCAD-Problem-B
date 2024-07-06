@@ -56,6 +56,10 @@ void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
     this->originalQ = coorQ;
 }
 
+void FF::setOriginalQpinDelay(double in){
+    this->originalQpinDelay = in;
+}
+
 // Getter
 double FF::getTimingSlack(const std::string &pinName)const{
     auto it = TimingSlack.find(pinName);
@@ -99,6 +103,10 @@ Coor FF::getOriginalD()const{
 
 Coor FF::getOriginalQ()const{
     return originalQ;
+}
+
+double FF::getOriginalQpinDelay()const{
+    return originalQpinDelay;
 }
 
 void FF::sortNeighbors(){

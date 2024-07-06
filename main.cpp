@@ -13,6 +13,8 @@ int main(int argc, char *argv[]){
     mgr.parse(argv[1]);
     mgr.Debank();
     mgr.Build_Circuit_Gragh();
+    mgr.optimal_FF_location();
+
     // mgr.meanshift();
     // mgr.print();
     // mgr.dump(argv[2]);

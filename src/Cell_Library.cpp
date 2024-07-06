@@ -22,6 +22,10 @@ Cell *const Cell_Library::getCell(const std::string &cellName)const{
     return it->second;
 }
 
+std::unordered_map<std::string, Cell *> Cell_Library::getCellMap()const{
+    return this->cellMap;
+}
+
 bool Cell_Library::isFF(const std::string &cellName){
     return (cellMap[cellName]->getType() == Cell_Type::FF);
 }

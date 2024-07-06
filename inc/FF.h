@@ -31,7 +31,7 @@ private:
     // int idx;
 
     Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
-
+    double originalQpinDelay;
 public:
     FF();
     ~FF();
@@ -45,6 +45,7 @@ public:
     void addNeighbor(int ffIdx, double euclidean_distance);
     void setIsShifting(bool shift);
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
+    void setOriginalQpinDelay(double);
     //void setIdx(int i){this->idx = i;}
     
     // Getter
@@ -58,6 +59,7 @@ public:
     bool getIsShifting()const;
     Coor getOriginalD()const;
     Coor getOriginalQ()const;
+    double getOriginalQpinDelay()const;
     //int getIdx(){return this->idx;}
     
     // ######################################### used in cluster ########################################################

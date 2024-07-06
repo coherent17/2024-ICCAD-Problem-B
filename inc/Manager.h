@@ -17,7 +17,8 @@
 #include "MeanShift.h"
 
 class FF;
-
+class obj_function;
+class Gradient;
 class Manager{
 public:
     // cost function weight
@@ -71,7 +72,7 @@ public:
 
     void Debank();
     void Build_Circuit_Gragh();
-    // void optimal_FF_location();
+    void optimal_FF_location();
     
     void meanshift();
     void dump(const std::string &filename);

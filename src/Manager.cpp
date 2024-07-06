@@ -1,5 +1,5 @@
 #include "Manager.h"
-// #include "OptimalLocation.h"
+#include "OptimalLocation.h"
 Manager::Manager():
     alpha(0),
     beta(0),
@@ -144,13 +144,14 @@ void Manager::Debank(){
                 double slack = cur_ff.getTimingSlack(pinName);
                 temp->setInstanceName(getNewFFName("FF"));
                 temp->setCoor(ff_coor);
-                temp->setTimingSlack("D0", slack);
+                temp->setTimingSlack("D", slack);
                 // set original coor for D port and Q port
                 Coor d_coor = cur_ff.getCoor() + cur_cell.getPinCoor(pinName);
                 std::string QpinName = pinName;
                 QpinName[0] = 'Q';
                 Coor q_coor = cur_ff.getCoor() + cur_cell.getPinCoor(QpinName); 
                 temp->setOriginalCoor(d_coor, q_coor);
+                temp->setOriginalQpinDelay(cur_cell.getQpinDelay());
                 FF_list[temp->getInstanceName()] = temp;
                 FF_list_Map[cur_name+'/'+pinName] = temp->getInstanceName();
             }
@@ -159,13 +160,13 @@ void Manager::Debank(){
 
     std::cout << "Total number of FF : " << FF_list.size() << std::endl;
     // /* for debug
-    for(auto& lm : FF_list_Map){
-        FF temp = *FF_list[lm.second];
-        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-        std::cout << "With timing slacke : " << temp.getTimingSlack("D0") << " And Coor : " << temp.getCoor() << std::endl;
-        std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
-        std::cout << std::endl;
-    }
+    // for(auto& lm : FF_list_Map){
+    //     FF temp = *FF_list[lm.second];
+    //     std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+    //     std::cout << "With timing slacke : " << temp.getTimingSlack("D0") << " And Coor : " << temp.getCoor() << std::endl;
+    //     std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+    //     std::cout << std::endl;
+    // }
     // */
 }
 
@@ -211,11 +212,11 @@ void Manager::Build_Circuit_Gragh(){
                     std::string driving_ff = driving_cell + "/D" + driving_pin.substr(1, driving_pin.size()-1);
                     driving_ff = FF_list[FF_list_Map[driving_ff]]->getInstanceName();
                     if(FF_Map.count(instanceName)){ // to FF
-                        FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_ff);
+                        FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_ff, driving_pin);
                         FF_list[driving_ff]->addOutput(FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
                     }
                     else if(Gate_Map.count(instanceName)){ // to std cell
-                        Gate_Map[instanceName]->addInput(driving_ff);
+                        Gate_Map[instanceName]->addInput(driving_ff, driving_pin);
                         FF_list[driving_ff]->addOutput(instanceName, pinName);
                     }
                     else{ // output pin
@@ -224,12 +225,12 @@ void Manager::Build_Circuit_Gragh(){
                 }
                 else{ // drive by std cell or IO
                     if(FF_Map.count(instanceName)){ // to FF
-                        FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_cell);
+                        FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_cell, driving_pin);
                         if(IO_Map.count(driving_cell))
                             IO_Map[driving_cell].addOutput(FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
                     }
                     else if(Gate_Map.count(instanceName)){ // to std cell
-                        Gate_Map[instanceName]->addInput(driving_cell);
+                        Gate_Map[instanceName]->addInput(driving_cell, driving_pin);
                         if(IO_Map.count(driving_cell))
                             IO_Map[driving_cell].addOutput(instanceName, pinName);
                     }
@@ -311,7 +312,8 @@ void Manager::Build_Circuit_Gragh(){
         std::vector<Instance*> temp_instance;
         std::queue<std::string> q;
         assert(ff.getInputInstances().size() != 0 && "FF with input floating");
-        q.push(ff.getInputInstances()[0]);
+        assert(ff.getInputInstances().size() == 1 && "FF should have only one driving cell");
+        q.push(ff.getInputInstances()[0].first);
         while(!q.empty()){ // find out all input IO or FF, and save to temp_instance
             std::string cur_instance = q.front();
             q.pop();
@@ -323,9 +325,9 @@ void Manager::Build_Circuit_Gragh(){
             }
             else{ // is std cell
                 Gate& cur_gate = *Gate_Map[cur_instance];
-                const std::vector<std::string>& input_vector = cur_gate.getInputInstances();
+                const std::vector<std::pair<std::string, std::string>>& input_vector = cur_gate.getInputInstances();
                 for(size_t i=0;i<input_vector.size();i++)
-                    q.push(input_vector[i]);
+                    q.push(input_vector[i].first);
             }
         }
 
@@ -368,18 +370,18 @@ void Manager::Build_Circuit_Gragh(){
     }
     
     // for debug
-    for(auto& lm : FF_list_Map){
-        FF& temp = *FF_list[lm.second];
-        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-        if(temp.getLargestInput() != nullptr)
-            std::cout << "Input largest cell : " << temp.getLargestInput()->getInstanceName() << std::endl;
-        else
-            std::cout << "Input is floating" << std::endl << std::endl;
-        if(temp.getLargestOutput().first != nullptr)
-            std::cout << "Output largest cell : " << temp.getLargestOutput().first->getInstanceName() << std::endl << std::endl; 
-        else
-            std::cout << "Output is floating" << std::endl << std::endl;
-    }
+    // for(auto& lm : FF_list_Map){
+    //     FF& temp = *FF_list[lm.second];
+    //     std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+    //     if(temp.getLargestInput() != nullptr)
+    //         std::cout << "Input largest cell : " << temp.getLargestInput()->getInstanceName() << std::endl;
+    //     else
+    //         std::cout << "Input is floating" << std::endl << std::endl;
+    //     if(temp.getLargestOutput().first != nullptr)
+    //         std::cout << "Output largest cell : " << temp.getLargestOutput().first->getInstanceName() << std::endl << std::endl; 
+    //     else
+    //         std::cout << "Output is floating" << std::endl << std::endl;
+    // }
     /*
     for(auto& lm : FF_list_Map){
         FF temp = FF_list[lm.second];
@@ -395,27 +397,168 @@ void Manager::Build_Circuit_Gragh(){
 }
 
 
-// void Manager::optimal_FF_location(){
-//     // create FF logic
-//     vector<Coor> c(FF_Map.size());
-//     int i=0;
-//     for(auto&FF_m : FF_Map){ // initial location and set index
-//         FF_m.second.setIdx(i);
-//         c[i].x = FF_m.second.getCoor().x;
-//         c[i].y = FF_m.second.getCoor().y;
-//         i++;
-//     }
+void Manager::optimal_FF_location(){
+    // create FF logic
+    std::vector<Coor> c(FF_list.size());
+    std::unordered_map<std::string, int> idx_map;
+    int i=0;
+    for(auto&FF_m : FF_list){ // initial location and set index
+        idx_map[FF_m.second->getInstanceName()] = i;
+        c[i] = FF_m.second->getCoor();
+        i++;
+    }
 
-//     obj_function obj(*this);
-//     const double kAlpha = 0.01;
-//     Gradient optimizer(obj, c, kAlpha);
+    obj_function obj(*this, idx_map);
+    const double kAlpha = 100;
+    Gradient optimizer(*this, obj, c, kAlpha, idx_map);
 
-//     for(i=0;i<25;i++){
-//         optimizer.Step();
-//         // CAL new slack
+    double WNS = DBL_MAX;
+    double TNS = 0;
+    double AVS = 0; // average slack
+    double MAS = -DBL_MAX; // max slack
+    std::cout << "Initial location " << std::endl;
+    for(auto& lm : FF_list_Map){
+        FF temp = *FF_list[lm.second];
+        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+        std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
+        std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+        std::cout << std::endl;
 
-//     }
-// }
+        double slack = temp.getTimingSlack("D");
+        if(slack < WNS)
+            WNS = slack;
+        if(slack < 0)
+            TNS += slack;
+        AVS += slack;
+        if(slack > MAS)
+            MAS = slack;
+    }
+
+    std::cout << "Slack statistic before Optimize" << std::endl;
+    std::cout << "\tWorst negative slack : " << WNS << std::endl;
+    std::cout << "\tTotal negative slack : " << TNS << std::endl;
+    std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
+    std::cout << "\tMaximum slack : " << MAS << std::endl;
+    for(i=0;i<25;i++){
+        std::cout << "step : " << i << std::endl;
+        optimizer.Step();
+        // CAL new slack
+    }
+
+    // map each FF to a single bit cell
+    Cell* targetCell = nullptr;
+    for(auto& cell_m : cell_library.getCellMap()){
+        if(cell_library.isFF(cell_m.first) && cell_m.second->getBits() == 1){
+            targetCell = cell_m.second;
+            break;
+        }
+    }
+    for(auto& ff_m : FF_list){
+        FF* cur_ff = ff_m.second;
+        cur_ff->setCell(targetCell);
+        cur_ff->setCellName(targetCell->getCellName());
+    }
+    for(auto& ff_m : FF_list){
+        FF* cur_ff = ff_m.second;
+
+        // update slack for new location
+        double delta_hpwl = 0;
+        double delta_q = 0; // delta q pin delay
+        // D pin delta HPWL
+        std::string inputInstanceName = cur_ff->getInputInstances()[0].first;
+        std::string inputPinName = cur_ff->getInputInstances()[0].second;
+        Coor inputCoor;
+        if(IO_Map.count(inputInstanceName)){
+            inputCoor = IO_Map[inputInstanceName].getCoor();
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+        else if(Gate_Map.count(inputInstanceName)){
+            inputCoor = Gate_Map[inputInstanceName]->getCoor() + Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+        else{
+            inputCoor = FF_list[inputInstanceName]->getOriginalQ();
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + cur_ff->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+
+        // Q pin delta HPWL (prev stage FFs Qpin)
+        if(cur_ff->getLargestInput()){
+            std::string prevInstanceName = cur_ff->getLargestInput()->getInstanceName();
+            Coor originalInput, newInput;
+            if(IO_Map.count(prevInstanceName)){
+                originalInput = IO_Map[prevInstanceName].getCoor();
+                newInput = originalInput;
+            }
+            else if(FF_list.count(prevInstanceName)){
+                originalInput = FF_list[prevInstanceName]->getOriginalQ();
+                newInput = FF_list[prevInstanceName]->getCoor() + FF_list[prevInstanceName]->getPinCoor("Q");
+                delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
+            }
+
+            std::pair<Instance*, std::string> output = cur_ff->getLargestInput()->getLargestOutput();
+            if(output.first){
+                std::string outputInstanceName = output.first->getInstanceName();
+                if(IO_Map.count(outputInstanceName)){
+                    inputCoor = IO_Map[outputInstanceName].getCoor();
+                    double old_hpwl = HPWL(inputCoor, originalInput);
+                    double new_hpwl = HPWL(inputCoor, newInput);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+                else if(Gate_Map.count(outputInstanceName)){
+                    inputCoor = Gate_Map[outputInstanceName]->getCoor() + Gate_Map[outputInstanceName]->getPinCoor(output.second);
+                    double old_hpwl = HPWL(inputCoor, originalInput);
+                    double new_hpwl = HPWL(inputCoor, newInput);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+                else{
+                    inputCoor = FF_list[outputInstanceName]->getOriginalQ();
+                    double old_hpwl = HPWL(inputCoor, originalInput);
+                    double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + cur_ff->getPinCoor("D"), newInput);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+            }
+        }
+        // get new slack
+        double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + DisplacementDelay * delta_hpwl;
+        cur_ff->setTimingSlack("D", newSlack);
+    }
+
+    WNS = DBL_MAX;
+    TNS = 0;
+    AVS = 0; // average slack
+    MAS = -DBL_MAX; // max slack
+    //
+    for(auto& lm : FF_list_Map){
+        FF temp = *FF_list[lm.second];
+        std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
+        std::cout << "With timing slacke : " << temp.getTimingSlack("D") << " And Coor : " << temp.getCoor() << std::endl;
+        std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
+        std::cout << std::endl;
+        
+        double slack = temp.getTimingSlack("D");
+        if(slack < WNS)
+            WNS = slack;
+        if(slack < 0)
+            TNS += slack;
+        AVS += slack;
+        if(slack > MAS)
+            MAS = slack;
+    }
+
+    std::cout << "Slack statistic after Optimize" << std::endl;
+    std::cout << "\tWorst negative slack : " << WNS << std::endl;
+    std::cout << "\tTotal negative slack : " << TNS << std::endl;
+    std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
+    std::cout << "\tMaximum slack : " << MAS << std::endl;
+    // */
+
+}
 
 std::string Manager::getNewFFName(const std::string& prefix){
     int count = name_record[prefix];

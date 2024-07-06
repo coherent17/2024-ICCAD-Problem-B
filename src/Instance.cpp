@@ -36,8 +36,8 @@ void Instance::setLargestOutput(Instance *output, const std::string& pinName){
     this->largestOutput = {output, pinName};
 }
 
-void Instance::addInput(const std::string& input){
-    this->inputInstances.push_back(input);
+void Instance::addInput(const std::string& input, const std::string& pinName){
+    this->inputInstances.push_back({input, pinName});
 }
 
 void Instance::addOutput(const std::string& output, const std::string& pinName){
@@ -85,7 +85,7 @@ const std::pair<Instance*, std::string> Instance::getLargestOutput()const{
     return (this->largestOutput);
 }
 
-const std::vector<std::string>& Instance::getInputInstances()const{
+const std::vector<std::pair<std::string, std::string>>& Instance::getInputInstances()const{
     return inputInstances;
 }
 
