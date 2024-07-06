@@ -76,6 +76,16 @@ visual1:
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i ./drawDie/testcase/sample_visual.txt.out -m die_pic.png -g -p -nl -o -c ./drawDie/testcase/cell_lst2.txt -n ./drawDie/testcase/net_lst2.txt
 
+v1:
+	./$(BIN) testcase/sampleCase testcase/sampleCase.out testcase/sampleCase_visual.txt.out
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i testcase/sampleCase_visual.txt.out -m die_pic.png -g -p -nl -o
+
+v4:
+	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -g -p -nl -o
+
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt out
 	cat valgrind.log

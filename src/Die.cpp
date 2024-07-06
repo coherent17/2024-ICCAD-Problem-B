@@ -55,6 +55,10 @@ double Die::getBinMaxUtil()const{
     return BinMaxUtil;
 }
 
+const std::vector<PlacementRow>& Die::getPlacementRows() const{
+    return  PlacementRows;
+}
+
 std::ostream &operator<<(std::ostream &os, const Die &die){
     os << "DieOrigin: " << die.DieOrigin << std::endl;
     os << "DieBorder: " << die.DieBorder << std::endl;

@@ -53,6 +53,7 @@ public:
     int getPinCount()const;
     const std::string &getPinName(size_t pinIdx)const;
     const Coor &getPinCoor(const std::string &pinName)const;
+    std::unordered_map<std::string, Coor> getPinCoorMap()const;
     double getQpinDelay() const;
     double getGatePower() const;
 

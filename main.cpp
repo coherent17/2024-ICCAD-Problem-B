@@ -15,17 +15,11 @@ int main(int argc, char *argv[]){
     mgr.Build_Circuit_Gragh();
     mgr.optimal_FF_location();
 
-    // mgr.meanshift();
+    mgr.meanshift();
     // mgr.print();
-    // mgr.dump(argv[2]);
-    // if(argc == 4){
-    //     mgr.dumpVisual(argv[3]);
-    // }
-
-
-    // mgr.Build_Circuit_Gragh();
-    
-    // mgr.preprocess();
-    // mgr.optimal_FF_location();
+    mgr.dump(argv[2]);
+    if(argc == 4){
+        mgr.dumpVisual(argv[3]);
+    }
     return 0;
 }

@@ -95,6 +95,10 @@ const Coor &Cell::getPinCoor(const std::string &pinName)const{
     return it->second;
 }
 
+std::unordered_map<std::string, Coor> Cell::getPinCoorMap()const{
+    return pinCoorMap;
+}
+
 double Cell::getQpinDelay() const{
     assert(type == Cell_Type::FF && "Not FF access");
     return QpinDelay;
