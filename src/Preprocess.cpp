@@ -43,7 +43,7 @@ void Preprocess::Debank(){
                 FF* temp = new FF;
                 Coor ff_coor;
                 const Cell* ff_cell;
-                if(pinName.length() == 1){
+                if(cur_cell.getBits() == 1){
                     ff_coor = cur_ff.getCoor();
                     ff_cell = cur_ff.getCell();
                 }
@@ -169,15 +169,15 @@ void Preprocess::optimal_FF_location(){
     }
 
     obj_function obj(mgr, FF_list, idx_map);
-    const double kAlpha = 10;
+    const double kAlpha = 100;
     Gradient optimizer(mgr, FF_list, obj, c, kAlpha, idx_map);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     showSlackStatistic();
 
-    for(i=0;i<100;i++){
-        std::cout << "step : " << i << std::endl;
-        optimizer.Step();
+    for(i=0;i<=100;i++){
+        std::cout << "phase 1 step : " << i << std::endl;
+        optimizer.Step(true);
         // CAL new slack
         updateSlack();
         // update original data
@@ -189,6 +189,10 @@ void Preprocess::optimal_FF_location(){
 
         std::cout << "Slack statistic after Optimize" << std::endl;
         showSlackStatistic();
+        // if(i%50 == 0){
+        //     mgr.FF_Map = FF_list;
+        //     mgr.dumpVisual("after_" + std::to_string(i) + "_gradient");
+        // }
     }
 }
 
@@ -456,7 +460,7 @@ void Preprocess::updateSlack(){
                 else{
                     inputCoor = FF_list[outputInstanceName]->getOriginalD();
                     double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + cur_ff->getPinCoor("D"), newInput);
+                    double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + FF_list[outputInstanceName]->getPinCoor("D"), newInput);
                     delta_hpwl += old_hpwl - new_hpwl;
                 }
             }

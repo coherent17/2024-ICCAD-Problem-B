@@ -31,7 +31,6 @@ void Manager::parse(const std::string &filename){
 
 void Manager::preprocess(){
     preprocessor->run();
-    FF_Map = preprocessor->getFFList();
 }
 
 void Manager::meanshift(){

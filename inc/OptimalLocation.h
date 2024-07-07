@@ -25,7 +25,7 @@ class obj_function{
         ~obj_function(){
         }
         double forward();
-        vector<Coor>& backward();
+        vector<Coor>& backward(int, bool);
         const vector<Coor>& grad()const {return grad_;}
 };
 
@@ -45,10 +45,10 @@ class Gradient{
     /////////////////////////////////
 
     // Initialize the optimizer
-    void Initialize();
+    void Initialize(double);
 
     // Perform one optimization step
-    void Step();
+    void Step(bool);
 
    private:
     /////////////////////////////////

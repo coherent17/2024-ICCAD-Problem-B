@@ -67,7 +67,7 @@ double obj_function::forward(){
     return loss;
 }
 
-vector<Coor>& obj_function::backward(){
+vector<Coor>& obj_function::backward(int step, bool onlyNegative){
     for(size_t i=0;i<grad_.size();i++){
         grad_[i].x = 0;
         grad_[i].y = 0;
@@ -99,11 +99,15 @@ vector<Coor>& obj_function::backward(){
             }
             // cout << cur_ff->getInstanceName() << "  " << D_weight << "  " << Q_weight << endl;
             // cout << D_slack << "  " << Q_slack << endl;
+            if(Q_slack >= 0 && onlyNegative)
+                Q_weight = 0;
         }
         else{
             D_weight = 1;
             Q_weight = 0;
         }
+        if(D_slack >= 0 && onlyNegative)
+            D_weight = 0;
         // net of D pin
         Coor curCoor = cur_ff->getOriginalD();
         grad_[idx].x += D_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
@@ -149,21 +153,24 @@ Gradient::Gradient( Manager &mgr,
       var_(var),
       idx_map(idx_map),
       mgr(mgr),
-      FF_list(FF_list) {}
+      FF_list(FF_list) {
+    Initialize(alpha);
+}
 
-void Gradient::Initialize() {
+void Gradient::Initialize(double kAlpha) {
     step_ = 0;
+    alpha_ = kAlpha;
 }
 
 /**
  * @details Update the solution once using the conjugate gradient method.
  */
-void Gradient::Step() {
+void Gradient::Step(bool onlyNegative) {
     const size_t &kNumModule = var_.size();
 
     // Compute the gradient direction
     obj_.forward(); // Forward, compute the function value and cache from the input
-    obj_.backward();  // Backward, compute the gradient according to the cache
+    obj_.backward(step_, onlyNegative);  // Backward, compute the gradient according to the cache
 
     // Compute the Polak-Ribiere coefficient and conjugate directions
     double beta;                                  // Polak-Ribiere coefficient
