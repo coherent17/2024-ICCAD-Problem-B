@@ -15,11 +15,13 @@ class obj_function{
         vector<Coor> grad_;
         unordered_map<string, int>& idx_map;
         double loss;
+        std::unordered_map<std::string, FF*>& FF_list;
         Manager& mgr;
         double gamma;
         vector<double> x_pos, x_neg, y_pos, y_neg;
     public:
-        obj_function(Manager&mgr, unordered_map<string, int>& idx_map);
+        obj_function(   Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
+                        unordered_map<string, int>& idx_map);
         ~obj_function(){
         }
         double forward();
@@ -33,7 +35,9 @@ class Gradient{
     // Constructors
     /////////////////////////////////
 
-    Gradient(Manager&mgr, obj_function &obj, std::vector<Coor> &var, const double &alpha, unordered_map<string, int>& idx_map);
+    Gradient(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
+            obj_function &obj, std::vector<Coor> &var, const double &alpha, 
+            unordered_map<string, int>& idx_map);
     ~Gradient(){
     }
     /////////////////////////////////
@@ -61,6 +65,7 @@ class Gradient{
     vector<Coor> &var_;  // Variables to optimize
     unordered_map<string, int>& idx_map;
     Manager& mgr;
+    std::unordered_map<std::string, FF*>& FF_list;
 };
 
 

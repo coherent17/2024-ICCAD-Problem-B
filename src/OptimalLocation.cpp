@@ -1,6 +1,9 @@
 #include "OptimalLocation.h"
 
-obj_function::obj_function(Manager&mgr, unordered_map<string, int>& idx_map):idx_map(idx_map), mgr(mgr), x_pos(mgr.FF_list.size()*2), x_neg(mgr.FF_list.size()*2), y_pos(mgr.FF_list.size()*2), y_neg(mgr.FF_list.size()*2){
+obj_function::obj_function(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map)
+    :idx_map(idx_map), FF_list(FF_list), mgr(mgr), 
+    x_pos(FF_list.size()*2), x_neg(FF_list.size()*2), 
+    y_pos(FF_list.size()*2), y_neg(FF_list.size()*2){
     gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(mgr.FF_Map.size());
 }
@@ -8,7 +11,7 @@ obj_function::obj_function(Manager&mgr, unordered_map<string, int>& idx_map):idx
 double obj_function::forward(){
     loss = 0;
     int i=0;
-    for(auto& FF_m : mgr.FF_list){
+    for(auto& FF_m : FF_list){
         FF* cur_ff = FF_m.second;
         // input net
         x_pos[i] = 0;
@@ -26,9 +29,9 @@ double obj_function::forward(){
             inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
         }
         else{
-            inputCoor = mgr.FF_list[inputInstanceName]->getCoor();
+            inputCoor = FF_list[inputInstanceName]->getOriginalQ();
         }
-        Coor curCoor = cur_ff->getCoor();
+        Coor curCoor = cur_ff->getOriginalD();
         x_pos[i] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
         x_neg[i] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
         y_pos[i] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
@@ -40,6 +43,7 @@ double obj_function::forward(){
         if(outputInstance){
             std::string outputInstanceName = outputInstance->getInstanceName();
             std::string outputPinName = cur_ff->getLargestOutput().second;
+            curCoor = cur_ff->getOriginalQ();
             Coor outputCoor;
             if(mgr.IO_Map.count(outputInstanceName)){
                 outputCoor = mgr.IO_Map[outputInstanceName].getCoor();
@@ -48,7 +52,7 @@ double obj_function::forward(){
                 outputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(outputPinName);
             }
             else{
-                outputCoor = mgr.FF_list[outputInstanceName]->getCoor();
+                outputCoor = FF_list[outputInstanceName]->getOriginalD();
             }
             x_pos[i] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
             x_neg[i] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
@@ -59,33 +63,6 @@ double obj_function::forward(){
         }
     }
 
-    // for(auto& net_m : mgr.Net_Map){
-    //     Net& n = net_m.second;
-    //     x_pos[i] = 0;
-    //     x_neg[i] = 0;
-    //     y_pos[i] = 0;
-    //     y_neg[i] = 0;
-    //     for(int j=0;j<n.getNumPins();j++){
-    //         const Pin& p = n.getPin(j);
-    //         string instName = p.getInstanceName();
-    //         double x, y;
-    //         if(mgr.FF_Map.count(instName)){
-    //             x = in[mgr.FF_Map[instName].getIdx()].x;
-    //             y = in[mgr.FF_Map[instName].getIdx()].y;
-    //         }
-    //         else{
-    //             x = mgr.FF_Map[instName].getCoor().x;
-    //             y = mgr.FF_Map[instName].getCoor().y;
-    //         }
-    //         x_pos[i] += exp( x / gamma);
-    //         x_neg[i] += exp(-x / gamma);
-    //         y_pos[i] += exp( y / gamma);
-    //         y_neg[i] += exp(-y / gamma);
-    //     }
-    //     loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-    //     i++;
-    // }
-    // input_ = in;
     cout << "loss : " << loss << std::endl;
     return loss;
 }
@@ -96,14 +73,14 @@ vector<Coor>& obj_function::backward(){
         grad_[i].y = 0;
     }
     int i=0;
-    for(auto& FF_m : mgr.FF_list){
+    for(auto& FF_m : FF_list){
         FF* cur_ff = FF_m.second;
         int idx = idx_map[cur_ff->getInstanceName()];
         // weigt by slack
         double D_weight, Q_weight;
         double D_slack = cur_ff->getTimingSlack("D");
         if(cur_ff->getNextStageFF()){
-            FF* nextFF = mgr.FF_list[cur_ff->getNextStageFF()->getInstanceName()];
+            FF* nextFF = FF_list[cur_ff->getNextStageFF()->getInstanceName()];
             double Q_slack = nextFF->getTimingSlack("D");
             double sum = D_slack + Q_slack + 0.000001;
             if(sum > 0){
@@ -128,13 +105,14 @@ vector<Coor>& obj_function::backward(){
             Q_weight = 0;
         }
         // net of D pin
-        Coor curCoor = cur_ff->getCoor();
+        Coor curCoor = cur_ff->getOriginalD();
         grad_[idx].x += D_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
         grad_[idx].y += D_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
         i++;
         // net of Q pin
         Instance* outputInstance = cur_ff->getLargestOutput().first;
         if(outputInstance){
+            curCoor = cur_ff->getOriginalQ();
             grad_[idx].x += Q_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
             grad_[idx].y += Q_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
             i++;
@@ -158,6 +136,7 @@ vector<Coor>& obj_function::backward(){
 }
 
 Gradient::Gradient( Manager &mgr,
+                    std::unordered_map<std::string, FF*>& FF_list,
                     obj_function &obj,
                     std::vector<Coor> &var,  
                     const double &alpha,
@@ -169,7 +148,8 @@ Gradient::Gradient( Manager &mgr,
       obj_(obj),
       var_(var),
       idx_map(idx_map),
-      mgr(mgr) {}
+      mgr(mgr),
+      FF_list(FF_list) {}
 
 void Gradient::Initialize() {
     step_ = 0;
@@ -220,7 +200,7 @@ void Gradient::Step() {
 
     // Update the solution
     // Please be aware of the updating directions, i.e., the sign for each term.
-    for(auto& ff_m : mgr.FF_list){
+    for(auto& ff_m : FF_list){
         int idx = idx_map[ff_m.second->getInstanceName()];
         FF* ff = ff_m.second;
         Coor coor = ff->getCoor();

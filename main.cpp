@@ -11,9 +11,7 @@ int main(int argc, char *argv[]){
 
     Manager mgr;
     mgr.parse(argv[1]);
-    mgr.Debank();
-    mgr.Build_Circuit_Gragh();
-    mgr.optimal_FF_location();
+    mgr.preprocess();
 
     mgr.meanshift();
     // mgr.print();
