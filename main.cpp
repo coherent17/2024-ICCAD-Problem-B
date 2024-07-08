@@ -5,7 +5,7 @@
 int main(int argc, char *argv[]){
 
     if (argc < 2){
-        std::cerr << "Usage: ./" << argv[0] << " <inputfile> <outputfile>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <inputfile> <outputfile>" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -19,5 +19,8 @@ int main(int argc, char *argv[]){
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }
+
+    // place holder method for runing legalize algorithm
+    mgr.legalize();
     return 0;
 }

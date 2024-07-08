@@ -16,6 +16,7 @@
 #include "Dumper.h"
 #include "MeanShift.h"
 #include "Preprocess.h"
+#include "Legalizer.h"
 
 class FF;
 class Preprocess;
@@ -69,6 +70,7 @@ public:
     void parse(const std::string &filename);
     void preprocess();
     void meanshift();
+    void legalize();
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
@@ -80,6 +82,7 @@ public:
     friend class Dumper;
     friend class MeanShift;
     friend class Preprocess;
+    friend class Legalize;
 
 private:
     bool isIOPin(const std::string &pinName);

@@ -40,6 +40,12 @@ void Manager::meanshift(){
     meanshift.run(*this);
 }
 
+void Manager::legalize(){
+    // do abacus legalize algorithm
+    Legalizer legalizer;
+    legalizer.run();
+}
+
 void Manager::dump(const std::string &filename){
     Dumper dumper(filename);
     dumper.dump(*this);

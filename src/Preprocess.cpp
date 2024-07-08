@@ -85,7 +85,7 @@ void Preprocess::Debank(){
 }
 
 void Preprocess::Build_Circuit_Gragh(){
-    for(auto& n_m : mgr.Net_Map){
+    for(auto &n_m: mgr.Net_Map){
         const Net& n = n_m.second;
         std::string driving_cell;
         std::string driving_pin;
