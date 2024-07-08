@@ -1,4 +1,4 @@
-usage: ./drawDie -i [Input_Name] -m [Image_Name] [-g -o -p -nl -c cellname_file -n net_file]
+usage: drawDie -i [Input_Name] -m [Image_Name] -t [Image_Title] [-g -o -p -nl -c cellname_file -n net_file]
 
 A script that processes input file or cell list file & net list file to generates a chip image.
 
@@ -8,6 +8,8 @@ options:
                         Input file path
   -m IMAGES, --images IMAGES
                         Images name
+  -t TITLE, --title TITLE
+                        Images title
   -g, --grid            Not draw bin line and placement row on image
   -o, --overlap         Not draw overlap region on image
   -p, --pin             Not draw pin on image
