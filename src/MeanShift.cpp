@@ -54,7 +54,7 @@ void MeanShift::shiftFFs(Manager &mgr){
     {
         iterationCount[i] = {0, i};
     }
-
+    #pragma omp parallel for num_threads(MAX_THREADS)
     for(size_t i = 0; i < mgr.FFs.size(); i++){
         FF *ff = mgr.FFs[i];
         if(!ff->getIsShifting()){
@@ -69,7 +69,6 @@ void MeanShift::shiftFFs(Manager &mgr){
                 iterationCount[i].first = iteration;
                 break;
             }
-            std::cout << iteration << std::endl;
         }
     }
 }
