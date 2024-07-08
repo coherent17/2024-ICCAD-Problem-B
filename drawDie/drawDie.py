@@ -592,5 +592,5 @@ if __name__ == "__main__":
     execution_time = end_time - start_time
     print("Total Runtime : ", execution_time, "s")
 
-    plt.savefig("die_pic.png", dpi=600)
+    plt.savefig(images_name, dpi=600)
     plt.show()
