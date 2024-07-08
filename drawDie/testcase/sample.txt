@@ -20,7 +20,7 @@ Pin CLK 0.0 0.5
 Gate G1 5.0 10.0 2
 Pin IN 0.0 8.0
 Pin OUT 5.0 2.0
-NumInstances 4
+NumInstances 6
 Inst C1 FF1 20.0 0.0
 Inst C2 FF2 20.0 10.0
 Inst C3 FF1 20.0 20.0

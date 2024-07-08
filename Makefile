@@ -71,20 +71,20 @@ run4:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
-visual1:
-	./$(BIN) testcase/sample.txt testcase/sample.txt.out drawDie/testcase/sample_visual.txt.out
+visual4:
+	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i ./drawDie/testcase/sample_visual.txt.out -m die_pic.png -g -p -nl -o -c ./drawDie/testcase/cell_lst2.txt -n ./drawDie/testcase/net_lst2.txt
+	./drawDie/drawDie -i ./drawDie/testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o -c ./drawDie/testcase/cell_lst2.txt -n ./drawDie/testcase/net_lst2.txt
 
 v1:
 	./$(BIN) testcase/sampleCase testcase/sampleCase.out testcase/sampleCase_visual.txt.out
 	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/sampleCase_visual.txt.out -m die_pic.png -g -p -nl -o
+	./drawDie/drawDie -i testcase/sampleCase_visual.txt.out -m die_pic.png -t sampleCase -g -p -nl -o
 
 v4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -g -p -nl -o
+	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o
 
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt out

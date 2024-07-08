@@ -15,13 +15,16 @@ import time
 def parseArgument():
     parser = argparse.ArgumentParser(
         description='A script that processes input file or cell list file & net list file to generates a chip image.',
-        usage='%(prog)s -i [Input_Name] -m [Image_Name] [-g -o -p -nl -c cellname_file -n net_file]'
+        usage='%(prog)s -i [Input_Name] -m [Image_Name] -t [Image_Title] [-g -o -p -nl -c cellname_file -n net_file]'
     )
     # Add the argument for input file
     parser.add_argument('-i', '--input', type=str, help='Input file path', required=True)
 
     # Add the argument for output images name
     parser.add_argument('-m', '--images', type=str, help='Images name', required=True)
+
+    # Add the argument for images title
+    parser.add_argument('-t', '--title', type=str, help='Images title', required=True)
 
     # Add the flag for bin line and placement row
     parser.add_argument('-g', '--grid', action='store_false', help='Not draw bin line and placement row on image', default=True)
@@ -181,7 +184,7 @@ def dataPreprocess(DieSize, IOList, SiteRows, FFCells, GateCells, FFPinList, Gat
 
 
 # draw die
-def drawDie(DieSize, BinWidth, BinHeight, SiteRows, show_grid):
+def drawDie(DieSize, BinWidth, BinHeight, SiteRows, images_title, show_grid):
     # die size
     chipXLeft = DieSize[0]
     chipYLow = DieSize[1]
@@ -194,6 +197,8 @@ def drawDie(DieSize, BinWidth, BinHeight, SiteRows, show_grid):
 
     # figure size
     plt.figure(figsize=(10,int(10*chipRatio)))
+    # image title 
+    plt.title(images_title)
 
     # FF & Gate color label
     labelX_pos = chipXRight-chipWidth/4
@@ -556,6 +561,7 @@ if __name__ == "__main__":
     # Access the values using the attributes of the args object
     input_filename = args.input
     images_name = args.images
+    images_title = args.title
     show_grid = args.grid
     show_pin = args.pin
     show_overlap = args.overlap
@@ -567,7 +573,7 @@ if __name__ == "__main__":
     # filename = sys.argv[1]
     DieSize, IOList, BinWidth, BinHeight, SiteRows, FFCells, GateCells, FFPinList, GatePinList, InstList, NetList = readFile(input_filename)
 
-    chipArea = drawDie(DieSize, BinWidth, BinHeight, SiteRows, show_grid)
+    chipArea = drawDie(DieSize, BinWidth, BinHeight, SiteRows, images_title, show_grid)
     
     InstList, instPinList = drawBlocks(chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, InstList, show_pin, show_netlist, show_overlap)
     
