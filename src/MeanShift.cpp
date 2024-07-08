@@ -69,7 +69,6 @@ void MeanShift::shiftFFs(Manager &mgr){
                 iterationCount[i].first = iteration;
                 break;
             }
-            std::cout << iteration << std::endl;
         }
     }
 }
