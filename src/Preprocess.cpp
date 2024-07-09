@@ -85,7 +85,7 @@ void Preprocess::Debank(){
 }
 
 void Preprocess::Build_Circuit_Gragh(){
-    for(auto &n_m: mgr.Net_Map){
+    for(auto& n_m : mgr.Net_Map){
         const Net& n = n_m.second;
         std::string driving_cell;
         std::string driving_pin;
@@ -185,6 +185,7 @@ void Preprocess::optimal_FF_location(){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
             cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
+            cur_ff->setNewCoor(cur_ff->getCoor());
         }
 
         std::cout << "Slack statistic after Optimize" << std::endl;
