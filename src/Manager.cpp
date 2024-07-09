@@ -48,7 +48,7 @@ void Manager::banking(){
 
 void Manager::legalize(){
     // do abacus legalize algorithm
-    Legalizer legalizer;
+    Legalizer legalizer(*this);
     legalizer.run();
 }
 
