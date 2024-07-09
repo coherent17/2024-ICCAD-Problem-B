@@ -7,6 +7,7 @@ Manager::Manager():
     DisplacementDelay(0),
     NumInput(0),
     NumOutput(0),
+    MaxBit(0),
     NumInstances(0),
     NumNets(0),
     preprocessor(new Preprocess(*this))
@@ -38,6 +39,11 @@ void Manager::meanshift(){
     std::cout << "do graceful meanshift clustering..." << std::endl;
     MeanShift meanshift;
     meanshift.run(*this);
+}
+
+void Manager::banking(){
+    Banking banking(*this);
+    banking.run();
 }
 
 void Manager::legalize(){

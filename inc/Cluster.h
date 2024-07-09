@@ -5,26 +5,28 @@
 #include <cassert>
 #include "Coor.h"
 #include "Util.h"
+#include "FF.h"
 
+class FF;
 class Cluster{
 private:
     int clusterIdx;
     Coor coor;
-    std::vector<int> FFs;
+    std::vector<FF *> FFs;
 
 public:
     Cluster();
     ~Cluster();
 
     // Setters
-    void setClusterIdx(int clusterIdx);
+    // void setClusterIdx(int clusterIdx);
     void setCoor(const Coor &coor);
-    void addFF(int ffIdx);
+    void addFF(FF* FF);
 
     // Getters
-    int getClusterIdx()const;
+    // int getClusterIdx()const;
     Coor getCoor()const;
-    int getFF(int idx)const;
+    FF* getFF(int idx)const;
 
 };
 

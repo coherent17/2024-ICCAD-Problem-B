@@ -16,10 +16,14 @@
 #include "Dumper.h"
 #include "MeanShift.h"
 #include "Preprocess.h"
+#include "Cluster.h"
+#include "Banking.h"
 #include "Legalizer.h"
 
 class FF;
 class Preprocess;
+class Cluster;
+class Banking;
 class Manager{
 public:
     // cost function weight
@@ -41,6 +45,8 @@ public:
 
     // Cell library
     Cell_Library cell_library;
+    std::unordered_map<int, std::vector<Cell *>> Bit_FF_Map;
+    int MaxBit;
 
     // Instance
     int NumInstances;
@@ -58,6 +64,9 @@ public:
     // preprocess
     Preprocess* preprocessor;
 
+    // cluster
+    std::vector<Cluster> clusters;
+
     // ######################################### used in cluster ########################################################
     // all should be single bit ff in here.    
     std::vector<FF *> FFs;
@@ -70,6 +79,7 @@ public:
     void parse(const std::string &filename);
     void preprocess();
     void meanshift();
+    void banking();
     void legalize();
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
@@ -82,6 +92,7 @@ public:
     friend class Dumper;
     friend class MeanShift;
     friend class Preprocess;
+    friend class Banking;
     friend class Legalize;
 
 private:

@@ -77,6 +77,17 @@ void Parser::readCellLibrary(Manager &mgr){
         if(cellType == "FlipFlop"){
             fin >> bits >> cellName >> w >> h >> pinCount;
             c->setType(Cell_Type::FF);
+
+            if(mgr.MaxBit < bits)
+                mgr.MaxBit = bits;
+
+            auto it = mgr.Bit_FF_Map.find(bits);
+            if(it != mgr.Bit_FF_Map.end()){
+                mgr.Bit_FF_Map[bits].push_back(c);
+            }else{
+                std::vector<Cell *> cells({c});
+                mgr.Bit_FF_Map[bits] = cells;
+            }
         }
         else if(cellType == "Gate"){
             fin >> cellName >> w >> h >> pinCount;
