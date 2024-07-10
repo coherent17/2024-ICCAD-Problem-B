@@ -149,8 +149,8 @@ void Preprocess::optimal_FF_location(){
     Gradient optimizer(mgr, FF_list, obj, c, kAlpha, idx_map);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
-    showSlackStatistic();
-
+    double prevTNS = getSlackStatistic(true);
+    const double terminateThreshold = 0.001;
     for(i=0;i<=100;i++){
         optimizer.Step(true);
         // CAL new slack
@@ -165,8 +165,15 @@ void Preprocess::optimal_FF_location(){
         if(i % 25 == 0){
             std::cout << "phase 1 step : " << i << std::endl;
             std::cout << "Slack statistic after Optimize" << std::endl;
-            showSlackStatistic();
         }
+        double newTNS = getSlackStatistic(i%25 == 0);
+        if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS){
+            std::cout << "Gradient Convergen at " << i << " iteration." << std::endl;
+            std::cout << "Final statistic" << std::endl;
+            getSlackStatistic(true);
+            break;
+        }
+        prevTNS = newTNS;
         // if(i%50 == 0){
         //     mgr.FF_Map = FF_list;
         //     mgr.dumpVisual("after_" + std::to_string(i) + "_gradient");
@@ -386,29 +393,31 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
     }
 }
 
-void Preprocess::showSlackStatistic(){
-        double WNS = DBL_MAX;
-        double TNS = 0;
-        double AVS = 0; // average slack
-        double MAS = -DBL_MAX; // max slack
-        //
-        for(auto& ff_m : FF_list){
-            FF* temp = ff_m.second;
-            double slack = temp->getTimingSlack("D");
-            if(slack < WNS)
-                WNS = slack;
-            if(slack < 0)
-                TNS += slack;
-            AVS += slack;
-            if(slack > MAS)
-                MAS = slack;
-        }
+double Preprocess::getSlackStatistic(bool show){
+    double WNS = DBL_MAX;
+    double TNS = 0;
+    double AVS = 0; // average slack
+    double MAS = -DBL_MAX; // max slack
+    //
+    for(auto& ff_m : FF_list){
+        FF* temp = ff_m.second;
+        double slack = temp->getTimingSlack("D");
+        if(slack < WNS)
+            WNS = slack;
+        if(slack < 0)
+            TNS += slack;
+        AVS += slack;
+        if(slack > MAS)
+            MAS = slack;
+    }
 
-
+    if(show){
         std::cout << "\tWorst negative slack : " << WNS << std::endl;
         std::cout << "\tTotal negative slack : " << TNS << std::endl;
         std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
         std::cout << "\tMaximum slack : " << MAS << std::endl;
+    }
+    return TNS;
 }
 
 void Preprocess::updateSlack(){
