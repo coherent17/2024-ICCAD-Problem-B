@@ -32,7 +32,9 @@ class Preprocess{
                              bool& is_CLK, bool& has_driving_cell);
         void connectNet(const Net& n, std::string& driving_cell, std::string& driving_pin);
         void setLargestOutput(Instance* cur_instance);
-        void setLargestInput(FF* ff);
+        void DelayPropagation();
+        void propagaFF(std::queue<Instance*>& q, FF* ff);
+        void propagaGate(std::queue<Instance*>& q, Gate* gate);
 
         // function for optimal ff location
         void showSlackStatistic();

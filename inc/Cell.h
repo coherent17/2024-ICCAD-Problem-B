@@ -23,6 +23,7 @@ private:
     double w;
     double h;
     int pinCount;
+    int inputCount;
     std::vector<std::string> pinNames;
     std::unordered_map<std::string, Coor> pinCoorMap;
     double QpinDelay;
@@ -39,6 +40,7 @@ public:
     void setW(double w);
     void setH(double h);
     void setPinCount(int pinCount);
+    void setInputCount(int inputCount);
     void addPinCoor(const std::string &pinName, const Coor &coor);
     void addPinName(const std::string &pinName);
     void setQpinDelay(double delay);
@@ -51,6 +53,7 @@ public:
     double getW()const;
     double getH()const;
     int getPinCount()const;
+    int getInputCount()const;
     const std::string &getPinName(size_t pinIdx)const;
     const Coor &getPinCoor(const std::string &pinName)const;
     std::unordered_map<std::string, Coor> getPinCoorMap()const;

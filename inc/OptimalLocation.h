@@ -27,6 +27,7 @@ class obj_function{
         double forward();
         vector<Coor>& backward(int, bool);
         const vector<Coor>& grad()const {return grad_;}
+        void getWeight(FF* cur_ff, vector<double>& weight);
 };
 
 class Gradient{
