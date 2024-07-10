@@ -6,6 +6,8 @@ FF::FF() : Instance(){
     coor = {0, 0};
     bandwidth = MAX_BANDWIDTH;
     isShifting = true;
+    prevStage = {nullptr, nullptr, ""};
+    prevInstance = {nullptr, ""};
 }
 
 FF::~FF(){}
@@ -49,6 +51,18 @@ void FF::addNeighbor(int ffIdx, double euclidean_distance){
 
 void FF::setIsShifting(bool shift){
     this->isShifting = shift;
+}
+
+void FF::setPrevStage(PrevStage inputStage){
+    this->prevStage = inputStage;
+}
+
+void FF::setPrevInstance(std::pair<Instance*, std::string> inputInstance){
+    this->prevInstance = inputInstance;
+}
+
+void FF::addNextStage(NextStage input){
+    this->nextStage.push_back(input);
 }
 
 void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
@@ -95,6 +109,18 @@ int FF::getNeighborSize()const{
 
 bool FF::getIsShifting()const{
     return isShifting;
+}
+
+PrevStage FF::getPrevStage()const{
+    return this->prevStage;
+}
+
+std::pair<Instance*, std::string> FF::getPrevInstance()const{
+    return this->prevInstance;
+}
+
+std::vector<NextStage> FF::getNextStage()const{
+    return this->nextStage;
 }
 
 Coor FF::getOriginalD()const{

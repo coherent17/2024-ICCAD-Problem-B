@@ -19,8 +19,8 @@ double obj_function::forward(){
         y_pos[i] = 0;
         y_neg[i] = 0;
         assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
-        std::string inputInstanceName = cur_ff->getInputInstances()[0].first;
-        std::string inputPinName = cur_ff->getInputInstances()[0].second;
+        std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
+        std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
         Coor inputCoor;
         if(mgr.IO_Map.count(inputInstanceName)){
             inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
@@ -39,31 +39,36 @@ double obj_function::forward(){
         loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
         i++;
         // output net (only for the ff output to IO, to avoid double calculation)
-        Instance* outputInstance = cur_ff->getLargestOutput().first;
-        if(outputInstance){
-            std::string outputInstanceName = outputInstance->getInstanceName();
-            std::string outputPinName = cur_ff->getLargestOutput().second;
-            curCoor = cur_ff->getOriginalQ();
-            Coor outputCoor;
-            if(mgr.IO_Map.count(outputInstanceName)){
-                outputCoor = mgr.IO_Map[outputInstanceName].getCoor();
+        const vector<NextStage>& nextStage = cur_ff->getNextStage();
+        if(nextStage.size()){
+            // cout << nextStage.size() << endl;
+            for(auto& next_p : nextStage){
+                std::string outputInstanceName;
+                if(next_p.outputGate)
+                    outputInstanceName = next_p.outputGate->getInstanceName();
+                else // shift register
+                    outputInstanceName = next_p.ff->getInstanceName();
+                std::string outputPinName = next_p.pinName;
+                curCoor = cur_ff->getOriginalQ();
+                Coor outputCoor;
+                if(mgr.IO_Map.count(outputInstanceName)){
+                    outputCoor = mgr.IO_Map[outputInstanceName].getCoor();
+                }
+                else if(mgr.Gate_Map.count(outputInstanceName)){
+                    outputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(outputPinName);
+                }
+                else{
+                    outputCoor = FF_list[outputInstanceName]->getOriginalD();
+                }
+                x_pos[i] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
+                x_neg[i] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
+                y_pos[i] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
+                y_neg[i] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
+                loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
+                i++;
             }
-            else if(mgr.Gate_Map.count(outputInstanceName)){
-                outputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(outputPinName);
-            }
-            else{
-                outputCoor = FF_list[outputInstanceName]->getOriginalD();
-            }
-            x_pos[i] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
-            x_neg[i] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
-            y_pos[i] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
-            y_neg[i] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
-            loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-            i++;
         }
     }
-
-    cout << "loss : " << loss << std::endl;
     return loss;
 }
 
@@ -77,66 +82,49 @@ vector<Coor>& obj_function::backward(int step, bool onlyNegative){
         FF* cur_ff = FF_m.second;
         int idx = idx_map[cur_ff->getInstanceName()];
         // weigt by slack
-        double D_weight, Q_weight;
-        double D_slack = cur_ff->getTimingSlack("D");
-        if(cur_ff->getNextStageFF()){
-            FF* nextFF = FF_list[cur_ff->getNextStageFF()->getInstanceName()];
-            double Q_slack = nextFF->getTimingSlack("D");
-            double sum = D_slack + Q_slack + 0.000001;
-            if(sum > 0){
-                D_weight = Q_slack / sum;
-                Q_weight = D_slack / sum;
-                sum = abs(D_weight) + abs(Q_weight);
-                D_weight = abs(D_weight) / sum;
-                Q_weight = abs(Q_weight) / sum;
-            }
-            else{
-                D_weight = D_slack / sum;
-                Q_weight = Q_slack / sum;
-                sum = abs(D_weight) + abs(Q_weight);
-                D_weight = abs(D_weight) / sum;
-                Q_weight = abs(Q_weight) / sum;
-            }
-            // cout << cur_ff->getInstanceName() << "  " << D_weight << "  " << Q_weight << endl;
-            // cout << D_slack << "  " << Q_slack << endl;
-            if(Q_slack >= 0 && onlyNegative)
-                Q_weight = 0;
-        }
-        else{
-            D_weight = 1;
-            Q_weight = 0;
-        }
-        if(D_slack >= 0 && onlyNegative)
-            D_weight = 0;
+        const vector<NextStage>& nextStage = cur_ff->getNextStage();
+        vector<double> weight(1 + nextStage.size());
+        getWeight(cur_ff, weight);
+
         // net of D pin
         Coor curCoor = cur_ff->getOriginalD();
-        grad_[idx].x += D_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-        grad_[idx].y += D_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
+        grad_[idx].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
+        grad_[idx].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
         i++;
         // net of Q pin
-        Instance* outputInstance = cur_ff->getLargestOutput().first;
-        if(outputInstance){
-            curCoor = cur_ff->getOriginalQ();
-            grad_[idx].x += Q_weight * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-            grad_[idx].y += Q_weight * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
+        curCoor = cur_ff->getOriginalQ();
+        for(size_t j=1;j<weight.size();j++){
+            grad_[idx].x += weight[j] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
+            grad_[idx].y += weight[j] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
             i++;
         }
     }
-
-    // for(auto& net_m : mgr.Net_Map){
-    //     Net& n = net_m.second;
-    //     for(int j=0;j<n.getNumPins();j++){
-    //         const Pin& p = n.getPin(j);
-    //         string instName = p.getInstanceName();
-    //         if(mgr.FF_Map.count(instName)){
-    //             int id = mgr.FF_Map[instName].getIdx();
-    //             grad_[id].x += (exp(input_[id].x / gamma) / x_pos[i]) - (exp(-input_[id].x / gamma) / x_neg[i]);
-    //             grad_[id].y += (exp(input_[id].y / gamma) / y_pos[i]) - (exp(-input_[id].y / gamma) / y_neg[i]);   
-    //         }
-    //     }
-    //     i++;
-    // }
     return grad_;
+}
+
+void obj_function::getWeight(FF* cur_ff, vector<double>& weight){
+    // weigt by slack
+    double D_slack = cur_ff->getTimingSlack("D");
+    const vector<NextStage>& nextStage = cur_ff->getNextStage();
+    double sum = 0.0000001;
+    // get total
+    if(D_slack < 0)
+        sum += D_slack;
+    for(size_t j=1;j<weight.size();j++){
+        if(nextStage[j-1].ff->getTimingSlack("D") < 0)
+            sum += nextStage[j-1].ff->getTimingSlack("D");
+    }
+    // get weight
+    if(D_slack < 0)
+        weight[0] = D_slack / sum;
+    else
+        weight[0] = 0;
+    for(size_t j=1;j<weight.size();j++){
+        if(nextStage[j-1].ff->getTimingSlack("D") < 0)
+            weight[j] = nextStage[j-1].ff->getTimingSlack("D") / sum;
+        else
+            weight[j] = 0;
+    }
 }
 
 Gradient::Gradient( Manager &mgr,
@@ -201,7 +189,6 @@ void Gradient::Step(bool onlyNegative) {
             dir[i].y = -obj_.grad().at(i).y + beta * dir_prev_.at(i).y;
         }
     }
-
     // Assume the step size is constant
     // TODO(Optional): Change to dynamic step-size control
 

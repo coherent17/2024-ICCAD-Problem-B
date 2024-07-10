@@ -7,7 +7,8 @@ Cell::Cell() :
     bits(0), 
     w(0), 
     h(0), 
-    pinCount(0), 
+    pinCount(0),
+    inputCount(0),
     QpinDelay(0), 
     GatePower(0){}
 
@@ -36,6 +37,10 @@ void Cell::setH(double h){
 
 void Cell::setPinCount(int pinCount){
     this->pinCount = pinCount;
+}
+
+void Cell::setInputCount(int inputCount){
+    this->inputCount = inputCount;
 }
 
 void Cell::addPinCoor(const std::string &pinName, const Coor &coor){
@@ -78,6 +83,10 @@ double Cell::getH()const{
 
 int Cell::getPinCount()const{
     return pinCount;
+}
+
+int Cell::getInputCount()const{
+    return inputCount;
 }
 
 const std::string &Cell::getPinName(size_t pinIdx) const{

@@ -14,14 +14,9 @@ protected:
     Coor coor;
     const Cell *cell;
 
-    // the largest neightbor instance(critical path)
-    Instance* largestInput; // IO pin or FF in FF_list, prev stage FF
-    Instance* nextStageFF; // if nullptr -> its output is not critical path
-    std::pair<Instance*, std::string> largestOutput; // output instance with largest HPWL and its pinName
-
     // for circuit gragh
-    std::vector<std::pair<std::string, std::string>> inputInstances; // contain all input cells/FFs/IOs
-    std::vector<std::pair<std::string, std::string>> outputInstances; // contain all output cells/FFs/IOs, pair of (instance name, pin name)
+    std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>> inputInstances; // cur input pin name -> {input instance name, input instance output pin}
+    std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>> outputInstances; // cur output pin name -> {output instance name and its input pin name}
 
 public:
     Instance();
@@ -32,11 +27,8 @@ public:
     void setCellName(const std::string &cellName);
     void setCoor(const Coor &coor);
     void setCell(const Cell *cell);
-    void setLargestInput(Instance *input);
-    void setLargestOutput(Instance *output, const std::string& pinName);
-    void setNextStageFF(Instance* input);
-    void addInput(const std::string &input, const std::string& pinName);
-    void addOutput(const std::string &output, const std::string& pinName);
+    void addInput(const std::string& pinName, const std::string &input, const std::string& instPinName);
+    void addOutput(const std::string& pinName, const std::string &output, const std::string& instPinName);
 
     // Getters
     const std::string &getInstanceName()const;
@@ -47,11 +39,8 @@ public:
     double getH()const;
     int getPinCount()const;
     const Coor &getPinCoor(const std::string &pinName)const;
-    const Instance* getLargestInput() const;
-    const std::pair<Instance*, std::string>getLargestOutput() const;
-    const Instance* getNextStageFF() const;
-    const std::vector<std::pair<std::string, std::string>> &getInputInstances() const;
-    const std::vector<std::pair<std::string, std::string>> &getOutputInstances() const;
+    std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>& getInputInstances();
+    std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>& getOutputInstances();
 };
 
 #endif

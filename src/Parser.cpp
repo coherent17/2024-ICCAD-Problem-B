@@ -105,12 +105,17 @@ void Parser::readCellLibrary(Manager &mgr){
         std::string _;
         std::string pinName;
         double pin_coor_x, pin_coor_y;
+        int inputCount = 0;
         for(int i = 0; i < pinCount; i++){
             fin >> _ >> pinName >> pin_coor_x >> pin_coor_y;
             Coor coor = Coor(pin_coor_x, pin_coor_y);
             c->addPinName(pinName);
             c->addPinCoor(pinName, coor);
+            if(pinName.substr(0, 2) == "IN"){
+                inputCount++;
+            }
         }
+        c->setInputCount(inputCount);
         mgr.cell_library.addCell(cellName, c);
     }
 }
