@@ -9,7 +9,6 @@ Cell::Cell() :
     h(0), 
     score(0),
     pinCount(0), 
-    pinCount(0),
     inputCount(0),
     QpinDelay(0), 
     GatePower(0){}
