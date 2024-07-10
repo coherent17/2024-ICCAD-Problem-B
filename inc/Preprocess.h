@@ -37,7 +37,7 @@ class Preprocess{
         void propagaGate(std::queue<Instance*>& q, Gate* gate);
 
         // function for optimal ff location
-        void showSlackStatistic();
+        double getSlackStatistic(bool show); // return TNS
         void updateSlack();
 };
 
