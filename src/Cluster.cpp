@@ -1,7 +1,7 @@
 #include "Cluster.h"
 
 Cluster::Cluster(){
-    this->clusterIdx = UNSET_IDX;
+    // this->clusterIdx = UNSET_IDX;
     this->coor = {0, 0};
 }
 

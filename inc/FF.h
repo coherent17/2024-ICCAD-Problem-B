@@ -65,6 +65,7 @@ public:
     // Getter
     double getTimingSlack(const std::string &pinName)const;
     int getFFIdx()const;
+    bool getIsCluster()const;
     int getClusterIdx()const;
     Coor getNewCoor()const;
     double getBandwidth()const;

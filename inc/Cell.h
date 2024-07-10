@@ -22,6 +22,7 @@ private:
     int bits;
     double w;
     double h;
+    double score;
     int pinCount;
     int inputCount;
     std::vector<std::string> pinNames;
@@ -39,6 +40,7 @@ public:
     void setBits(int bits);
     void setW(double w);
     void setH(double h);
+    void setScore(double score);
     void setPinCount(int pinCount);
     void setInputCount(int inputCount);
     void addPinCoor(const std::string &pinName, const Coor &coor);
@@ -52,6 +54,7 @@ public:
     int getBits()const;
     double getW()const;
     double getH()const;
+    double getScore()const;
     int getPinCount()const;
     int getInputCount()const;
     const std::string &getPinName(size_t pinIdx)const;
