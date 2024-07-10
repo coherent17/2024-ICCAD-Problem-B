@@ -32,6 +32,29 @@ void Manager::parse(const std::string &filename){
 
 void Manager::preprocess(){
     preprocessor->run();
+    // delete all FF before preprocess
+    for(auto& ff_m : FF_Map)
+        delete ff_m.second;
+    FF_Map.clear();
+    // assign new FF after debank and optimal location to FF_Map and FFs
+    const std::unordered_map<std::string, FF*>& FF_list = preprocessor->getFFList();
+    for(const auto& ff_m : FF_list){
+        FF* newFF = new FF(1);
+        FF* curFF = ff_m.second;
+        Coor coor = curFF->getNewCoor();
+        std::string instanceName = getNewFFName("FF_1_");
+        const Cell* cell = curFF->getCell();
+        newFF->setInstanceName(instanceName);
+        newFF->setCoor(coor);
+        newFF->setNewCoor(coor);
+        newFF->setCell(cell);
+        newFF->setCellName(curFF->getCellName());
+        newFF->addClusterFF(curFF, 0);
+
+        curFF->setPhysicalFF(newFF);
+
+        FF_Map[instanceName] = newFF;
+    }
 }
 
 void Manager::meanshift(){

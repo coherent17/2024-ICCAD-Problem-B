@@ -26,7 +26,7 @@ typedef PrevStage NextStage; // ff -> the end of critical path
 class FF : public Instance{
 private:
     std::unordered_map<std::string, double> TimingSlack;
-    
+    std::vector<FF*> clusterFF;
     // ######################################### used in cluster ########################################################
     int ffIdx;
     int clusterIdx;
@@ -44,12 +44,15 @@ private:
     std::vector<NextStage> nextStage;
     Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
     double originalQpinDelay;
+    FF* physicalFF;
 public:
     FF();
+    FF(int size);
     ~FF();
 
     // Setters
     void setTimingSlack(const std::string &pinName, double slack);
+    void addClusterFF(FF* inputFF, int slot);
     void setFFIdx(int ffIdx);
     void setClusterIdx(int clusterIdx);
     void setNewCoor(const Coor &coor);
@@ -61,6 +64,7 @@ public:
     void addNextStage(NextStage);
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     void setOriginalQpinDelay(double);
+    void setPhysicalFF(FF* targetFF);
     
     // Getter
     double getTimingSlack(const std::string &pinName)const;
@@ -84,7 +88,13 @@ public:
     double shift(const Manager &mgr);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
+//     double getTNS();
+//     double getWNS();
+//     void updateSlack();
+    
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
+// private:
+//     double getSlack();
 };
 
 

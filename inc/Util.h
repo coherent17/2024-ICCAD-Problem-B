@@ -38,4 +38,17 @@ double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth);
 // string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 double HPWL(const Coor&, const Coor&);
 // // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);
+
+// FF* bank(Coor newbankCoor, cell* bankCellType, std::vector<FF*> ffToBank); // given the new coor(left down) and cell type, it will bank the ff in vector
+// // remove FF in vector in FF_Map
+// // insert new FF in FF_Map
+// // may use marriage algorithm
+// std::vector<FF*> debank(FF*, cell*); // given and MBFF, it will debank it into N bit single FF
+// // remove input ff from FF_Map
+// // insert new in FF_Map
+// // new ff coor -> equal D pin coor
+// void getNS(double& TNS, double& WNS);
+// // ff method to update slack (you can call after move a bank ff or single bit ff)
+// // change celltype
+
 #endif

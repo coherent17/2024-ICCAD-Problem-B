@@ -10,11 +10,26 @@ FF::FF() : Instance(){
     prevInstance = {nullptr, ""};
 }
 
+FF::FF(int size) : Instance(), clusterFF(size, nullptr){
+    ffIdx = UNSET_IDX;
+    clusterIdx = UNSET_IDX;
+    coor = {0, 0};
+    bandwidth = MAX_BANDWIDTH;
+    isShifting = true;
+    prevStage = {nullptr, nullptr, ""};
+    prevInstance = {nullptr, ""};
+}
+
 FF::~FF(){}
 
 // Setter
 void FF::setTimingSlack(const std::string &pinName, double slack){
     TimingSlack[pinName] = slack;
+}
+
+void FF::addClusterFF(FF* inputFF, int slot){
+    assert(clusterFF[slot] == nullptr && "slot already has FF");
+    clusterFF[slot] = inputFF;
 }
 
 void FF::setFFIdx(int ffIdx){
@@ -63,6 +78,10 @@ void FF::setPrevInstance(std::pair<Instance*, std::string> inputInstance){
 
 void FF::addNextStage(NextStage input){
     this->nextStage.push_back(input);
+}
+
+void FF::setPhysicalFF(FF* targetFF){
+    this->physicalFF = targetFF;
 }
 
 void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
