@@ -103,33 +103,9 @@ void Preprocess::Build_Circuit_Gragh(){
         connectNet(n, driving_cell, driving_pin);
     }
 
-    // find largest HPWL output instance
-    // find out largest HPWL cell for IO and FF
-    // (cur_FF->Q -----> Instance->inputPin)
-    for(auto& ff_m : FF_list){
-        setLargestOutput(ff_m.second);
-    }
+    // go study STA
+    DelayPropagation();
 
-    for(auto& IO_m : mgr.IO_Map){
-        setLargestOutput(&IO_m.second);
-    }
-
-    // find the largest HPWL input
-    // trace the input FF for all FFs in FF list
-    // (LargestInput->Q -----> comb -----> cur_FF->D)
-    for(auto& ff_m : FF_list){
-        setLargestInput(ff_m.second);
-    }
-
-    // find the next stage FF(cur_ff->Q ----> comb ----> nextFF->D)
-    for(auto& ff_m : FF_list){
-        if(ff_m.second->getLargestInput()){
-            if(FF_list.count(ff_m.second->getLargestInput()->getInstanceName())){
-                FF* input = FF_list[ff_m.second->getLargestInput()->getInstanceName()];
-                input->setNextStageFF(ff_m.second);
-            }
-        }
-    }
     // for debug
     // for(auto& lm : FF_list_Map){
     //     FF& temp = *FF_list[lm.second];
@@ -176,7 +152,6 @@ void Preprocess::optimal_FF_location(){
     showSlackStatistic();
 
     for(i=0;i<=100;i++){
-        std::cout << "phase 1 step : " << i << std::endl;
         optimizer.Step(true);
         // CAL new slack
         updateSlack();
@@ -187,9 +162,11 @@ void Preprocess::optimal_FF_location(){
             cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
             cur_ff->setNewCoor(cur_ff->getCoor());
         }
-
-        std::cout << "Slack statistic after Optimize" << std::endl;
-        showSlackStatistic();
+        if(i % 25 == 0){
+            std::cout << "phase 1 step : " << i << std::endl;
+            std::cout << "Slack statistic after Optimize" << std::endl;
+            showSlackStatistic();
+        }
         // if(i%50 == 0){
         //     mgr.FF_Map = FF_list;
         //     mgr.dumpVisual("after_" + std::to_string(i) + "_gradient");
@@ -250,125 +227,160 @@ void Preprocess::connectNet(const Net& n, std::string& driving_cell, std::string
                 std::string driving_ff = driving_cell + "/D" + driving_pin.substr(1, driving_pin.size()-1);
                 driving_ff = FF_list[FF_list_Map[driving_ff]]->getInstanceName();
                 if(mgr.FF_Map.count(instanceName)){ // to FF
-                    FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_ff, driving_pin);
-                    FF_list[driving_ff]->addOutput(FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
+                    FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput("D", driving_ff, "Q");
+                    FF_list[driving_ff]->addOutput("Q", FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
                 }
                 else if(mgr.Gate_Map.count(instanceName)){ // to std cell
-                    mgr.Gate_Map[instanceName]->addInput(driving_ff, driving_pin);
-                    FF_list[driving_ff]->addOutput(instanceName, pinName);
+                    mgr.Gate_Map[instanceName]->addInput(pinName, driving_ff, "Q");
+                    FF_list[driving_ff]->addOutput("Q", instanceName, pinName);
                 }
                 else{ // output pin
-                    FF_list[driving_ff]->addOutput(instanceName, pinName);
+                    FF_list[driving_ff]->addOutput("Q", instanceName, pinName);
                 }
             }
             else{ // drive by std cell or IO
                 if(mgr.FF_Map.count(instanceName)){ // to FF
-                    FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput(driving_cell, driving_pin);
+                    FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->addInput("D", driving_cell, driving_pin);
                     if(mgr.IO_Map.count(driving_cell))
-                        mgr.IO_Map[driving_cell].addOutput(FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
+                        mgr.IO_Map[driving_cell].addOutput(driving_pin, FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
+                    else
+                        mgr.Gate_Map[driving_cell]->addOutput(driving_pin, FF_list[FF_list_Map[instanceName + '/' + p.getPinName()]]->getInstanceName(), pinName);
                 }
                 else if(mgr.Gate_Map.count(instanceName)){ // to std cell
-                    mgr.Gate_Map[instanceName]->addInput(driving_cell, driving_pin);
+                    mgr.Gate_Map[instanceName]->addInput(pinName, driving_cell, driving_pin);
                     if(mgr.IO_Map.count(driving_cell))
-                        mgr.IO_Map[driving_cell].addOutput(instanceName, pinName);
+                        mgr.IO_Map[driving_cell].addOutput(driving_pin, instanceName, pinName);
+                    else
+                        mgr.Gate_Map[driving_cell]->addOutput(driving_pin, instanceName, pinName);
                 }
                 else{ // output pin
+                    mgr.IO_Map[instanceName].addInput(pinName, driving_cell, driving_pin);
                     if(mgr.IO_Map.count(driving_cell))
-                        mgr.IO_Map[driving_cell].addOutput(instanceName, pinName);
+                        mgr.IO_Map[driving_cell].addOutput(driving_pin, instanceName, pinName);
+                    else
+                        mgr.Gate_Map[driving_cell]->addOutput(driving_pin, instanceName, pinName);
                 }
             }
         }
     }
 }
 
-void Preprocess::setLargestOutput(Instance* driving_instance){
-    // from all its output instances
-    // findout one with largest HPWL as the largest output(critical path)
-    Coor cur_coor;
-    if(FF_list.count(driving_instance->getInstanceName())) // driving by FF
-        cur_coor = FF_list[driving_instance->getInstanceName()]->getOriginalQ();
-    else // driving by IO
-        cur_coor = driving_instance->getCoor(); 
-    double maxHPWL = 0;
-    const std::vector<std::pair<std::string, std::string>>& output_vector = driving_instance->getOutputInstances();
-    for(auto& instance_pair : output_vector){
-        const std::string& instance_name = instance_pair.first;
-        const std::string& pin_name = instance_pair.second;
-        Instance *cur_instance;
-        double curHPWL;
-        if(FF_list.count(instance_name)){
-            cur_instance = FF_list[instance_name];
-            curHPWL = HPWL(cur_coor, FF_list[instance_name]->getOriginalD()); // in FF list coor is default as D pin coor
+void Preprocess::DelayPropagation(){
+    // delay propagation
+    // start with IO
+    std::queue<Instance*> q;
+    cout << "num of Input : " << mgr.Input_Map.size() << endl;
+    for(auto& io_m : mgr.Input_Map){
+        Instance* input = &mgr.IO_Map[io_m.first];
+        for(auto& outputPairs : input->getOutputInstances()){
+            const std::string& drivingPin = outputPairs.first;
+            for(auto& outputVector : outputPairs.second){
+                const std::string& instanceName = outputVector.first;
+                const std::string& pinName = outputVector.second;
+                if(FF_list.count(instanceName)){// output to FF
+                    FF_list[instanceName]->setPrevInstance({input, drivingPin});
+                    q.push(FF_list[instanceName]);
+                }
+                else if(mgr.Gate_Map.count(instanceName)){ // output to std cell
+                    Gate* curGate = mgr.Gate_Map[instanceName];
+                    double cost = mgr.DisplacementDelay * HPWL(input->getCoor(), curGate->getCoor() + curGate->getPinCoor(pinName));
+                    curGate->setMaxInput({input, curGate, drivingPin, cost});
+                    curGate->updateVisitedTime();
+                    if(curGate->getVisitedTime() == curGate->getCell()->getInputCount()){
+                        q.push(curGate);
+                    }
+                }
+            }
         }
-        else if(mgr.Gate_Map.count(instance_name)){
-            cur_instance = mgr.Gate_Map[instance_name];
-            curHPWL = HPWL(cur_coor, cur_instance->getCoor() + cur_instance->getPinCoor(pin_name));
+    }
+
+    // propagate FF, its like INPUT
+    for(auto& ff_m: FF_list){
+        propagaFF(q, ff_m.second);
+    }
+
+    // propagation
+    while(!q.empty()){
+        Instance* curInst = q.front();
+        q.pop();
+
+        if(mgr.Gate_Map.count(curInst->getInstanceName())){
+            //cout <<"gate" << endl;
+            propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
+            //cout <<"Finish gate" << endl;
         }
         else{
-            cur_instance = &mgr.IO_Map[instance_name];
-            curHPWL = HPWL(cur_coor, cur_instance->getCoor());
-        }
-        if(curHPWL > maxHPWL){
-            maxHPWL = curHPWL;
-            driving_instance->setLargestOutput(cur_instance, pin_name);
+            assert("Something wrong!!!");
+            // should never go here
+            // its OUTPUT PIN
         }
     }
 }
 
-void Preprocess::setLargestInput(FF* ff){
-    std::vector<Instance*> temp_instance;
-    std::queue<std::string> q;
-    assert(ff->getInputInstances().size() != 0 && "FF with input floating");
-    assert(ff->getInputInstances().size() == 1 && "FF should have only one driving cell");
-    q.push(ff->getInputInstances()[0].first);
-    while(!q.empty()){ // find out all input IO or FF, and save to temp_instance
-        std::string cur_instance = q.front();
-        q.pop();
-        if(FF_list.count(cur_instance)){
-            temp_instance.push_back(FF_list[cur_instance]);
-        }
-        else if(mgr.IO_Map.count(cur_instance)){
-            temp_instance.push_back(&mgr.IO_Map[cur_instance]);
-        }
-        else{ // is std cell
-            Gate& cur_gate = *mgr.Gate_Map[cur_instance];
-            const std::vector<std::pair<std::string, std::string>>& input_vector = cur_gate.getInputInstances();
-            for(size_t i=0;i<input_vector.size();i++)
-                q.push(input_vector[i].first);
-        }
-    }
+void Preprocess::propagaFF(std::queue<Instance*>& q, FF* ff){
+    // given the ff, setMaxInput for all its output std cell
+    // and prevInstance for all its output FF
+    const std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>& outputMap = ff->getOutputInstances();
+    for(const auto& output_m : outputMap){
+        const std::string& outputPin = output_m.first;
+        assert(outputPin == "Q" && "FF list ff output pin should always be Q");
+        for(const auto& outputVector : output_m.second){
+            const std::string& instanceName = outputVector.first;
+            const std::string& pinName = outputVector.second;
 
-    double maxHPWL = 0;
-    // find the one instance with largest output HPWL
-    // max idx of HPWL(temp_instance, temp_instance largestOutput);
-    for(auto& instance : temp_instance){
-        bool isFF = mgr.FF_Map.count(instance->getInstanceName());
-        double curHPWL;
-        std::pair<Instance*, std::string> outputPair = instance->getLargestOutput();
-        std::string outputInstanceName = outputPair.first->getInstanceName();
-        Coor outputCellCoor;
-        if(FF_list.count(outputInstanceName)){ // output to a FF
-            outputCellCoor = FF_list[outputInstanceName]->getOriginalD();
-        }
-        else if(mgr.Gate_Map.count(outputInstanceName)){ // output to std cell
-            outputCellCoor = outputPair.first->getCoor() + outputPair.first->getPinCoor(outputPair.second);
-        }
-        else{ // output to IO
-            outputCellCoor = outputPair.first->getCoor();
-        }
-        if(isFF){
-            curHPWL = HPWL(FF_list[FF_list_Map[instance->getInstanceName()]]->getOriginalQ(), outputCellCoor);
-            curHPWL = FF_list[FF_list_Map[instance->getInstanceName()]]->getOriginalQpinDelay() + mgr.DisplacementDelay * curHPWL;
-            if(curHPWL > maxHPWL){
-                ff->setLargestInput(FF_list[FF_list_Map[instance->getInstanceName()]]);
-                maxHPWL = curHPWL;
+            if(FF_list.count(instanceName)){// FF output to FF
+                FF_list[instanceName]->setPrevInstance({ff, "Q"});
+                q.push(FF_list[instanceName]);
+                ff->addNextStage({FF_list[instanceName], nullptr, " "});
+            }
+            else if(mgr.Gate_Map.count(instanceName)){ // FF output to std cell
+                Gate* curGate = mgr.Gate_Map[instanceName];
+                double cost = ff->getOriginalQpinDelay() + mgr.DisplacementDelay * HPWL(ff->getOriginalQ(), curGate->getCoor() + curGate->getPinCoor(pinName));
+                curGate->setMaxInput({ff, curGate, pinName, cost});
+                curGate->updateVisitedTime();
+                if(curGate->getVisitedTime() == curGate->getCell()->getInputCount()){
+                    q.push(curGate);
+                }
             }
         }
-        else{ // is IO
-            curHPWL = HPWL(instance->getCoor(), outputCellCoor);
-            if(curHPWL > maxHPWL){
-                ff->setLargestInput(instance);
-                maxHPWL = curHPWL;
+    }
+}
+
+void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
+    MaxInput maxInput = gate->getMaxInput();
+    FF* prevFF = nullptr;
+    if(FF_list.count(maxInput.instance->getInstanceName())){
+        prevFF = FF_list[maxInput.instance->getInstanceName()];
+    }
+    const std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>& outputMap = gate->getOutputInstances();
+    for(const auto& output_m : outputMap){
+        const std::string& outputPin = output_m.first;
+        // cout << "Propagete cell : " << gate->getInstanceName() << " with output pin : " << outputPin << endl;
+        for(const auto& outputVector : output_m.second){
+            const std::string& instanceName = outputVector.first;
+            const std::string& pinName = outputVector.second;
+
+            if(FF_list.count(instanceName)){// std cell output to FF
+                FF_list[instanceName]->setPrevInstance({gate, outputPin});
+                q.push(FF_list[instanceName]);
+
+                // set up for prev stage FF
+                if(prevFF){ // ignore when start of critical path is INPUT
+                    FF_list[instanceName]->setPrevStage({prevFF, maxInput.outputGate, maxInput.pinName});
+                    prevFF->addNextStage({FF_list[instanceName], maxInput.outputGate, maxInput.pinName});
+                }
+            }
+            else if(mgr.Gate_Map.count(instanceName)){ // std cell to std cell
+                Gate* curGate = mgr.Gate_Map[instanceName];
+                double cost = maxInput.cost + mgr.DisplacementDelay * 
+                            HPWL(gate->getCoor() + gate->getPinCoor(outputPin), curGate->getCoor() + curGate->getPinCoor(pinName));
+                curGate->setMaxInput({maxInput.instance, maxInput.outputGate, maxInput.pinName, cost}); // AUTOMATICALLY update with largest cost
+                curGate->updateVisitedTime();
+                if(curGate->getVisitedTime() == curGate->getCell()->getInputCount()){
+                    q.push(curGate);
+                    // cout << "push new : " << curGate->getInstanceName() << endl;
+                }
+                // cout << curGate->getInstanceName() << " " << curGate->getVisitedTime() << " " << curGate->getCell()->getInputCount() << endl;
             }
         }
     }
@@ -402,36 +414,38 @@ void Preprocess::showSlackStatistic(){
 void Preprocess::updateSlack(){
     for(auto& ff_m : FF_list){
         FF* cur_ff = ff_m.second;
-
         // update slack for new location
         double delta_hpwl = 0;
         double delta_q = 0; // delta q pin delay
-        // D pin delta HPWL
-        std::string inputInstanceName = cur_ff->getInputInstances()[0].first;
-        std::string inputPinName = cur_ff->getInputInstances()[0].second;
         Coor inputCoor;
-        if(mgr.IO_Map.count(inputInstanceName)){
-            inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
-        }
-        else if(mgr.Gate_Map.count(inputInstanceName)){
-            inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
-        }
-        else{
-            inputCoor = FF_list[inputInstanceName]->getOriginalQ();
-            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-            double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + FF_list[inputInstanceName]->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
-            delta_hpwl += old_hpwl - new_hpwl;
+        // D pin delta HPWL
+        if(cur_ff->getPrevInstance().first){
+            std::string inputInstanceName = cur_ff->getPrevInstance().first->getInstanceName();
+            std::string inputPinName = cur_ff->getPrevInstance().second;
+            if(mgr.IO_Map.count(inputInstanceName)){
+                inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
+            }
+            else if(mgr.Gate_Map.count(inputInstanceName)){
+                inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
+            }
+            else{
+                inputCoor = FF_list[inputInstanceName]->getOriginalQ();
+                double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+                double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + FF_list[inputInstanceName]->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                delta_hpwl += old_hpwl - new_hpwl;
+            }
         }
 
         // Q pin delta HPWL (prev stage FFs Qpin)
-        if(cur_ff->getLargestInput()){
-            std::string prevInstanceName = cur_ff->getLargestInput()->getInstanceName();
+        const PrevStage& prev = cur_ff->getPrevStage();
+        if(prev.ff){
+            std::string prevInstanceName = prev.ff->getInstanceName();
             Coor originalInput, newInput;
             if(mgr.IO_Map.count(prevInstanceName)){
                 originalInput = mgr.IO_Map[prevInstanceName].getCoor();
@@ -443,26 +457,16 @@ void Preprocess::updateSlack(){
                 delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
             }
 
-            std::pair<Instance*, std::string> output = cur_ff->getLargestInput()->getLargestOutput();
-            if(output.first){
-                std::string outputInstanceName = output.first->getInstanceName();
-                if(mgr.IO_Map.count(outputInstanceName)){
-                    inputCoor = mgr.IO_Map[outputInstanceName].getCoor();
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(inputCoor, newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
-                }
-                else if(mgr.Gate_Map.count(outputInstanceName)){
-                    inputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(output.second);
+            if(prev.outputGate){
+                std::string outputInstanceName = prev.outputGate->getInstanceName();
+                if(mgr.Gate_Map.count(outputInstanceName)){
+                    inputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(prev.pinName);
                     double old_hpwl = HPWL(inputCoor, originalInput);
                     double new_hpwl = HPWL(inputCoor, newInput);
                     delta_hpwl += old_hpwl - new_hpwl;
                 }
                 else{
-                    inputCoor = FF_list[outputInstanceName]->getOriginalD();
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(FF_list[outputInstanceName]->getCoor() + FF_list[outputInstanceName]->getPinCoor("D"), newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
+                    assert("you should never go here");
                 }
             }
         }

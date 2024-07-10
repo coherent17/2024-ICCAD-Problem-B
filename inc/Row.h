@@ -4,6 +4,7 @@
 #include "Subrow.h"
 #include "Coor.h"
 #include <vector>
+#include <cmath>
 
 // Row class used in legalizer code
 // Will update the result of the struct::PlacementRow
@@ -14,7 +15,7 @@ private:
     double siteHeight;
     double siteWidth;
     int numOfSites;
-    std::vector<Subrow *> subrows;
+    std::vector<Subrow *> subrows;  // Use list
 
 public:
     Row();
@@ -33,6 +34,11 @@ public:
     double getSiteWidth()const;
     int getNumOfSite()const;
     const std::vector<Subrow *> &getSubrows()const;
+
+    // If Node *gate overlap the current row, split current row
+    void slicing(Node *gate);
+
+    friend std::ostream &operator<<(std::ostream &os, const Row &row);
 };
 
 #endif

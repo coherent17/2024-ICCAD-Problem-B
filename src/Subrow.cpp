@@ -47,7 +47,7 @@ SubrowCluster *Subrow::getLastCluster()const{
 
 std::ostream &operator<<(std::ostream &os, const Subrow &subrow){
     os << "[Subrow] ";
-    os << "startX: " << subrow.startX << ", ";
-    os << "endX: " << subrow.endX << std::endl;
+    os << "(startX: " << subrow.startX << ", ";
+    os << "endX: " << subrow.endX << ")";
     return os;
 }
