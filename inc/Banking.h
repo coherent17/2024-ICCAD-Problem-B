@@ -7,6 +7,14 @@
 #include "Util.h"
 #include "FF.h"
 
+namespace bg = boost::geometry;
+
+// 2-D point with coordinate type of double in cartesian
+typedef bg::model::point<double, 2, bg::cs::cartesian> Point;
+
+// Define a Point with an ID:
+typedef std::pair<Point, int> PointWithID;
+
 class Manager;
 class Cluster;
 class FF;
@@ -19,8 +27,10 @@ public:
     ~Banking();
 
     void run();
-    // void lib_scoring();
-    Coor getMedian(FF* nowFF, Cluster& c, std::vector<int>& resultFFs, std::vector<int>& toRemoveFFs);
+    void libScoring();
+    void sortCell(std::vector<Cell *> &cell_vector);
+    Coor getMedian(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs);
+    void doClustering();
 
 };
 

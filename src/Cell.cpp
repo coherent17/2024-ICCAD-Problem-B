@@ -7,6 +7,7 @@ Cell::Cell() :
     bits(0), 
     w(0), 
     h(0), 
+    score(0),
     pinCount(0), 
     QpinDelay(0), 
     GatePower(0){}
@@ -32,6 +33,10 @@ void Cell::setW(double w){
 
 void Cell::setH(double h){
     this->h = h;
+}
+
+void Cell::setScore(double score){
+    this->score = score;
 }
 
 void Cell::setPinCount(int pinCount){
@@ -74,6 +79,10 @@ double Cell::getW()const{
 
 double Cell::getH()const{
     return h;
+}
+
+double Cell::getScore()const{
+    return score;
 }
 
 int Cell::getPinCount()const{

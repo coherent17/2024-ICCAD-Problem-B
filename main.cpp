@@ -19,6 +19,8 @@ int main(int argc, char *argv[]){
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }
+    
+    mgr.banking();
 
     // place holder method for runing legalize algorithm
     mgr.legalize();

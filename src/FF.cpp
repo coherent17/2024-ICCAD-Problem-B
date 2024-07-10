@@ -73,6 +73,10 @@ int FF::getFFIdx()const{
     return ffIdx;
 }
 
+bool FF::getIsCluster()const{
+    return clusterIdx != UNSET_IDX;
+}
+
 int FF::getClusterIdx()const{
     return clusterIdx;
 }
