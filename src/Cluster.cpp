@@ -3,6 +3,7 @@
 Cluster::Cluster(){
     // this->clusterIdx = UNSET_IDX;
     this->coor = {0, 0};
+    cell = nullptr;
 }
 
 Cluster::~Cluster(){}
@@ -20,6 +21,11 @@ void Cluster::addFF(FF* FF){
     FFs.push_back(FF);
 }
 
+
+void Cluster::setCell(Cell* cell){
+    this->cell = cell;
+}
+
 // Getters
 // int Cluster::getClusterIdx()const{
 //     return clusterIdx;
@@ -29,7 +35,11 @@ Coor Cluster::getCoor()const{
     return coor;
 }
 
-FF* Cluster::getFF(int idx)const{
-    assert(idx >= 0 && idx < (int)FFs.size());
-    return FFs[idx];
+std::vector<FF *> Cluster::getFFs()const{
+    return FFs;
+}
+
+
+Cell* Cluster::getCell()const{
+    return cell;
 }

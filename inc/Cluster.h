@@ -10,9 +10,10 @@
 class FF;
 class Cluster{
 private:
-    int clusterIdx;
+    // int clusterIdx;
     Coor coor;
     std::vector<FF *> FFs;
+    Cell* cell;
 
 public:
     Cluster();
@@ -22,11 +23,13 @@ public:
     // void setClusterIdx(int clusterIdx);
     void setCoor(const Coor &coor);
     void addFF(FF* FF);
+    void setCell(Cell* cell);
 
     // Getters
     // int getClusterIdx()const;
     Coor getCoor()const;
-    FF* getFF(int idx)const;
+    std::vector<FF *> getFFs()const;
+    Cell* getCell()const;
 
 };
 
