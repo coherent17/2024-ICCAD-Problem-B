@@ -45,6 +45,7 @@ private:
     Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
     double originalQpinDelay;
     FF* physicalFF;
+    int slot;
 public:
     FF();
     FF(int size);
@@ -64,10 +65,11 @@ public:
     void addNextStage(NextStage);
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     void setOriginalQpinDelay(double);
-    void setPhysicalFF(FF* targetFF);
+    void setPhysicalFF(FF* targetFF, int slot);
     
     // Getter
     double getTimingSlack(const std::string &pinName)const;
+    std::vector<FF*>& getClusterFF();
     int getFFIdx()const;
     bool getIsCluster()const;
     int getClusterIdx()const;

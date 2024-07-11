@@ -51,7 +51,7 @@ void Manager::preprocess(){
         newFF->setCellName(curFF->getCellName());
         newFF->addClusterFF(curFF, 0);
 
-        curFF->setPhysicalFF(newFF);
+        curFF->setPhysicalFF(newFF, 0);
 
         FF_Map[instanceName] = newFF;
     }
@@ -204,4 +204,104 @@ std::string Manager::getNewFFName(const std::string& prefix){
     assert("number of FF exceed INT_MAX, pls modify counter datatype" && count != INT_MAX);
     name_record[prefix]++;
     return prefix + std::to_string(count);
+}
+
+struct ComparePairs {
+  bool operator()(const std::pair<double, FF*>& a, const std::pair<double, FF*>& b) const {
+    // Priority based on the first element (ascending order for min heap)
+    return a.first > b.first;
+  }
+};
+
+FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToBank){
+    // get all FF to be bank
+    std::vector<FF*> FFs(bankCellType->getBits());
+    int bit = 0;
+    for(auto& MBFF : FFToBank){
+        std::vector<FF*>& clusterFF = MBFF->getClusterFF();
+        for(auto& ff : clusterFF){
+            FFs[bit] = ff;
+            bit++;
+        }
+    }
+
+    // delete all MBFF to be cluster from FF_Map
+    for(auto& MBFF : FFToBank){
+        FF_Map.erase(MBFF->getInstanceName());
+        delete MBFF;
+    }
+
+    // assign new FF
+    assert(bit == bankCellType->getBits() && "Floating input is allowed???");
+    FF* newFF = new FF(bit);
+    newFF->setInstanceName(getNewFFName("FF_" + std::to_string(bit) + "_"));
+    newFF->setCoor(newbankCoor);
+    newFF->setNewCoor(newbankCoor);
+    newFF->setCell(bankCellType);
+    newFF->setCellName(bankCellType->getCellName());
+    FF_Map[newFF->getInstanceName()] = newFF;
+
+
+    // Greedy from smallest slack
+    std::priority_queue<std::pair<double, FF*>, std::vector<std::pair<double, FF*>>, ComparePairs> pq;
+    for(auto& ff : FFs){
+        pq.push({ff->getTimingSlack("D"), ff});
+    }
+    // assign to smallest HPWL D slot
+    std::vector<bool> slotEmpty(bit, true);
+    while(!pq.empty()){
+        FF* curFF = pq.top().second;
+        pq.pop();
+        int slot = -1;
+        double bestHPWL = DBL_MAX;
+        for(int i=0;i<bit;i++){
+            if(slotEmpty[i]){
+                double curHPWL = HPWL(curFF->getOriginalD(), newbankCoor + bankCellType->getPinCoor("D" + std::to_string(i)));
+                if(curHPWL < bestHPWL){
+                    bestHPWL = curHPWL;
+                    slot = i;
+                }
+            }
+        }
+
+        assert(slot != -1 && "why you can't findout your best location, you are looser");
+        slotEmpty[slot] = false;
+        newFF->addClusterFF(curFF, slot);
+        curFF->setPhysicalFF(newFF, slot);
+    }
+
+    return newFF;
+}
+
+std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
+    std::vector<FF*> outputFF;
+    std::vector<FF*>& clusterFF = MBFF->getClusterFF();
+    int slot = 0;
+    for(auto& ff : clusterFF){
+        FF* newFF = new FF(1);
+        // use coor for same D pin coor
+        Coor coor = MBFF->getCoor() + MBFF->getPinCoor("D" + std::to_string(slot)) - debankCellType->getPinCoor("D");
+        std::string instanceName = getNewFFName("FF_1_");
+        newFF->setInstanceName(instanceName);
+        newFF->setCoor(coor);
+        newFF->setNewCoor(coor);
+        newFF->setCell(debankCellType);
+        newFF->setCellName(debankCellType->getCellName());
+        newFF->addClusterFF(ff, 0);
+
+        ff->setPhysicalFF(newFF, 0);
+
+        FF_Map[instanceName] = newFF;
+        slot++;
+        outputFF.push_back(newFF);
+    }
+
+    FF_Map.erase(MBFF->getInstanceName());
+    delete MBFF;
+
+    return outputFF;
+}
+
+void Manager::getNS(double& TNS, double& WNS){
+    // to be continue
 }

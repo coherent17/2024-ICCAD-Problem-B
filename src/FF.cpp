@@ -80,8 +80,9 @@ void FF::addNextStage(NextStage input){
     this->nextStage.push_back(input);
 }
 
-void FF::setPhysicalFF(FF* targetFF){
+void FF::setPhysicalFF(FF* targetFF, int slot){
     this->physicalFF = targetFF;
+    this->slot = slot;
 }
 
 void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
@@ -100,6 +101,10 @@ double FF::getTimingSlack(const std::string &pinName)const{
         throw std::out_of_range("Pin name not found");
     }
     return it->second;
+}
+
+std::vector<FF*>& FF::getClusterFF(){
+    return this->clusterFF;
 }
 
 int FF::getFFIdx()const{
