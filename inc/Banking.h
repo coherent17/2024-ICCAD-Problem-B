@@ -29,7 +29,10 @@ public:
     void run();
     void libScoring();
     void sortCell(std::vector<Cell *> &cell_vector);
-    Coor getMedian(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs);
+    void chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs);
+    Cell* chooseCellLib(int bitNum);
+    Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
+    void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();
 
 };

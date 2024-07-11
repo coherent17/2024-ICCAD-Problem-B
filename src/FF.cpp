@@ -14,7 +14,7 @@ FF::FF(int size) : Instance(), clusterFF(size, nullptr){
     ffIdx = UNSET_IDX;
     clusterIdx = UNSET_IDX;
     coor = {0, 0};
-    bandwidth = MAX_BANDWIDTH;
+    bandwidth = 0;
     isShifting = true;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, ""};
