@@ -86,7 +86,15 @@ public:
     void print();
     
     std::string getNewFFName(const std::string&); // using a prefix string to get new unique FF name
-                                            // suggest prefix for N-bit MBFF -> FF_N_
+                                                  // suggest prefix for N-bit MBFF -> FF_N_
+
+    FF* bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToBank);
+    // given newbankCoor (left down) and target celltype
+    // it will bank all the FF in vector (can be MBFF in FFToBank)
+    // and it will delete old and insert new FF to FF_Map
+    std::vector<FF*> debankFF(FF* MBFF, Cell* debankCellType);
+    // the FF after debank will be assign to debankCellType (maybe this can be a vector)
+    void getNS(double& TNS, double& WNS);
 
     friend class Parser;
     friend class Dumper;

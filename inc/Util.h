@@ -38,4 +38,6 @@ double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth);
 // string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 double HPWL(const Coor&, const Coor&);
 // // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);
+
+
 #endif
