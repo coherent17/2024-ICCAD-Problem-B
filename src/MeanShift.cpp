@@ -43,7 +43,7 @@ void MeanShift::initKNN(Manager &mgr){
             ff->setIsShifting(false);
         }
         else{
-            ff->setBandwidth();
+            ff->setBandwidth(mgr);
         }
     }
 }
@@ -71,6 +71,15 @@ void MeanShift::shiftFFs(Manager &mgr){
             }
         }
     }
+    double totalShift = 0;
+    double maxShift = 0;
+    for(size_t i = 0; i < mgr.FFs.size(); i++){
+        double shift_distance = std::sqrt(SquareEuclideanDistance(mgr.FFs[i]->getCoor(), mgr.FFs[i]->getNewCoor()));
+        totalShift += shift_distance;
+        if(shift_distance > maxShift){maxShift = shift_distance;}
+    }
+    std::cout << "Max shift distance: " << maxShift << std::endl;
+    std::cout << "Total shift distance: " << totalShift << std::endl;
 }
 
 void MeanShift::FFrunKNN(const Manager &mgr, int ffidx){
@@ -81,7 +90,7 @@ void MeanShift::FFrunKNN(const Manager &mgr, int ffidx){
         int ffneighbor_idx = p.second;
         FF *ffneighbor = mgr.FFs[ffneighbor_idx];
         double distance = SquareEuclideanDistance(ff->getCoor(), ffneighbor->getCoor());
-        if(distance < MAX_SQUARE_DISPLACEMENT){
+        if(distance < mgr.param.MAX_SQUARE_DISPLACEMENT){
             ff->addNeighbor(ffneighbor_idx, distance);
         }
     }

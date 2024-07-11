@@ -1,5 +1,11 @@
 #include "Util.h"
 
+Param::Param():
+    MAX_SQUARE_DISPLACEMENT(400000000),
+    MAX_BANDWIDTH(10000)
+    {}
+Param::~Param(){}
+
 double SquareEuclideanDistance(const Coor &p1, const Coor &p2){
     return std::pow(p1.getX() - p2.getX(), 2) + std::pow(p1.getY() - p2.getY(), 2);
 }

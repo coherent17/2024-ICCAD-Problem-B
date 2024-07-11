@@ -57,7 +57,7 @@ public:
     void setFFIdx(int ffIdx);
     void setClusterIdx(int clusterIdx);
     void setNewCoor(const Coor &coor);
-    void setBandwidth();
+    void setBandwidth(const Manager &mgr);
     void addNeighbor(int ffIdx, double euclidean_distance);
     void setIsShifting(bool shift);
     void setPrevStage(PrevStage);

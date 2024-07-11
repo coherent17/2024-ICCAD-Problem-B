@@ -7,8 +7,8 @@
 
 // Parameter for KNN
 #define MAX_NEIGHBORS 20
-#define MAX_SQUARE_DISPLACEMENT 100000000
-#define MAX_BANDWIDTH 10000
+// #define MAX_SQUARE_DISPLACEMENT 100000000
+// #define MAX_BANDWIDTH 10000
 #define BANDWIDTH_SELECTION_NEIGHBOR 4
 #define SHIFT_TOLERANCE 0.1
 #define SQUARE_EPSILON 25000000
@@ -31,6 +31,15 @@
 // #include <queue>
 // #include <limits.h>
 // using namespace std;
+
+class Param{
+
+    public:
+        Param();
+        ~Param();
+        double MAX_SQUARE_DISPLACEMENT;
+        double MAX_BANDWIDTH;
+};
 
 double SquareEuclideanDistance(const Coor &p1, const Coor &p2);
 double MangattanDistance(const Coor &p1, const Coor &p2);

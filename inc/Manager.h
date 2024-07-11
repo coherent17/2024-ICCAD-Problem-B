@@ -19,11 +19,13 @@
 #include "Cluster.h"
 #include "Banking.h"
 #include "Legalizer.h"
+#include "Util.h"
 
 class FF;
 class Preprocess;
 class Cluster;
 class Banking;
+class Param;
 class Manager{
 public:
     // cost function weight
@@ -66,6 +68,9 @@ public:
 
     // cluster
     std::vector<Cluster> clusters;
+
+    // parameter
+    Param param;
 
     // ######################################### used in cluster ########################################################
     // all should be single bit ff in here.    
