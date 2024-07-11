@@ -67,6 +67,7 @@ void Parser::readIOCoordinate(Manager &mgr){
 }
 
 void Parser::readCellLibrary(Manager &mgr){
+    double maxArea = 0;
     std::string cellType;
     while(fin >> cellType){
         Cell *c = new Cell();
@@ -94,9 +95,12 @@ void Parser::readCellLibrary(Manager &mgr){
             c->setType(Cell_Type::Gate);
         }
         else{
+            mgr.param.MAX_SQUARE_DISPLACEMENT = maxArea*4;
+            mgr.param.MAX_BANDWIDTH = std::sqrt(maxArea);
             delete c;
             return;
         };
+        if(maxArea < w*h) {maxArea = w*h;}
         c->setBits(bits);
         c->setCellName(cellName);
         c->setW(w);

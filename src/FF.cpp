@@ -4,7 +4,7 @@ FF::FF() : Instance(){
     ffIdx = UNSET_IDX;
     clusterIdx = UNSET_IDX;
     coor = {0, 0};
-    bandwidth = MAX_BANDWIDTH;
+    bandwidth = 0;
     isShifting = true;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, ""};
@@ -29,7 +29,7 @@ void FF::setNewCoor(const Coor &coor){
     this->newCoor = coor;
 }
 
-void FF::setBandwidth(){
+void FF::setBandwidth(const Manager &mgr){
     if(getNeighborSize() > BANDWIDTH_SELECTION_NEIGHBOR){
         bandwidth = NeighborFFs[BANDWIDTH_SELECTION_NEIGHBOR].second;
     }
@@ -37,8 +37,8 @@ void FF::setBandwidth(){
         bandwidth = NeighborFFs.back().second;
     }
 
-    if(bandwidth > MAX_SQUARE_DISPLACEMENT){
-        bandwidth = MAX_BANDWIDTH;
+    if(bandwidth > mgr.param.MAX_SQUARE_DISPLACEMENT){
+        bandwidth = mgr.param.MAX_BANDWIDTH;
     }
     else{
         bandwidth = std::sqrt(bandwidth);
