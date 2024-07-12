@@ -33,8 +33,7 @@ void Manager::parse(const std::string &filename){
 void Manager::preprocess(){
     preprocessor->run();
     // delete all FF before preprocess
-    for(auto& ff_m : FF_Map)
-        delete ff_m.second;
+    originalFF_Map = FF_Map;
     FF_Map.clear();
     // assign new FF after debank and optimal location to FF_Map and FFs
     const std::unordered_map<std::string, FF*>& FF_list = preprocessor->getFFList();

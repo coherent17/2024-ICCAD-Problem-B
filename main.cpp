@@ -19,11 +19,11 @@ int main(int argc, char *argv[]){
     std::cout << "Slack after meanshift" << std::endl;
     mgr.showNS();
     // mgr.print();
-    mgr.dump(argv[2]);
     
     mgr.banking();
     std::cout << "Slack after banking" << std::endl;
     mgr.showNS();
+    mgr.dump(argv[2]);
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }

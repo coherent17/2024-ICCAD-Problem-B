@@ -163,6 +163,14 @@ double FF::getOriginalQpinDelay()const{
     return originalQpinDelay;
 }
 
+FF* FF::getPhysicalFF()const{
+    return physicalFF;
+}
+
+int FF::getSlot()const{
+    return slot;
+}
+
 void FF::sortNeighbors(){
     auto FFcmp = [](const std::pair<int, double> &neighbor1, const std::pair<int, double> &neighbor2){
         return neighbor1.second < neighbor2.second;

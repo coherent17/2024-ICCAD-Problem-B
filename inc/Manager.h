@@ -53,6 +53,7 @@ public:
     // Instance
     int NumInstances;
     std::unordered_map<std::string, FF *> FF_Map;
+    std::unordered_map<std::string, FF *> originalFF_Map;
     std::unordered_map<std::string, Gate *> Gate_Map;
     
 
