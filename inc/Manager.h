@@ -96,8 +96,8 @@ public:
     // and it will delete old and insert new FF to FF_Map
     std::vector<FF*> debankFF(FF* MBFF, Cell* debankCellType);
     // the FF after debank will be assign to debankCellType (maybe this can be a vector)
-    void getNS(double& TNS, double& WNS);
-
+    void getNS(double& TNS, double& WNS, bool show); // this retunr TNS and WNS of whole design (all FF in FF_Map)
+    void showNS();
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

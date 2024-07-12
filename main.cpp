@@ -12,12 +12,18 @@ int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.preprocess();
+    std::cout << "Slack after preprocess" << std::endl;
+    mgr.showNS();
 
     mgr.meanshift();
+    std::cout << "Slack after meanshift" << std::endl;
+    mgr.showNS();
     // mgr.print();
     mgr.dump(argv[2]);
     
     mgr.banking();
+    std::cout << "Slack after banking" << std::endl;
+    mgr.showNS();
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }

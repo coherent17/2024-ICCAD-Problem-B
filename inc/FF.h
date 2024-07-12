@@ -90,13 +90,13 @@ public:
     double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
-//     double getTNS();
-//     double getWNS();
-//     void updateSlack();
+    void getNS(double& TNS, double& WNS); // pls call update slack before get TNS and WNS
+    void updateSlack(Manager&);
     
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
-// private:
-//     double getSlack();
+private:
+    double getSlack(Manager&); // don't touch is only for FF in FF_list
+    std::string getPhysicalPinName();
 };
 
 
