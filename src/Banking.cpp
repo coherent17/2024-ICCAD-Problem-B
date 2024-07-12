@@ -8,6 +8,7 @@ void Banking::run(){
     std::cout << "Running cluster..." << std::endl;
     libScoring();
     doClustering();
+    ClusterResult();
 }
 
 void Banking::libScoring(){
@@ -34,10 +35,10 @@ void Banking::sortCell(std::vector<Cell *> &cell_vector){
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
 }
 
-void Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs){
+Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank){
     std::vector<std::pair<int, double>> nearFFs;
     for(int i = 0; i < (int)resultFFs.size(); i++){
-        double dis = SquareEuclideanDistance (nowFF->getNewCoor(), mgr.FFs[resultFFs[i].second]->getNewCoor());
+        double dis = SquareEuclideanDistance (nowFF->getNewCoor(), FFs[resultFFs[i].second]->getNewCoor());
         if (dis < SQUARE_EPSILON)
         {
             nearFFs.push_back ({i, dis});
@@ -51,11 +52,13 @@ void Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>&
 
         for(int i = 0; i < bitNum; i++){
             toRemoveFFs.push_back (resultFFs[nearFFs[i].first]);
-            c.addFF (mgr.FFs[resultFFs[nearFFs[i].first].second]);
+            FFToBank.push_back(FFs[resultFFs[nearFFs[i].first].second]);
+            c.addFF (FFs[resultFFs[nearFFs[i].first].second]->getInstanceName());
         }
         c.setCell(chooseCell);
+        return chooseCell;
     }
-    
+    return nullptr;
 }
 
 Cell* Banking::chooseCellLib(int bitNum){
@@ -71,8 +74,8 @@ Cell* Banking::chooseCellLib(int bitNum){
 Coor Banking::getMedian(std::vector<PointWithID>& toRemoveFFs){
     std::vector<double> median_x, median_y;
     for(size_t i = 0; i < toRemoveFFs.size(); i++){
-        median_x.push_back (mgr.FFs[toRemoveFFs[i].second]->getNewCoor().x);
-        median_y.push_back (mgr.FFs[toRemoveFFs[i].second]->getNewCoor().y);
+        median_x.push_back (FFs[toRemoveFFs[i].second]->getNewCoor().x);
+        median_y.push_back (FFs[toRemoveFFs[i].second]->getNewCoor().y);
     }
     std::sort (median_x.begin(), median_x.end());
     std::sort (median_y.begin(), median_y.end());
@@ -92,47 +95,80 @@ void Banking::sortFFs(std::vector<std::pair<int, double>> &nearFFs){
 void Banking::doClustering(){
     std::vector<PointWithID> points;
     points.reserve(mgr.FF_Map.size());
-    for(size_t i = 0; i < mgr.FFs.size(); i++){
-        FF *ff = mgr.FFs[i];
+
+    // make unique id for the flipflop
+    for(const auto &pair : mgr.FF_Map){
+        FFs.push_back(pair.second);
+    }
+
+    for(size_t i = 0; i < FFs.size(); i++){
+        FF *ff = FFs[i];
         points.push_back(std::make_pair(Point(ff->getNewCoor().x,ff->getNewCoor().y), i));
     }
     bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > rtree;
     rtree.insert(points.begin(), points.end());
+    std::vector<bool> isClustered (FFs.size(), false);
     
     int clusterNum = 0;
-    for (size_t index = 0; index < mgr.FFs.size(); index++){
-        FF* nowFF = mgr.FFs[index];
-        if (nowFF->getIsCluster()) {continue;}
-        Cluster c;
+    for (size_t index = 0; index < FFs.size(); index++){
+        FF* nowFF = FFs[index];
+        if (isClustered[index]) {continue;}
+        Cluster c;  // DEBUG
         std::vector<PointWithID> resultFFs, toRemoveFFs;
         resultFFs.reserve(mgr.MaxBit);
         rtree.query(bgi::nearest(Point(nowFF->getNewCoor().x, nowFF->getNewCoor().y), mgr.MaxBit), std::back_inserter(resultFFs));
-        chooseCandidateFF(nowFF, c, resultFFs, toRemoveFFs);
+        std::vector<FF*> FFToBank;
+        Cell* chooseCell = chooseCandidateFF(nowFF, c, resultFFs, toRemoveFFs, FFToBank);
         
         
         if(!toRemoveFFs.empty()){
             Coor clusterCoor = getMedian(toRemoveFFs);
+            mgr.bankFF(clusterCoor, chooseCell, FFToBank);
             c.setCoor(clusterCoor);
             for (size_t j = 0; j < toRemoveFFs.size(); j++)
             {
-                FF* toRemoveFF = mgr.FFs[toRemoveFFs[j].second];
+                isClustered[toRemoveFFs[j].second] = true;
+                FF* toRemoveFF = FFs[toRemoveFFs[j].second];
                 toRemoveFF->setClusterIdx(clusterNum);
                 toRemoveFF->setNewCoor(clusterCoor);
             }
             rtree.remove (toRemoveFFs.begin(), toRemoveFFs.end());
-            mgr.clusters.push_back (c);
+            clusters.push_back (c);
             clusterNum++;
         }
         
     }
-    std::cout << "Cluster Num: " << clusterNum << std::endl;
-    // for(size_t i = 0; i < mgr.clusters.size(); i++){
-    //     std::cout << mgr.clusters[i].getCell()->getCellName() << ":";
-    //     std::vector<FF*> FFs = mgr.clusters[i].getFFs();
-    //     for(size_t j = 0; j < FFs.size(); j++){
-    //         std::cout << " " << FFs[j]->getInstanceName();
+    
+}
+
+void Banking::ClusterResult(){
+    std::cout << "Cluster Num: " << clusters.size() << std::endl;
+    // DEBUG
+    // for(size_t i = 0; i < clusters.size(); i++){
+    //     std::cout << clusters[i].getCell()->getCellName() << ":";
+    //     std::vector<std::string> FFsName = clusters[i].getFFsName();
+    //     for(size_t j = 0; j < FFsName.size(); j++){
+    //         std::cout << " " << FFsName[j];
     //     }
     //     std::cout << std::endl;
     // }
+    // for(const auto &MBFF : mgr.FF_Map){
+    //     std::vector<FF*> clusterFFs = MBFF.second->getClusterFF();
+    //     std::cout << MBFF.second->getInstanceName() << ":";
+    //     if(clusterFFs.size() != 0){
+    //         for(size_t i = 0; i < clusterFFs.size(); i++){
+    //             std::cout << " " << clusterFFs[i]->getInstanceName();
+    //         }
+    //     }else{
+    //         std::cout << " No Cluster"; 
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    // give to legalizer
+    for(const auto &pair : mgr.FF_Map){
+        mgr.FFs.push_back(pair.second);
+    }
+
 }
     

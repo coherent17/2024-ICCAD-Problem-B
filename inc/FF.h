@@ -87,7 +87,7 @@ public:
     
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
-    double shift(const Manager &mgr);     // shift the ff and return the euclidean distance from origin coordinate
+    double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
 //     double getTNS();

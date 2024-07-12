@@ -170,12 +170,12 @@ void FF::sortNeighbors(){
     std::sort(NeighborFFs.begin(), NeighborFFs.end(), FFcmp);
 }
 
-double FF::shift(const Manager &mgr){
+double FF::shift(std::vector<FF *> &FFs){
     double x_shift = 0;
     double y_shift = 0;
     double scale_factor = 0;
     for(size_t i = 0; i < NeighborFFs.size(); i++){
-        FF *ffneighbor = mgr.FFs[NeighborFFs[i].first];
+        FF *ffneighbor = FFs[NeighborFFs[i].first];
         double bandwidth_i = ffneighbor->getBandwidth();
         double weight = GaussianKernel(newCoor, ffneighbor->getCoor(), bandwidth_i) / std::pow(bandwidth_i, 4);
         // DEBUG_MSG(weight)

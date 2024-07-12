@@ -12,7 +12,7 @@ class Cluster{
 private:
     // int clusterIdx;
     Coor coor;
-    std::vector<FF *> FFs;
+    std::vector<std::string> FFsName;
     Cell* cell;
 
 public:
@@ -22,13 +22,13 @@ public:
     // Setters
     // void setClusterIdx(int clusterIdx);
     void setCoor(const Coor &coor);
-    void addFF(FF* FF);
+    void addFF(std::string);
     void setCell(Cell* cell);
 
     // Getters
     // int getClusterIdx()const;
     Coor getCoor()const;
-    std::vector<FF *> getFFs()const;
+    std::vector<std::string> getFFsName()const;
     Cell* getCell()const;
 
 };

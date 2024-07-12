@@ -22,6 +22,9 @@ class FF;
 class Banking{
 private:
     Manager& mgr;
+    std::vector<FF *> FFs;
+    std::vector<Cluster> clusters;
+
 public:
     explicit Banking(Manager& mgr);
     ~Banking();
@@ -29,11 +32,12 @@ public:
     void run();
     void libScoring();
     void sortCell(std::vector<Cell *> &cell_vector);
-    void chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs);
+    Cell* chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
     Cell* chooseCellLib(int bitNum);
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
     void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();
+    void ClusterResult();
 
 };
 
