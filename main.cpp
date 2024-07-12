@@ -16,13 +16,13 @@ int main(int argc, char *argv[]){
     mgr.meanshift();
     // mgr.print();
     mgr.dump(argv[2]);
+    
+    mgr.banking();
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }
-    
-    mgr.banking();
 
     // place holder method for runing legalize algorithm
-    mgr.legalize();
+    // mgr.legalize();
     return 0;
 }
