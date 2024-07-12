@@ -66,15 +66,12 @@ public:
     // preprocess
     Preprocess* preprocessor;
 
-    // cluster
-    std::vector<Cluster> clusters;
-
     // parameter
     Param param;
 
     // ######################################### used in cluster ########################################################
     // all should be single bit ff in here.    
-    std::vector<FF *> FFs;
+    std::vector<FF *> FFs;// need to delete in legalizer 
     // ######################################### used in cluster ########################################################
 
 public:

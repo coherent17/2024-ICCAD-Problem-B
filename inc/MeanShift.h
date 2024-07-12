@@ -25,9 +25,11 @@ typedef std::pair<Point, int> PointWithID;
 // The R-tree stores PointWithID elements and uses a quadratic split algorithm for node splitting
 typedef bgi::rtree<PointWithID, bgi::quadratic<P_PER_NODE>> RTree;
 
+class FF;
 class MeanShift{
 private:
     RTree rtree;
+    std::vector<FF *> FFs;
     std::vector<std::pair<int, int>> iterationCount;    // {iteration to coverage, ffidx}
 
 public:
@@ -40,7 +42,7 @@ public:
 private:
     void buildRtree(Manager &mgr);
     void initKNN(Manager &mgr);
-    void shiftFFs(Manager &mgr);
+    void shiftFFs();
     void FFrunKNN(const Manager &mgr, int ffidx);
 };
 

@@ -17,8 +17,8 @@ void Cluster::setCoor(const Coor &coor){
     this->coor = coor;
 }
 
-void Cluster::addFF(FF* FF){
-    FFs.push_back(FF);
+void Cluster::addFF(std::string FFName){
+    FFsName.push_back(FFName);
 }
 
 
@@ -35,8 +35,8 @@ Coor Cluster::getCoor()const{
     return coor;
 }
 
-std::vector<FF *> Cluster::getFFs()const{
-    return FFs;
+std::vector<std::string> Cluster::getFFsName()const{
+    return FFsName;
 }
 
 
