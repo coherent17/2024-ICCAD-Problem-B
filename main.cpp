@@ -23,6 +23,6 @@ int main(int argc, char *argv[]){
     }
 
     // place holder method for runing legalize algorithm
-    // mgr.legalize();
+    mgr.legalize();
     return 0;
 }
