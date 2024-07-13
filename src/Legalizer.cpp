@@ -23,7 +23,7 @@ bool Legalizer::run(){
     ConstructDB();
     SliceRows();
     CheckSubrowsAttribute();     // Should remove when release the binary
-    // Abacus();
+    Abacus();
     // for(const auto &row : rows){
     //     std::cout << *row << std::endl;
     // }
@@ -159,6 +159,7 @@ void Legalizer::Abacus(){
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
             minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+            down_row_idx--;
         }
 
         // search up
@@ -166,6 +167,7 @@ void Legalizer::Abacus(){
         while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double upDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
             minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+            up_row_idx++;
         }
 
         // fix the multi row height ff, make it as gate
@@ -176,7 +178,7 @@ void Legalizer::Abacus(){
                 }
             }
         }
-        DEBUG_LGZ("Legalized Multi Row Height FF failed...");
+        else DEBUG_LGZ("Legalized Multi Row Height FF failed...");
     }
 
     // Place the normal height FF
@@ -200,6 +202,9 @@ bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &c
     return true;
 }
 
+// Given the start coordinate from the row, and the w and h,
+// find if there exist continous row combination to place a multi-height ff
+// Need to take care of row not alignment conditions
 bool Legalizer::ContinousAndEmpty(double startX, double w, double h, int row_idx){
     return true;
 }
@@ -246,8 +251,6 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
-                DEBUG_LGZ("Placed FF...");
-                std::cout << ff->getName() << std::endl;
             }
         }
     }
