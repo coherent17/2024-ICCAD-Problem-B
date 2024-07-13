@@ -195,7 +195,9 @@ void Legalizer::LegalizeResultWriteBack(){
     DEBUG_LGZ("Write Back Legalize Coordinate...");
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
+            std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
+            std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
         }
         else{
             mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
@@ -280,7 +282,8 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
         if(subrow->getFreeWidth() < ff->getW()) continue;
 
         // for each subrow, try to place on site if has place
-        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+        // [TODO]: modify to binary search
+        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += 3 * rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(subrow->getStartX(), rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
