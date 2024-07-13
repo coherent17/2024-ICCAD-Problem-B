@@ -195,9 +195,9 @@ void Legalizer::LegalizeResultWriteBack(){
     DEBUG_LGZ("Write Back Legalize Coordinate...");
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
-            std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
+            // std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
-            std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
+            // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
         }
         else{
             mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
@@ -273,6 +273,12 @@ int Legalizer::FindClosestRow(Node *ff){
 // Try to place on this row, for multi-row height, must check upper row can place or not
 // Return the displacement from the global placement coordinate
 double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
+
+    // Should make use of this trend:
+    // if the ff->getGPCoor() > subrow->getEndX(), then the displacement will be decreasing
+    // if the ff->getGPCoor() < subrow->getStartX() then the displacement will be increasing
+    // otherwise, will decrease then increasing
+
     double minDisplacement = ff->getDisplacement(ff->getLGCoor());
 
     // iterate through subrow in this row
@@ -280,10 +286,9 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
     for(const auto &subrow : rows[row_idx]->getSubrows()){
         // no space in this subrow
         if(subrow->getFreeWidth() < ff->getW()) continue;
-
         // for each subrow, try to place on site if has place
-        // [TODO]: modify to binary search
-        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += 3 * rows[row_idx]->getSiteWidth()){
+        // [TODO]: modify to bisection method
+        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(subrow->getStartX(), rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
@@ -291,6 +296,10 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
+            }
+            // if not placeable, increase the step size to escape
+            else{
+                x += 3 * rows[row_idx]->getSiteWidth();
             }
         }
     }
