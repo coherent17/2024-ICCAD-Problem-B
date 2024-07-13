@@ -112,6 +112,15 @@ void Row::slicing(Node *gate) {
     // Replace the old subrows with the new ones
     subrows = newSubrows;
 }
+
+bool Row::operator<(const Row &rhs)const{
+    if(startCoor.y != rhs.startCoor.y){
+        return startCoor.y < rhs.startCoor.y;
+    }
+    // Tie condition
+    return startCoor.x < rhs.startCoor.x;
+}
+
 std::ostream &operator<<(std::ostream &os, const Row &row){
     os << "[ROW] ";
     os << "x: " << row.startCoor.x << ", ";

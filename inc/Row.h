@@ -38,6 +38,9 @@ public:
     // If Node *gate overlap the current row, split current row
     void slicing(Node *gate);
 
+    // Operator overloading for sorting
+    bool operator<(const Row &rhs)const;
+
     friend std::ostream &operator<<(std::ostream &os, const Row &row);
 };
 

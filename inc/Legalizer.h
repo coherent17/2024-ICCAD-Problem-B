@@ -39,10 +39,6 @@ private:
 
     // helper function
     bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
-
-    // unit test:
-    //Testcase for testing Row::slicing()
-    void row_slicing_unit_test();
 };
 
 #endif
