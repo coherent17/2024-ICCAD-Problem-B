@@ -8,8 +8,13 @@
 #include <vector>
 #include <string>
 #include <algorithm>
+#include <cfloat>
 
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
+#define HEIGHT_WEIGHT 1000
+#define WIDTH_WEIGHT 1
+#define X_WEIGHT 1
+#define SEARCH_FAILURE -1
 
 class Legalizer{
 private:
@@ -20,12 +25,13 @@ private:
     std::vector<Node *> ffs;
     std::vector<Node *> gates;
     std::vector<Row *> rows;
+    double minRowHeight;
 
 public:
     Legalizer(Manager& mgr);
     ~Legalizer();
 
-    void run();
+    bool run();
 
 private:
     void ConstructDB();
@@ -33,10 +39,14 @@ private:
     void LoadGate();
     void LoadPlacementRow();
     void SliceRows();
+    void Abacus();
 
     // helper function
     bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
-    void CheckSubrows();
+    bool ContinousAndEmpty(double startX, double w, double h, int row_idx);
+    void CheckSubrowsAttribute();
+    int FindClosestRow(Node *ff);
+    double PlaceMultiHeightFFOnRow(Node *ff, int row_idx);
 };
 
 #endif

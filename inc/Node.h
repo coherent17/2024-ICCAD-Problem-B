@@ -3,6 +3,7 @@
 
 #include "Coor.h"
 #include <string.h>
+#include <cmath>
 
 // Node class used in legalizer code, 
 // represent about the ff and the comb cell(obstacle)
@@ -11,10 +12,11 @@ class Node{
 private:
     std::string name;
     Coor gpCoor;   // global placement coordinate
-    Coor lgzCoor;  // legalized coordinatge
+    Coor lgCoor;  // legalized coordinatge
     double w;
     double h;
     double weight;
+    bool isPlace;
 
 public:
     Node();
@@ -23,18 +25,21 @@ public:
     // Setters
     void setName(const std::string &name);
     void setGPCoor(const Coor &gpCoor);
-    void setLGZCoor(const Coor &lgzCoor);
+    void setLGCoor(const Coor &lgzCoor);
     void setW(double w);
     void setH(double h);
     void setWeight(double weight);
+    void setIsPlace(bool isPlace);
 
     // Getters
     const std::string &getName()const;
     const Coor &getGPCoor()const;
-    const Coor &getLHZCoor()const;
+    const Coor &getLGCoor()const;
     double getW()const;
     double getH()const;
     double getWeight()const;
+    bool getIsPlace()const;
+    double getDisplacement(const Coor &candidateCoor)const;
 
     // Stream Insertion
     friend std::ostream &operator<<(std::ostream &os, const Node &node);

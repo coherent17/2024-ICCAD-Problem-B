@@ -20,7 +20,6 @@ int main(int argc, char *argv[]){
     mgr.meanshift();
     std::cout << "Slack after meanshift" << std::endl;
     mgr.showNS();
-    // mgr.print();
     
     mgr.banking();
     std::cout << "Slack after banking" << std::endl;

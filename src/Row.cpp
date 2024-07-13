@@ -88,9 +88,6 @@ void Row::slicing(Node *gate) {
                 if(newSubrowAfter->getStartX() < newSubrowAfter->getEndX()){
                     newSubrows.push_back(newSubrowAfter);
                 }
-                else{
-                    std::cout << "Out of bound" << std::endl;
-                }
             }
 
         }
@@ -104,6 +101,15 @@ void Row::slicing(Node *gate) {
     subrows = newSubrows;
     // std::cout << "After slicing:" << std::endl;
     // std::cout << *this << std::endl;
+}
+
+bool Row::canPlace(double startX, double endX){
+    for(const auto &subrow : subrows){
+        if(subrow->getStartX() <= startX && subrow->getEndX() >= endX){
+            return true;
+        }
+    }
+    return false;
 }
 
 bool Row::operator<(const Row &rhs)const{

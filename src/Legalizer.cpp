@@ -1,15 +1,40 @@
 #include "Legalizer.h"
 
-Legalizer::Legalizer(Manager& mgr) : mgr(mgr){}
-
-Legalizer::~Legalizer(){
-
+Legalizer::Legalizer(Manager& mgr) : mgr(mgr){
+    numffs = 0;
+    numgates = 0;
+    numrows = 0;
+    minRowHeight = DBL_MAX;
 }
 
-void Legalizer::run(){
+Legalizer::~Legalizer(){
+    for(auto &ff : ffs){
+        delete ff;
+    }
+    for(auto &gate : gates){
+        delete gate;
+    }
+    for(auto &row : rows){
+        delete row;
+    }
+}
+
+bool Legalizer::run(){
     ConstructDB();
     SliceRows();
-    CheckSubrows();     // Should remove when release the binary
+    CheckSubrowsAttribute();     // Should remove when release the binary
+    // Abacus();
+    // for(const auto &row : rows){
+    //     std::cout << *row << std::endl;
+    // }
+
+    for(const auto &ff : ffs){
+        if(!ff->getIsPlace()){
+            DEBUG_LGZ("Legalization Failed...");
+            return false;
+        }
+    }
+    return true;
 }
 
 void Legalizer::ConstructDB(){
@@ -28,7 +53,7 @@ void Legalizer::LoadFF(){
         Node *ff = new Node();
         ff->setName(mgr.FFs[i]->getInstanceName());
         ff->setGPCoor(mgr.FFs[i]->getNewCoor());
-        ff->setLGZCoor(mgr.FFs[i]->getNewCoor());
+        ff->setLGCoor(Coor(DBL_MAX, DBL_MAX));
         ff->setW(mgr.FFs[i]->getW());
         ff->setH(mgr.FFs[i]->getH());
         ff->setWeight(mgr.FFs[i]->getPinCount());
@@ -44,7 +69,7 @@ void Legalizer::LoadGate(){
         Node *gate = new Node();
         gate->setName(pair.second->getInstanceName());
         gate->setGPCoor(pair.second->getCoor());
-        gate->setLGZCoor(pair.second->getCoor());
+        gate->setLGCoor(pair.second->getCoor());
         gate->setW(pair.second->getW());
         gate->setH(pair.second->getH());
         gate->setWeight(pair.second->getPinCount());
@@ -70,6 +95,7 @@ void Legalizer::LoadPlacementRow(){
         subrow->setLastCluster(nullptr);
         row->addSubrows(subrow);
         rows.push_back(row);
+        minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);
     }
 
     // sort row by the y coordinate in ascending order, if tie, sort by x in ascending order
@@ -81,9 +107,10 @@ void Legalizer::LoadPlacementRow(){
 
 void Legalizer::SliceRows(){
     DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
-    std::sort(gates.begin(), gates.end(), [](Node *node1, Node *node2){
-        return node1->getGPCoor().x < node2->getGPCoor().x;
-    });
+    // will blockage affect the slicing row? It seems not effect...
+    // std::sort(gates.begin(), gates.end(), [](Node *node1, Node *node2){
+    //     return node1->getGPCoor().x < node2->getGPCoor().x;
+    // });
 
     // for each gate, if it occupies a placement row, slice the row
     for(const auto &gate : gates){
@@ -93,7 +120,71 @@ void Legalizer::SliceRows(){
                 row->slicing(gate);
             }
         }
+        gate->setIsPlace(true);
     }
+}
+
+void Legalizer::Abacus(){
+    // Sort cell by cost function
+    std::sort(ffs.begin(), ffs.end(), [](Node *a, Node *b){
+        double costA = a->getH() * HEIGHT_WEIGHT + a->getW() * WIDTH_WEIGHT + a->getGPCoor().x * X_WEIGHT;
+        double costB = b->getH() * HEIGHT_WEIGHT + b->getW() * WIDTH_WEIGHT + b->getGPCoor().x * X_WEIGHT;;
+        return costA > costB;
+    });
+
+
+    // [TODO]:
+    // 1. Find the closest place to place the row height > minRowHeight ff and slicing the affect row
+    // 2. Run normal abacus algorithm to further place the ff that height <= the minRowHeight
+    
+    // Find the ff that has multi-row height...
+
+    std::vector<Node *> multiRowHeightFFs;
+    std::vector<Node *> normalHeightFFs;
+    for(const auto &ff : ffs){
+        if(ff->getH() > minRowHeight){
+            multiRowHeightFFs.push_back(ff);
+        }
+        else{
+            normalHeightFFs.push_back(ff);
+        }
+    }
+
+    for(const auto &ff : multiRowHeightFFs){
+        int closest_row_idx = FindClosestRow(ff);
+        double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
+
+        // search down until the y displacement is greater than the displacement
+        int down_row_idx = closest_row_idx - 1;
+        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+        }
+
+        // search up
+        int up_row_idx = closest_row_idx + 1;
+        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+            double upDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+        }
+
+        // fix the multi row height ff, make it as gate
+        if(ff->getIsPlace()){
+            for(auto &row : rows){
+                if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
+                    row->slicing(ff);
+                }
+            }
+        }
+        DEBUG_LGZ("Legalized Multi Row Height FF failed...");
+    }
+
+    // Place the normal height FF
+    // for(const auto &ff : normalHeightFFs){
+
+    // }
+
+
 }
 
 bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2){
@@ -109,11 +200,56 @@ bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &c
     return true;
 }
 
-void Legalizer::CheckSubrows(){
+bool Legalizer::ContinousAndEmpty(double startX, double w, double h, int row_idx){
+    return true;
+}
+
+void Legalizer::CheckSubrowsAttribute(){
     for(const auto &row: rows){
         for(const auto &subrow : row->getSubrows()){
             assert((int)(subrow->getStartX() - row->getStartCoor().x) % (int)(row->getSiteWidth()) == 0);
             assert(subrow->getStartX() < subrow->getEndX());
         }
     }
+}
+
+int Legalizer::FindClosestRow(Node *ff){
+    double min_distance = DBL_MAX;
+    size_t min_idx = 0;
+    for(size_t i = 0; i < rows.size(); i++){
+        double curr_distance = std::abs(ff->getGPCoor().y - rows[i]->getStartCoor().y);
+        if(curr_distance < min_distance){
+            min_distance = curr_distance;
+            min_idx = i;
+        }
+    }
+    return min_idx;
+}
+
+
+// Try to place on this row, for multi-row height, must check upper row can place or not
+// Return the displacement from the global placement coordinate
+double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
+    double minDisplacement = ff->getDisplacement(ff->getLGCoor());
+
+    // iterate through subrow in this row
+    for(const auto &subrow : rows[row_idx]->getSubrows()){
+        // no space in this subrow
+        if(subrow->getFreeWidth() < ff->getW()) continue;
+
+        // for each subrow, try to place on site if has place
+        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+            // check if upper row can be used...
+            bool placeable = ContinousAndEmpty(subrow->getStartX(), ff->getW(), ff->getH(), row_idx);
+            Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
+            if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
+                ff->setLGCoor(currCoor);
+                minDisplacement = ff->getDisplacement(currCoor);
+                ff->setIsPlace(true);
+                DEBUG_LGZ("Placed FF...");
+                std::cout << ff->getName() << std::endl;
+            }
+        }
+    }
+    return minDisplacement;
 }
