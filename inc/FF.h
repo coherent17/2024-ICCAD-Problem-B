@@ -84,19 +84,20 @@ public:
     Coor getOriginalD()const;
     Coor getOriginalQ()const;
     double getOriginalQpinDelay()const;
-    
+    FF* getPhysicalFF()const;
+    int getSlot()const;
+    std::string getPhysicalPinName();
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
     double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
-//     double getTNS();
-//     double getWNS();
-//     void updateSlack();
+    void getNS(double& TNS, double& WNS); // pls call update slack before get TNS and WNS
+    void updateSlack(Manager&);
     
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
-// private:
-//     double getSlack();
+private:
+    double getSlack(Manager&); // don't touch is only for FF in FF_list
 };
 
 

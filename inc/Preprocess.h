@@ -21,6 +21,9 @@ class Preprocess{
         std::unordered_map<std::string, FF*>& getFFList(){
             return FF_list;
         }
+        std::unordered_map<std::string, std::string>& getFFListMap(){
+            return FF_list_Map;
+        }
 
     private:
         void Debank();

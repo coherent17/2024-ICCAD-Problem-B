@@ -33,8 +33,7 @@ void Manager::parse(const std::string &filename){
 void Manager::preprocess(){
     preprocessor->run();
     // delete all FF before preprocess
-    for(auto& ff_m : FF_Map)
-        delete ff_m.second;
+    originalFF_Map = FF_Map;
     FF_Map.clear();
     // assign new FF after debank and optimal location to FF_Map and FFs
     const std::unordered_map<std::string, FF*>& FF_list = preprocessor->getFFList();
@@ -302,6 +301,23 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
     return outputFF;
 }
 
-void Manager::getNS(double& TNS, double& WNS){
-    // to be continue
+void Manager::getNS(double& TNS, double& WNS, bool show){
+    TNS = 0;
+    WNS = 0;
+    for(auto& FF_m : FF_Map){
+        double curTNS, curWNS;
+        FF_m.second->updateSlack(*this);
+        FF_m.second->getNS(curTNS, curWNS);
+        TNS += curTNS;
+        WNS = std::min(WNS, curWNS);
+    }
+    if(show){
+        std::cout << "\tWorst negative slack : " << WNS << std::endl;
+        std::cout << "\tTotal negative slack : " << TNS << std::endl << std::endl;
+    }
+}
+
+void Manager::showNS(){
+    double _0, _1;
+    this->getNS(_0, _1, true);
 }

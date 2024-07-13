@@ -163,6 +163,14 @@ double FF::getOriginalQpinDelay()const{
     return originalQpinDelay;
 }
 
+FF* FF::getPhysicalFF()const{
+    return physicalFF;
+}
+
+int FF::getSlot()const{
+    return slot;
+}
+
 void FF::sortNeighbors(){
     auto FFcmp = [](const std::pair<int, double> &neighbor1, const std::pair<int, double> &neighbor2){
         return neighbor1.second < neighbor2.second;
@@ -191,6 +199,31 @@ double FF::shift(std::vector<FF *> &FFs){
     return euclidean_distance;
 }
 
+void FF::getNS(double& TNS, double& WNS){
+    TNS = 0;
+    WNS = 0;
+    for(const auto& slack_m : TimingSlack){
+        if(slack_m.second < 0){
+            TNS += slack_m.second;
+            WNS = std::min(slack_m.second, WNS);
+        }
+    }
+}
+
+void FF::updateSlack(Manager& mgr){
+    int curSlot = 0;
+    for(auto& FF : clusterFF){
+        double slack = FF->getSlack(mgr);
+        if(clusterFF.size() == 1){
+            TimingSlack["D"] = slack;
+        }
+        else{
+            TimingSlack["D" + std::to_string(curSlot)] = slack;
+        }
+        curSlot++;
+    }
+}
+
 std::ostream &operator<<(std::ostream &os, const FF &ff){
     os << "Instance Name: " << ff.instanceName << std::endl;
     os << "Coor: " << ff.coor << std::endl;
@@ -198,4 +231,79 @@ std::ostream &operator<<(std::ostream &os, const FF &ff){
     for(auto &pair : ff.TimingSlack)
         os << "Pin[" << pair.first << "] Slack: " << pair.second << std::endl;
     return os;
+}
+
+
+double FF::getSlack(Manager& mgr){
+    FF* cur_ff = this;
+    std::unordered_map<std::string, FF*>& FF_list =  mgr.preprocessor->getFFList();
+    // update slack for new location
+    Coor newCoorD = this->physicalFF->getNewCoor() + this->physicalFF->getPinCoor("D" + this->getPhysicalPinName());
+    double delta_hpwl = 0;
+    double delta_q = 0; // delta q pin delay
+    Coor inputCoor;
+    // D pin delta HPWL
+    if(cur_ff->getPrevInstance().first){
+        std::string inputInstanceName = cur_ff->getPrevInstance().first->getInstanceName();
+        std::string inputPinName = cur_ff->getPrevInstance().second;
+        if(mgr.IO_Map.count(inputInstanceName)){
+            inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(inputCoor, newCoorD);
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+        else if(mgr.Gate_Map.count(inputInstanceName)){
+            inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(inputCoor, newCoorD);
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+        else{
+            FF* inputFF = FF_list[inputInstanceName];
+            inputCoor = inputFF->getOriginalQ();
+            Coor newCoorQ = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+            double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
+            double new_hpwl = HPWL(newCoorQ, newCoorD);
+            delta_hpwl += old_hpwl - new_hpwl;
+        }
+    }
+
+    // Q pin delta HPWL (prev stage FFs Qpin)
+    const PrevStage& prev = cur_ff->getPrevStage();
+    if(prev.ff){
+        std::string prevInstanceName = prev.ff->getInstanceName();
+        Coor originalInput, newInput;
+        if(FF_list.count(prevInstanceName)){
+            FF* inputFF = FF_list[prevInstanceName];
+            originalInput = inputFF->getOriginalQ();
+            newInput = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+            delta_q = inputFF->getOriginalQpinDelay() - inputFF->physicalFF->getCell()->getQpinDelay();
+        }
+        else{
+            assert(0 && "Prev shold always be FF");
+        }
+
+        if(prev.outputGate){
+            std::string outputInstanceName = prev.outputGate->getInstanceName();
+            if(mgr.Gate_Map.count(outputInstanceName)){
+                inputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(prev.pinName);
+                double old_hpwl = HPWL(inputCoor, originalInput);
+                double new_hpwl = HPWL(inputCoor, newInput);
+                delta_hpwl += old_hpwl - new_hpwl;
+            }
+            else{
+                assert(0 && "prev output should always be std cell");
+            }
+        }
+    }
+    // get new slack
+    double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + mgr.DisplacementDelay * delta_hpwl;
+    return newSlack;
+}
+
+std::string FF::getPhysicalPinName(){
+    if(this->physicalFF->getCell()->getBits() == 1)
+        return "";
+    else
+        return std::to_string(this->slot); 
 }

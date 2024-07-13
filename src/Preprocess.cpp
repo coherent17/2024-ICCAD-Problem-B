@@ -456,14 +456,13 @@ void Preprocess::updateSlack(){
         if(prev.ff){
             std::string prevInstanceName = prev.ff->getInstanceName();
             Coor originalInput, newInput;
-            if(mgr.IO_Map.count(prevInstanceName)){
-                originalInput = mgr.IO_Map[prevInstanceName].getCoor();
-                newInput = originalInput;
-            }
-            else if(FF_list.count(prevInstanceName)){
+            if(FF_list.count(prevInstanceName)){
                 originalInput = FF_list[prevInstanceName]->getOriginalQ();
                 newInput = FF_list[prevInstanceName]->getCoor() + FF_list[prevInstanceName]->getPinCoor("Q");
                 delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
+            }
+            else{
+                assert(0 && "Prev shold always be FF");
             }
 
             if(prev.outputGate){
