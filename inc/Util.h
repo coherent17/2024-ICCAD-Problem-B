@@ -17,20 +17,9 @@
 #define MAX_THREADS 8
 
 #include "Coor.h"
-// #include "Pin.h"
 
-// #include <iostream>
-// #include <unordered_map>
-// #include <unordered_set>
-// #include <string>
-// #include <cassert>
-// #include <vector>
-// #include <fstream>
 #include <cmath>
-// #include <climits>
-// #include <queue>
-// #include <limits.h>
-// using namespace std;
+
 
 class Param{
 
