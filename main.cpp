@@ -31,5 +31,9 @@ int main(int argc, char *argv[]){
 
     // place holder method for runing legalize algorithm
     mgr.legalize();
+    mgr.showNS();
+    // if(argc == 4){
+    //     mgr.dumpVisual(argv[3]);
+    // }
     return 0;
 }
