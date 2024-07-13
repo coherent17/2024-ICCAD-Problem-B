@@ -9,9 +9,7 @@ Legalizer::~Legalizer(){
 void Legalizer::run(){
     ConstructDB();
     SliceRows();
-    for(const auto &row : rows){
-        std::cout << *row << std::endl;
-    }
+    CheckSubrows();     // Should remove when release the binary
 }
 
 void Legalizer::ConstructDB(){
@@ -87,26 +85,35 @@ void Legalizer::SliceRows(){
         return node1->getGPCoor().x < node2->getGPCoor().x;
     });
 
-    // for(size_t i = 0; i < gates.size(); i++){
-    //     DEBUG_LGZ(gates[i]->getName() + "/" + std::to_string(gates[i]->getGPCoor().x));
-    // }
-
     // for each gate, if it occupies a placement row, slice the row
-    // for(const auto &gate : gates){
-    //     for(auto &row : rows){
-    //         if(IsOverlap(gate->getGPCoor(), gate->getW(), gate->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
-    //             DEBUG_LGZ("Overlap detected...");
-    //             row->slicing(gate);
-    //         }
-    //     }
-    // }
+    for(const auto &gate : gates){
+        for(auto &row : rows){
+            if(IsOverlap(gate->getGPCoor(), gate->getW(), gate->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
+                // DEBUG_LGZ("Overlap detected...");
+                row->slicing(gate);
+            }
+        }
+    }
 }
 
 bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2){
-    using namespace boost::geometry;
-    typedef model::point<double, 2, cs::cartesian> point;
-    typedef model::box<point> box;
-    box box1(point(coor1.x, coor1.y), point(coor1.x + w1, coor1.y + h1));
-    box box2(point(coor2.x, coor2.y), point(coor2.x + w2, coor2.y + h2));
-    return intersects(box1, box2);
+    // Check if one rectangle is to the left of the other
+    if(coor1.x + w1 <= coor2.x || coor2.x + w2 <= coor1.x){
+        return false;
+    }
+
+    // Check if one rectangle is above the other
+    if (coor1.y + h1 <= coor2.y || coor2.y + h2 <= coor1.y) {
+            return false;
+    }
+    return true;
+}
+
+void Legalizer::CheckSubrows(){
+    for(const auto &row: rows){
+        for(const auto &subrow : row->getSubrows()){
+            assert((int)(subrow->getStartX() - row->getStartCoor().x) % (int)(row->getSiteWidth()) == 0);
+            assert(subrow->getStartX() < subrow->getEndX());
+        }
+    }
 }

@@ -35,6 +35,9 @@ public:
     double getW()const;
     double getH()const;
     double getWeight()const;
+
+    // Stream Insertion
+    friend std::ostream &operator<<(std::ostream &os, const Node &node);
 };
 
 #endif

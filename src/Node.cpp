@@ -60,3 +60,10 @@ double Node::getH()const{
 double Node::getWeight()const{
     return weight;
 }
+
+std::ostream &operator<<(std::ostream &os, const Node &node){
+    os << "GPCoor" << node.gpCoor << std::endl;
+    os << "W: " << node.w << std::endl;
+    os << "H: " << node.h << std::endl;
+    return os;
+}

@@ -8,9 +8,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/point.hpp>
-#include <boost/geometry/geometries/box.hpp>
 
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
 
@@ -39,6 +36,7 @@ private:
 
     // helper function
     bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
+    void CheckSubrows();
 };
 
 #endif

@@ -4,6 +4,8 @@
 
 int main(int argc, char *argv[]){
 
+    std::cout << std::fixed << std::setprecision(2);
+
     if (argc < 2){
         std::cerr << "Usage: " << argv[0] << " <inputfile> <outputfile>" << std::endl;
         return EXIT_FAILURE;
