@@ -187,7 +187,6 @@ void Legalizer::Abacus(){
 
     // }
 
-
 }
 
 // Write legalize coordinate back to manager
@@ -200,7 +199,7 @@ void Legalizer::LegalizeResultWriteBack(){
             // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
         }
         else{
-            mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
+            // mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
         }
     }
 }
@@ -281,6 +280,7 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
 
     double minDisplacement = ff->getDisplacement(ff->getLGCoor());
 
+    // Exhausted search to place
     // iterate through subrow in this row
     // [TODO]: find the best entry to the subrow
     for(const auto &subrow : rows[row_idx]->getSubrows()){
@@ -297,9 +297,9 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
             }
-            // if not placeable, increase the step size to escape
+            //if not placeable, increase the step size to escape
             else{
-                x += 3 * rows[row_idx]->getSiteWidth();
+                x += 20 * rows[row_idx]->getSiteWidth();
             }
         }
     }
