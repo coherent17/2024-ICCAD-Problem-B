@@ -22,15 +22,15 @@ void Banking::libScoring(){
         }
         sortCell(cell_vector);
         //DEBUG
-        // for(size_t i = 0; i < pair.second.size(); i++){
-        //     std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
-        // }
+        for(size_t i = 0; i < pair.second.size(); i++){
+            std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
+        }
     }
 }
 
 void Banking::sortCell(std::vector<Cell *> &cell_vector){
     auto scoreCmp = [](const Cell * cell1, const Cell * cell2){
-        return cell1->getScore() > cell2->getScore();
+        return cell1->getScore() < cell2->getScore();
     };
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
 }
