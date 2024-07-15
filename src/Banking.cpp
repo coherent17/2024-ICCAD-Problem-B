@@ -22,9 +22,9 @@ void Banking::libScoring(){
         }
         sortCell(cell_vector);
         //DEBUG
-        for(size_t i = 0; i < pair.second.size(); i++){
-            std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
-        }
+        // for(size_t i = 0; i < pair.second.size(); i++){
+        //     std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
+        // }
     }
 }
 
