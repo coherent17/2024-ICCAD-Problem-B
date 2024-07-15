@@ -58,6 +58,7 @@ void Legalizer::LoadFF(){
         ff->setW(mgr.FFs[i]->getW());
         ff->setH(mgr.FFs[i]->getH());
         ff->setWeight(mgr.FFs[i]->getPinCount());
+        ff->setIsPlace(false);
         ffs.push_back(ff);
     }
 }
@@ -74,6 +75,7 @@ void Legalizer::LoadGate(){
         gate->setW(pair.second->getW());
         gate->setH(pair.second->getH());
         gate->setWeight(pair.second->getPinCount());
+        gate->setIsPlace(false);
         gates.push_back(gate);
     }
 }
@@ -123,6 +125,7 @@ void Legalizer::SliceRows(){
         }
         gate->setIsPlace(true);
     }
+
 }
 
 void Legalizer::Abacus(){

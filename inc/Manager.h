@@ -99,6 +99,7 @@ public:
     // the FF after debank will be assign to debankCellType (maybe this can be a vector)
     void getNS(double& TNS, double& WNS, bool show); // this retunr TNS and WNS of whole design (all FF in FF_Map)
     void showNS();
+    double getOverallCost();
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

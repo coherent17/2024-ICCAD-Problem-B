@@ -16,24 +16,28 @@ int main(int argc, char *argv[]){
     mgr.preprocess();
     std::cout << "Slack after preprocess" << std::endl;
     mgr.showNS();
+    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
 
     mgr.meanshift();
     std::cout << "Slack after meanshift" << std::endl;
     mgr.showNS();
+    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
     
     mgr.banking();
     std::cout << "Slack after banking" << std::endl;
     mgr.showNS();
+    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
     mgr.dump(argv[2]);
-    if(argc == 4){
-        mgr.dumpVisual(argv[3]);
-    }
+    // if(argc == 4){
+    //     mgr.dumpVisual(argv[3]);
+    // }
 
     // place holder method for runing legalize algorithm
     mgr.legalize();
     mgr.showNS();
-    // if(argc == 4){
-    //     mgr.dumpVisual(argv[3]);
-    // }
+    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
+    if(argc == 4){
+        mgr.dumpVisual(argv[3]);
+    }
     return 0;
 }
