@@ -25,10 +25,6 @@ bool Legalizer::run(){
     //CheckSubrowsAttribute();     // Should remove when release the binary
     Abacus();
     LegalizeResultWriteBack();
-    // for(const auto &row : rows){
-    //     std::cout << *row << std::endl;
-    // }
-
     for(const auto &ff : ffs){
         if(!ff->getIsPlace()){
             DEBUG_LGZ("Legalization Failed...");
@@ -110,27 +106,13 @@ void Legalizer::LoadPlacementRow(){
 
 void Legalizer::SliceRows(){
     DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
-    // will blockage affect the slicing row? It seems not effect...
-    // std::sort(gates.begin(), gates.end(), [](Node *node1, Node *node2){
-    //     return node1->getGPCoor().x < node2->getGPCoor().x;
-    // });
-
     // for each gate, if it occupies a placement row, slice the row
-    for(size_t i = 0; i < gates.size(); i++){
-    //for(const auto &gate : gates){
-        Node *gate = gates[i];
-        // std::cout << "gate: " << *gate << std::endl;
+    for(const auto &gate : gates){
         for(auto &row : rows){
-            // if(IsOverlap(gate->getGPCoor(), gate->getW(), gate->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
-                // DEBUG_LGZ("Overlap detected...");
-                // std::cout << *row << std::endl;
-                row->slicing(gate);
-                // std::cout << *row << std::endl;
-            // }
+            row->slicing(gate);
         }
         gate->setIsPlace(true);
     }
-
 }
 
 void Legalizer::Abacus(){
@@ -140,14 +122,8 @@ void Legalizer::Abacus(){
         double costB = b->getH() * HEIGHT_WEIGHT + b->getW() * WIDTH_WEIGHT + b->getGPCoor().x * X_WEIGHT;;
         return costA > costB;
     });
-
-
-    // [TODO]:
-    // 1. Find the closest place to place the row height > minRowHeight ff and slicing the affect row
-    // 2. Run normal abacus algorithm to further place the ff that height <= the minRowHeight
     
-    // Find the ff that has multi-row height...
-
+    // Find the ff that has multi-row height and legalize it first
     std::vector<Node *> multiRowHeightFFs;
     std::vector<Node *> normalHeightFFs;
     for(const auto &ff : ffs){
@@ -159,13 +135,12 @@ void Legalizer::Abacus(){
         }
     }
 
-    for(size_t i = 0; i < multiRowHeightFFs.size(); i++){
-    // for(const auto &ff : multiRowHeightFFs){
-        Node *ff = multiRowHeightFFs[i];
+    DEBUG_LGZ("Legalize Multi-Row Height FF");
+    for(const auto &ff : multiRowHeightFFs){
         int closest_row_idx = FindClosestRow(ff);
-        //std::cout << "try to place: " << ff->getName() << std::endl;
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-        // search down until the y displacement is greater than the displacement
+
+        // search down
         int down_row_idx = closest_row_idx - 1;
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
@@ -181,29 +156,20 @@ void Legalizer::Abacus(){
             up_row_idx++;
         }
 
-        // fix the multi row height ff, make it as gate
         if(ff->getIsPlace()){
             for(auto &row : rows){
-                // if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
-                    row->slicing(ff);
-                // }
+                row->slicing(ff);
             }
         }
-        else DEBUG_LGZ("Legalized Multi Row Height FF failed...");
+        else DEBUG_LGZ("Legalize Multi-Row Height FF Failed");
     }
 
-    // Place the normal height FF
-    // for(const auto &ff : normalHeightFFs){
-
-    // }
-
-    for(size_t i = 0; i < normalHeightFFs.size(); i++){
-    // for(const auto &ff : multiRowHeightFFs){
-        Node *ff = normalHeightFFs[i];
+    DEBUG_LGZ("Legalize Normal Height FF");
+    for(const auto & ff : normalHeightFFs){
         int closest_row_idx = FindClosestRow(ff);
-        // std::cout << "try to place: " << ff->getName() << std::endl;
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-        // search down until the y displacement is greater than the displacement
+
+        // search down
         int down_row_idx = closest_row_idx - 1;
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
@@ -219,17 +185,13 @@ void Legalizer::Abacus(){
             up_row_idx++;
         }
 
-        // fix the multi row height ff, make it as gate
         if(ff->getIsPlace()){
             for(auto &row : rows){
-                // if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
-                    row->slicing(ff);
-                // }
+                row->slicing(ff);
             }
         }
-        else DEBUG_LGZ("Legalized Multi Row Height FF failed...");
+        else DEBUG_LGZ("Legalize Normal Height FF Failed");
     }
-
 }
 
 // Write legalize coordinate back to manager
@@ -237,10 +199,8 @@ void Legalizer::LegalizeResultWriteBack(){
     DEBUG_LGZ("Write Back Legalize Coordinate...");
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
-            // std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
             assert((((int)ff->getLGCoor().x - 15300) % 510) == 0);
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
-            // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
         }
         else{
             mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
