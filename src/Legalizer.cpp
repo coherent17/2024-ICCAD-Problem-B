@@ -154,25 +154,28 @@ void Legalizer::Abacus(){
         }
     }
 
-    for(const auto &ff : multiRowHeightFFs){
+    for(size_t i = 0; i < 1; i++){
+    // for(const auto &ff : multiRowHeightFFs){
+        Node *ff = multiRowHeightFFs[i];
         int closest_row_idx = FindClosestRow(ff);
+        std::cout << "try to place: " << ff->getName() << std::endl;
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
+        std::cout << std::endl << std::endl;
+        // // search down until the y displacement is greater than the displacement
+        // int down_row_idx = closest_row_idx - 1;
+        // while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+        //     double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+        //     minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+        //     down_row_idx--;
+        // }
 
-        // search down until the y displacement is greater than the displacement
-        int down_row_idx = closest_row_idx - 1;
-        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
-            down_row_idx--;
-        }
-
-        // search up
-        int up_row_idx = closest_row_idx + 1;
-        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            double upDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-            up_row_idx++;
-        }
+        // // search up
+        // int up_row_idx = closest_row_idx + 1;
+        // while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+        //     double upDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+        //     minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+        //     up_row_idx++;
+        // }
 
         // fix the multi row height ff, make it as gate
         if(ff->getIsPlace()){
@@ -202,7 +205,7 @@ void Legalizer::LegalizeResultWriteBack(){
             // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
         }
         else{
-            // mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
+            mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
         }
     }
 }
@@ -237,7 +240,7 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
         // check if this row can place the cell from startX to startX + w
         if(rows[i]->canPlace(startX, startX + w)){
             // Ensure the row covers the currentY to at least part of the target range
-            if(rowStartY <= currentY && rowEndY > currentY){
+            if(rowStartY == currentY && rowEndY > currentY){
                 currentY = rowEndY;
             }
 
@@ -296,6 +299,9 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
             bool placeable = ContinousAndEmpty(subrow->getStartX(), rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
             if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
+                std::cout << "Ori Disp.: " << minDisplacement << ", cur Disp.: " << ff->getDisplacement(currCoor) << std::endl;
+                std::cout << "ff: " << currCoor << ", w = " <<  ff->getW() << std::endl;
+                std::cout << *subrow << std::endl;
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
