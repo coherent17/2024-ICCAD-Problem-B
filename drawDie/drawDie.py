@@ -306,7 +306,7 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
         blockY = InstList[instName][2]
         blockW = block[0]
         blockH = block[1]
-        rect = patches.Rectangle((blockX, blockY),blockW, blockH, linewidth=0.5, ec = blockColor, fc = 'none', zorder=2)
+        rect = patches.Rectangle((blockX, blockY),blockW, blockH, linewidth=0.3, ec = blockColor, fc = 'none', zorder=2)
         ax.add_patch(rect)
 
         
