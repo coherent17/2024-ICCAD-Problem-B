@@ -37,20 +37,33 @@ void Banking::sortCell(std::vector<Cell *> &cell_vector){
 
 Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank){
     std::vector<std::pair<int, double>> nearFFs;
+    PointWithID curFF;
     for(int i = 0; i < (int)resultFFs.size(); i++){
         double dis = SquareEuclideanDistance (nowFF->getNewCoor(), FFs[resultFFs[i].second]->getNewCoor());
-        if (dis < SQUARE_EPSILON && nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
-        {
-            nearFFs.push_back ({i, dis});
+        if(dis == 0){
+            curFF = resultFFs[i];
+        }
+        else if (dis < SQUARE_EPSILON && nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
+        {   
+            FFs[resultFFs[i].second]->updateSlack(mgr);            
+            double slack = FFs[resultFFs[i].second]->getTimingSlack("D") - std::sqrt(dis)*mgr.DisplacementDelay;
+            if(slack > 0){
+                // std::cout << "slack:" << slack << std::endl;
+                nearFFs.push_back ({i, slack});
+            }
+                
         }
     }
-    assert (!nearFFs.empty());
-    if(nearFFs.size() > 1){
+    // assert (!nearFFs.empty());
+    if(nearFFs.size() > 0){
         sortFFs(nearFFs);
-        Cell* chooseCell = chooseCellLib(nearFFs.size());
+        Cell* chooseCell = chooseCellLib(nearFFs.size()+1);
         int bitNum = chooseCell->getBits();
 
-        for(int i = 0; i < bitNum; i++){
+        toRemoveFFs.push_back(curFF);
+        FFToBank.push_back(FFs[curFF.second]);
+        c.addFF (FFs[curFF.second]->getInstanceName());
+        for(int i = 0; i < bitNum-1; i++){
             toRemoveFFs.push_back (resultFFs[nearFFs[i].first]);
             FFToBank.push_back(FFs[resultFFs[nearFFs[i].first].second]);
             c.addFF (FFs[resultFFs[nearFFs[i].first].second]->getInstanceName());
@@ -87,7 +100,7 @@ Coor Banking::getMedian(std::vector<PointWithID>& toRemoveFFs){
 
 void Banking::sortFFs(std::vector<std::pair<int, double>> &nearFFs){
     auto FFcmp = [](const std::pair<int, double> &neighbor1, const std::pair<int, double> &neighbor2){
-        return neighbor1.second < neighbor2.second;
+        return neighbor1.second > neighbor2.second;
     };
     std::sort(nearFFs.begin(), nearFFs.end(), FFcmp);
 }
