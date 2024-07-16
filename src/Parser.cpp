@@ -156,11 +156,13 @@ void Parser::readInstance(Manager &mgr){
 void Parser::readNet(Manager &mgr){
     std::string _;
     fin >> _ >> mgr.NumNets;
+    int clkIdx = 0;
     for(int i = 0; i < mgr.NumNets; i++){
         Net net;
         std::string netName;
         int numPins;
         fin >> _ >> netName >> numPins;
+        bool isClkNet = false;
         net.setNetName(netName);
         net.setNumPins(numPins);
         for(int j = 0; j < numPins; j++){
@@ -171,6 +173,10 @@ void Parser::readNet(Manager &mgr){
             if(!mgr.isIOPin(pinName)){
                 pin.setPinName(getSubStringAfterSlash(pinName));
                 pin.setInstanceName(getSubStringBeforeSlash(pinName));
+                if(pin.getPinName() == "CLK" || pin.getPinName() == "clk"){
+                    isClkNet = true;
+                    mgr.FF_Map[pin.getInstanceName()]->setClkIdx(clkIdx);
+                }
             }
             else{
                 pin.setPinName(pinName);
@@ -179,6 +185,9 @@ void Parser::readNet(Manager &mgr){
             net.addPins(pin);
         }
         mgr.Net_Map[netName] = net;
+        if(isClkNet == true){
+            clkIdx++;
+        }
     }
 }
 

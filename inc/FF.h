@@ -35,6 +35,7 @@ private:
     bool isShifting;
     // pair<other ffId, euclidean distance>, store the neighbor ff with their Id and the distance to this FF
     std::vector<std::pair<int, double>> NeighborFFs;
+    int clkIdx;
 
     // ######################################### used in Preprocessing ########################################################
     PrevStage prevStage; // {prev stage FF/INPUT, {prevFF's output cell on critical path, output cell pin}}
@@ -56,6 +57,7 @@ public:
     void addClusterFF(FF* inputFF, int slot);
     void setFFIdx(int ffIdx);
     void setClusterIdx(int clusterIdx);
+    void setClkIdx(int clkIdx);
     void setNewCoor(const Coor &coor);
     void setBandwidth(const Manager &mgr);
     void addNeighbor(int ffIdx, double euclidean_distance);
@@ -73,6 +75,7 @@ public:
     int getFFIdx()const;
     bool getIsCluster()const;
     int getClusterIdx()const;
+    int getClkIdx()const;
     Coor getNewCoor()const;
     double getBandwidth()const;
     std::pair<int, double> getNeighbor(int idx)const;

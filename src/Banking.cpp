@@ -39,7 +39,7 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
     std::vector<std::pair<int, double>> nearFFs;
     for(int i = 0; i < (int)resultFFs.size(); i++){
         double dis = SquareEuclideanDistance (nowFF->getNewCoor(), FFs[resultFFs[i].second]->getNewCoor());
-        if (dis < SQUARE_EPSILON)
+        if (dis < SQUARE_EPSILON && nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
         {
             nearFFs.push_back ({i, dis});
         }

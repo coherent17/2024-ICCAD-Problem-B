@@ -5,7 +5,7 @@ Lambda 10
 DieSize 0 0 23475 23280
 NumInput 2
 Input INPUT 8344 22840
-Input clk 0 1970
+Input CLK 0 1970
 NumOutput 1
 Output OUTPUT 23075 11410
 FlipFlop 1 SVT_FF_1 741 480 3
