@@ -22,7 +22,7 @@ Legalizer::~Legalizer(){
 bool Legalizer::run(){
     ConstructDB();
     SliceRows();
-    CheckSubrowsAttribute();     // Should remove when release the binary
+    //CheckSubrowsAttribute();     // Should remove when release the binary
     Abacus();
     LegalizeResultWriteBack();
     // for(const auto &row : rows){
@@ -116,12 +116,17 @@ void Legalizer::SliceRows(){
     // });
 
     // for each gate, if it occupies a placement row, slice the row
-    for(const auto &gate : gates){
+    for(size_t i = 0; i < gates.size(); i++){
+    //for(const auto &gate : gates){
+        Node *gate = gates[i];
+        // std::cout << "gate: " << *gate << std::endl;
         for(auto &row : rows){
-            if(IsOverlap(gate->getGPCoor(), gate->getW(), gate->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
+            // if(IsOverlap(gate->getGPCoor(), gate->getW(), gate->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
                 // DEBUG_LGZ("Overlap detected...");
+                // std::cout << *row << std::endl;
                 row->slicing(gate);
-            }
+                // std::cout << *row << std::endl;
+            // }
         }
         gate->setIsPlace(true);
     }
@@ -154,35 +159,34 @@ void Legalizer::Abacus(){
         }
     }
 
-    for(size_t i = 0; i < 1; i++){
+    for(size_t i = 0; i < multiRowHeightFFs.size(); i++){
     // for(const auto &ff : multiRowHeightFFs){
         Node *ff = multiRowHeightFFs[i];
         int closest_row_idx = FindClosestRow(ff);
-        std::cout << "try to place: " << ff->getName() << std::endl;
+        //std::cout << "try to place: " << ff->getName() << std::endl;
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-        std::cout << std::endl << std::endl;
-        // // search down until the y displacement is greater than the displacement
-        // int down_row_idx = closest_row_idx - 1;
-        // while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-        //     double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-        //     minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
-        //     down_row_idx--;
-        // }
+        // search down until the y displacement is greater than the displacement
+        int down_row_idx = closest_row_idx - 1;
+        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+            down_row_idx--;
+        }
 
-        // // search up
-        // int up_row_idx = closest_row_idx + 1;
-        // while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-        //     double upDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-        //     minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-        //     up_row_idx++;
-        // }
+        // search up
+        int up_row_idx = closest_row_idx + 1;
+        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
+            double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+            up_row_idx++;
+        }
 
         // fix the multi row height ff, make it as gate
         if(ff->getIsPlace()){
             for(auto &row : rows){
-                if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
+                // if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
                     row->slicing(ff);
-                }
+                // }
             }
         }
         else DEBUG_LGZ("Legalized Multi Row Height FF failed...");
@@ -193,6 +197,39 @@ void Legalizer::Abacus(){
 
     // }
 
+    for(size_t i = 0; i < normalHeightFFs.size(); i++){
+    // for(const auto &ff : multiRowHeightFFs){
+        Node *ff = normalHeightFFs[i];
+        int closest_row_idx = FindClosestRow(ff);
+        // std::cout << "try to place: " << ff->getName() << std::endl;
+        double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
+        // search down until the y displacement is greater than the displacement
+        int down_row_idx = closest_row_idx - 1;
+        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+            down_row_idx--;
+        }
+
+        // search up
+        int up_row_idx = closest_row_idx + 1;
+        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
+            double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+            up_row_idx++;
+        }
+
+        // fix the multi row height ff, make it as gate
+        if(ff->getIsPlace()){
+            for(auto &row : rows){
+                // if(IsOverlap(ff->getLGCoor(), ff->getW(), ff->getH(), row->getStartCoor(), row->getSiteWidth() * row->getNumOfSite(), row->getSiteHeight())){
+                    row->slicing(ff);
+                // }
+            }
+        }
+        else DEBUG_LGZ("Legalized Multi Row Height FF failed...");
+    }
+
 }
 
 // Write legalize coordinate back to manager
@@ -201,6 +238,7 @@ void Legalizer::LegalizeResultWriteBack(){
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
             // std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
+            assert((((int)ff->getLGCoor().x - 15300) % 510) == 0);
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
             // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
         }
@@ -240,7 +278,7 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
         // check if this row can place the cell from startX to startX + w
         if(rows[i]->canPlace(startX, startX + w)){
             // Ensure the row covers the currentY to at least part of the target range
-            if(rowStartY == currentY && rowEndY > currentY){
+            if(rowStartY <= currentY && rowEndY > currentY){
                 currentY = rowEndY;
             }
 
@@ -248,15 +286,23 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
             if(currentY >= endY) return true;
         }
     }
-
     return false;
 }
 
 void Legalizer::CheckSubrowsAttribute(){
+    DEBUG_LGZ("Check slicing attribute...");
     for(const auto &row: rows){
         for(const auto &subrow : row->getSubrows()){
             assert((int)(subrow->getStartX() - row->getStartCoor().x) % (int)(row->getSiteWidth()) == 0);
             assert(subrow->getStartX() < subrow->getEndX());
+
+            for(const auto &gate: gates){
+                if(gate->getGPCoor().y >= row->getStartCoor().y + row->getSiteHeight() || gate->getGPCoor().y + gate->getH() <= row->getStartCoor().y) continue;
+                if(subrow->getEndX() > gate->getGPCoor().x && subrow->getStartX() < gate->getGPCoor().x + gate->getW()){
+                    std::cout << "slicing fail" << std::endl;
+                }
+            }
+
         }
     }
 }
@@ -289,6 +335,9 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
     // Exhausted search to place
     // iterate through subrow in this row
     // [TODO]: find the best entry to the subrow
+    // std::cout << "All row: " << *rows[row_idx];
+
+
     for(const auto &subrow : rows[row_idx]->getSubrows()){
         // no space in this subrow
         if(subrow->getFreeWidth() < ff->getW()) continue;
@@ -296,20 +345,20 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
         // [TODO]: modify to bisection method
         for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
-            bool placeable = ContinousAndEmpty(subrow->getStartX(), rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
+            bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
             if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
-                std::cout << "Ori Disp.: " << minDisplacement << ", cur Disp.: " << ff->getDisplacement(currCoor) << std::endl;
-                std::cout << "ff: " << currCoor << ", w = " <<  ff->getW() << std::endl;
-                std::cout << *subrow << std::endl;
+                // std::cout << "Ori Disp.: " << minDisplacement << ", cur Disp.: " << ff->getDisplacement(currCoor) << std::endl;
+                // std::cout << "ff: " << currCoor << ", w = " <<  ff->getW() << std::endl;
+                // std::cout << *subrow << std::endl;
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
             }
             //if not placeable, increase the step size to escape
-            else{
-                x += 20 * rows[row_idx]->getSiteWidth();
-            }
+            // else{
+            //     x += 20 * rows[row_idx]->getSiteWidth();
+            // }
         }
     }
     return minDisplacement;

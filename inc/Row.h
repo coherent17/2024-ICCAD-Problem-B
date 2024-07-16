@@ -33,7 +33,7 @@ public:
     double getSiteHeight()const;
     double getSiteWidth()const;
     int getNumOfSite()const;
-    const std::vector<Subrow *> &getSubrows()const;
+    std::vector<Subrow *> &getSubrows();
 
     // If Node *gate overlap the current row, split current row
     void slicing(Node *gate);

@@ -47,18 +47,25 @@ int Row::getNumOfSite()const{
     return numOfSites;
 }
 
-const std::vector<Subrow *> &Row::getSubrows()const{
+std::vector<Subrow *> &Row::getSubrows(){
     return subrows;
 }
 
 // [TODO]: if the current row is overlap with the gate (fix comb cell), row will call this function
 // Find the subrows in Row::subrows which is overlapped with gate, and split the effective subrows into multiple subrows
 void Row::slicing(Node *gate) {
+    if(subrows.size() == 0){
+        std::cout << "I am here" << std::endl;
+    }
     // std::cout << *this << std::endl;
     // std::cout << "Cut with gate: " << *gate << std::endl;
     // Gate's coordinates and dimensions
-    double gateStartX = gate->getGPCoor().x;
+    double gateStartX = gate->getLGCoor().x;
     double gateEndX = gateStartX + gate->getW();
+
+    if(gate->getLGCoor().y >= getStartCoor().y + siteHeight || gate->getLGCoor().y + gate->getH() <= getStartCoor().y){
+        return;
+    }
 
     std::vector<Subrow *> newSubrows;
     for(auto subrow : subrows){

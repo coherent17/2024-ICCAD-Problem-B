@@ -92,7 +92,7 @@ v4:
 	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o
 
 valgrind:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1.txt out
+	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
 	cat valgrind.log
 
 cppcheck:
