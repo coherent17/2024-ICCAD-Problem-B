@@ -6,14 +6,6 @@ Banking::~Banking(){}
 
 void Banking::run(){
     std::cout << "Running cluster..." << std::endl;
-    for(auto &pair: mgr.FF_Map){
-        FF* ff = pair.second;
-        double TNS, WNS;
-        ff->updateSlack(mgr);
-        ff->getNS(TNS, WNS);
-        if(TNS > 0)
-            std::cout << TNS << std::endl;
-    }
     libScoring();
     doClustering();
     ClusterResult();
