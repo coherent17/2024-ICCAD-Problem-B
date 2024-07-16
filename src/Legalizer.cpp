@@ -24,6 +24,7 @@ bool Legalizer::run(){
     SliceRows();
     CheckSubrowsAttribute();     // Should remove when release the binary
     Abacus();
+    LegalizeResultWriteBack();
     // for(const auto &row : rows){
     //     std::cout << *row << std::endl;
     // }
@@ -57,6 +58,7 @@ void Legalizer::LoadFF(){
         ff->setW(mgr.FFs[i]->getW());
         ff->setH(mgr.FFs[i]->getH());
         ff->setWeight(mgr.FFs[i]->getPinCount());
+        ff->setIsPlace(false);
         ffs.push_back(ff);
     }
 }
@@ -73,6 +75,7 @@ void Legalizer::LoadGate(){
         gate->setW(pair.second->getW());
         gate->setH(pair.second->getH());
         gate->setWeight(pair.second->getPinCount());
+        gate->setIsPlace(false);
         gates.push_back(gate);
     }
 }
@@ -122,6 +125,7 @@ void Legalizer::SliceRows(){
         }
         gate->setIsPlace(true);
     }
+
 }
 
 void Legalizer::Abacus(){
@@ -186,7 +190,21 @@ void Legalizer::Abacus(){
 
     // }
 
+}
 
+// Write legalize coordinate back to manager
+void Legalizer::LegalizeResultWriteBack(){
+    DEBUG_LGZ("Write Back Legalize Coordinate...");
+    for(const auto &ff : ffs){
+        if(ff->getIsPlace()){
+            // std::cout << ff->getName() << "GPCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl;
+            mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
+            // std::cout << ff->getName() << "LGCoor: " << mgr.FF_Map[ff->getName()]->getNewCoor() << std::endl << std::endl;
+        }
+        else{
+            // mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
+        }
+    }
 }
 
 bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2){
@@ -205,8 +223,30 @@ bool Legalizer::IsOverlap(const Coor &coor1, double w1, double h1, const Coor &c
 // Given the start coordinate from the row, and the w and h,
 // find if there exist continous row combination to place a multi-height ff
 // Need to take care of row not alignment conditions
-bool Legalizer::ContinousAndEmpty(double startX, double w, double h, int row_idx){
-    return true;
+bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx){
+    double endY = startY + h;
+    double currentY = startY;
+
+    for(size_t i = row_idx; i < rows.size(); i++){
+        double rowStartY = rows[i]->getStartCoor().y;
+        double rowEndY = rowStartY + rows[i]->getSiteHeight();
+
+        // check if the current row is complete beyond the target endY
+        if(rowStartY >= endY) break;
+
+        // check if this row can place the cell from startX to startX + w
+        if(rows[i]->canPlace(startX, startX + w)){
+            // Ensure the row covers the currentY to at least part of the target range
+            if(rowStartY <= currentY && rowEndY > currentY){
+                currentY = rowEndY;
+            }
+
+            // Check if we reached the target height
+            if(currentY >= endY) return true;
+        }
+    }
+
+    return false;
 }
 
 void Legalizer::CheckSubrowsAttribute(){
@@ -235,22 +275,34 @@ int Legalizer::FindClosestRow(Node *ff){
 // Try to place on this row, for multi-row height, must check upper row can place or not
 // Return the displacement from the global placement coordinate
 double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
+
+    // Should make use of this trend:
+    // if the ff->getGPCoor() > subrow->getEndX(), then the displacement will be decreasing
+    // if the ff->getGPCoor() < subrow->getStartX() then the displacement will be increasing
+    // otherwise, will decrease then increasing
+
     double minDisplacement = ff->getDisplacement(ff->getLGCoor());
 
+    // Exhausted search to place
     // iterate through subrow in this row
+    // [TODO]: find the best entry to the subrow
     for(const auto &subrow : rows[row_idx]->getSubrows()){
         // no space in this subrow
         if(subrow->getFreeWidth() < ff->getW()) continue;
-
         // for each subrow, try to place on site if has place
+        // [TODO]: modify to bisection method
         for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
-            bool placeable = ContinousAndEmpty(subrow->getStartX(), ff->getW(), ff->getH(), row_idx);
+            bool placeable = ContinousAndEmpty(subrow->getStartX(), rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
             if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
+            }
+            //if not placeable, increase the step size to escape
+            else{
+                x += 20 * rows[row_idx]->getSiteWidth();
             }
         }
     }

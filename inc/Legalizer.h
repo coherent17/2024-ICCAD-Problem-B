@@ -40,10 +40,11 @@ private:
     void LoadPlacementRow();
     void SliceRows();
     void Abacus();
+    void LegalizeResultWriteBack();
 
     // helper function
     bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
-    bool ContinousAndEmpty(double startX, double w, double h, int row_idx);
+    bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
     void CheckSubrowsAttribute();
     int FindClosestRow(Node *ff);
     double PlaceMultiHeightFFOnRow(Node *ff, int row_idx);

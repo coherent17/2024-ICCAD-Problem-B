@@ -100,6 +100,9 @@ cppcheck:
 
 calc:
 	(find src inc -type f -name "*.cpp" -o -name "*.h" && echo main.cpp) | xargs wc -l | tail -n 1
+	find inc src main.cpp -type f -name '*.*' -exec git blame {} \; | grep "coherent17" | wc -l
+	find inc src main.cpp -type f -name '*.*' -exec git blame {} \; | grep "c119cheng" | wc -l
+	find inc src main.cpp -type f -name '*.*' -exec git blame {} \; | grep "clairekuo" | wc -l
 
 boost:
 	chmod +x scripts/GetBoost.sh

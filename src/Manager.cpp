@@ -323,3 +323,15 @@ void Manager::showNS(){
     double _0, _1;
     this->getNS(_0, _1, true);
 }
+
+// the cost function without evaluate the bin density
+double Manager::getOverallCost(){
+    double cost = 0;
+    for(const auto & ff_pair : FF_Map){
+        double curTNS, curWNS;
+        ff_pair.second->updateSlack(*this);
+        ff_pair.second->getNS(curTNS, curWNS);
+        cost += alpha * curTNS + beta * ff_pair.second->getCell()->getGatePower() + gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
+    }
+    return cost;
+}
