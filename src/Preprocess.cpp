@@ -57,12 +57,15 @@ void Preprocess::Debank(){
                 std::string QpinName = pinName;
                 QpinName[0] = 'Q';
                 Coor q_coor = cur_ff.getCoor() + cur_cell.getPinCoor(QpinName); 
+
+                int ff_clk = cur_ff.getClkIdx();
                 
                 temp->setInstanceName(mgr.getNewFFName("FF"));
                 temp->setCoor(ff_coor);
                 temp->setTimingSlack("D", slack);
                 temp->setOriginalCoor(d_coor, q_coor);
                 temp->setOriginalQpinDelay(cur_cell.getQpinDelay());
+                temp->setClkIdx(ff_clk);
                 temp->setCell(ff_cell);
                 temp->setCellName(ff_cell->getCellName());
                 FF_list[temp->getInstanceName()] = temp;

@@ -6,6 +6,7 @@ FF::FF() : Instance(){
     coor = {0, 0};
     bandwidth = 0;
     isShifting = true;
+    clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, ""};
 }
@@ -16,6 +17,7 @@ FF::FF(int size) : Instance(), clusterFF(size, nullptr){
     coor = {0, 0};
     bandwidth = 0;
     isShifting = true;
+    clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, ""};
 }
@@ -38,6 +40,10 @@ void FF::setFFIdx(int ffIdx){
 
 void FF::setClusterIdx(int clusterIdx){
     this->clusterIdx = clusterIdx;
+}
+
+void FF::setClkIdx(int clkIdx){
+    this->clkIdx = clkIdx;
 }
 
 void FF::setNewCoor(const Coor &coor){
@@ -117,6 +123,10 @@ bool FF::getIsCluster()const{
 
 int FF::getClusterIdx()const{
     return clusterIdx;
+}
+
+int FF::getClkIdx()const{
+    return clkIdx;
 }
 
 Coor FF::getNewCoor()const{
