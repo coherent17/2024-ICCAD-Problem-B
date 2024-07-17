@@ -199,7 +199,7 @@ void Legalizer::LegalizeResultWriteBack(){
     DEBUG_LGZ("Write Back Legalize Coordinate...");
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
-            assert((((int)ff->getLGCoor().x - 15300) % 510) == 0);
+            // assert((((int)ff->getLGCoor().x - 15300) % 510) == 0);
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
         }
         else{

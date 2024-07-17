@@ -331,7 +331,7 @@ double Manager::getOverallCost(){
         double curTNS, curWNS;
         ff_pair.second->updateSlack(*this);
         ff_pair.second->getNS(curTNS, curWNS);
-        cost += alpha * curTNS + beta * ff_pair.second->getCell()->getGatePower() + gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
+        cost += alpha * (-curTNS) + beta * ff_pair.second->getCell()->getGatePower() + gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
     }
     return cost;
 }

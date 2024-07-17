@@ -24,12 +24,15 @@ private:
     Manager& mgr;
     std::vector<FF *> FFs;
     std::vector<Cluster> clusters;
+    std::unordered_map<int, int> clusterNum;
+    std::vector<int> bitOrder;
 
 public:
     explicit Banking(Manager& mgr);
     ~Banking();
 
     void run();
+
     void libScoring();
     void sortCell(std::vector<Cell *> &cell_vector);
     Cell* chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
@@ -37,6 +40,7 @@ public:
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
     void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();
+    void restoreUnclusterFFCoor();
     void ClusterResult();
 
 };
