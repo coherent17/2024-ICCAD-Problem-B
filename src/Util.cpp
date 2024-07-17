@@ -25,3 +25,20 @@ double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth){
 double HPWL(const Coor& c1, const Coor& c2){
     return std::abs(c1.x - c2.x) + std::abs(c1.y - c2.y);
 }
+
+bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2){
+    // Check if one rectangle is to the left of the other
+    if(coor1.x + w1 <= coor2.x || coor2.x + w2 <= coor1.x){
+        return false;
+    }
+
+    // Check if one rectangle is above the other
+    if (coor1.y + h1 <= coor2.y || coor2.y + h2 <= coor1.y) {
+            return false;
+    }
+    return true;
+}
+
+std::string toStringWithPrecision(double value, int numAfterDot){
+    return std::to_string(value).substr(0, std::to_string(value).find('.') + numAfterDot);
+}

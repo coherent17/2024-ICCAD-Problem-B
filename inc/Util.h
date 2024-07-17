@@ -17,12 +17,11 @@
 #define MAX_THREADS 8
 
 #include "Coor.h"
-
+#include <string>
+#include <sstream>
 #include <cmath>
 
-
 class Param{
-
     public:
         Param();
         ~Param();
@@ -33,9 +32,8 @@ class Param{
 double SquareEuclideanDistance(const Coor &p1, const Coor &p2);
 double MangattanDistance(const Coor &p1, const Coor &p2);
 double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth);
-// string getNewFFName(const string&, const int&); // given prefix string and counter return the concate name = (prefix + string(int))
 double HPWL(const Coor&, const Coor&);
-// // double HPWL(const Net& n, vector<Coor>& c, Manager& mgr);
-
+bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
+std::string toStringWithPrecision(double value, int numAfterDot);
 
 #endif

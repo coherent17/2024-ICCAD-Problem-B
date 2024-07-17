@@ -20,6 +20,7 @@
 #include "Banking.h"
 #include "Legalizer.h"
 #include "Util.h"
+#include "PrettyTable.h"
 
 class FF;
 class Preprocess;
@@ -94,7 +95,7 @@ public:
     // the FF after debank will be assign to debankCellType (maybe this can be a vector)
     void getNS(double& TNS, double& WNS, bool show); // this retunr TNS and WNS of whole design (all FF in FF_Map)
     void showNS();
-    double getOverallCost();
+    double getOverallCost(bool verbose);
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

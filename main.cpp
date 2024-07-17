@@ -11,22 +11,24 @@ int main(int argc, char *argv[]){
         return EXIT_FAILURE;
     }
 
+    bool cost_verbose = true;
+
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.preprocess();
     std::cout << "Slack after preprocess" << std::endl;
     mgr.showNS();
-    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
+    mgr.getOverallCost(cost_verbose);
 
     mgr.meanshift();
     std::cout << "Slack after meanshift" << std::endl;
     mgr.showNS();
-    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
+    mgr.getOverallCost(cost_verbose);
     
     mgr.banking();
     std::cout << "Slack after banking" << std::endl;
     mgr.showNS();
-    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
+    mgr.getOverallCost(cost_verbose);
     mgr.dump(argv[2]);
     // if(argc == 4){
     //     mgr.dumpVisual(argv[3]);
@@ -35,7 +37,7 @@ int main(int argc, char *argv[]){
     // place holder method for runing legalize algorithm
     mgr.legalize();
     mgr.showNS();
-    std::cout << "Overall Cost: " << mgr.getOverallCost() << std::endl;
+    mgr.getOverallCost(cost_verbose);
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }

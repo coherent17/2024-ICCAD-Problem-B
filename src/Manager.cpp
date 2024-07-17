@@ -325,13 +325,76 @@ void Manager::showNS(){
 }
 
 // the cost function without evaluate the bin density
-double Manager::getOverallCost(){
-    double cost = 0;
+double Manager::getOverallCost(bool verbose){
+    std::cout << "[Cost Evaluation]" << std::endl;
+    double TNS_cost = 0;
+    double Power_cost = 0;
+    double Area_cost = 0;
+    double Bin_cost = 0;
     for(const auto & ff_pair : FF_Map){
         double curTNS, curWNS;
         ff_pair.second->updateSlack(*this);
         ff_pair.second->getNS(curTNS, curWNS);
-        cost += alpha * (-curTNS) + beta * ff_pair.second->getCell()->getGatePower() + gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
+        TNS_cost += alpha * (-curTNS);
+        Power_cost += beta * ff_pair.second->getCell()->getGatePower();
+        Area_cost += gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
+    }
+
+    // check for the bin density
+    int numBins = 0;
+    int numViolationBins = 0;
+    int DieStartX = die.getDieOrigin().x;
+    int DieStartY = die.getDieOrigin().y;
+    int DieEndX = die.getDieBorder().x;
+    int DieEndY = die.getDieBorder().y;
+    int BinW = die.getBinWidth();
+    int BinH = die.getBinHeight();
+    #pragma omp parallel for reduction(+:numBins, numViolationBins) collapse(2)
+    for(int _x = DieStartX; _x < DieEndX; _x += BinW){
+        for(int _y = DieStartY; _y < DieEndY; _y += BinH){
+            numBins++;
+            double area = 0;
+            for(const auto &ff : FF_Map){
+                if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
+                    area += ff.second->getW() * ff.second->getH();
+                }
+            }
+
+            for(const auto &gate : Gate_Map){
+                if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
+                    area += gate.second->getW() * gate.second->getH();
+                }
+            }
+            
+            // check if over bin max util
+            if(area / (die.getBinWidth() * die.getBinHeight()) > die.getBinMaxUtil()){
+                numViolationBins++;
+            }
+        }
+    }
+    Bin_cost = lambda * numViolationBins;
+
+    double cost = TNS_cost + Power_cost + Area_cost + Bin_cost;
+    double TNS_percentage = TNS_cost / cost * 100;
+    double Power_percentage = Power_cost / cost * 100;
+    double Area_percentage = Area_cost / cost * 100;
+    double Bin_percentage = Bin_cost / cost * 100;
+    if(verbose){
+        size_t numAfterDot = 4;
+        std::vector<std::string> header = {"Cost", "Value", "Percentage(%)"};
+        std::vector<std::vector<std::string>> rows = {
+            {"TNS", toStringWithPrecision(TNS_cost, numAfterDot), toStringWithPrecision(TNS_percentage, numAfterDot) + "(%)"},
+            {"Power", toStringWithPrecision(Power_cost, numAfterDot), toStringWithPrecision(Power_percentage, numAfterDot) + "(%)"},
+            {"Area", toStringWithPrecision(Area_cost, numAfterDot), toStringWithPrecision(Area_percentage, numAfterDot) + "(%)"},
+            {"Bin", toStringWithPrecision(Bin_cost, numAfterDot), toStringWithPrecision(Bin_percentage, numAfterDot) + "(%)"},
+            {"Total", toStringWithPrecision(cost, numAfterDot), "100.00(%)"}
+        };
+
+        PrettyTable pt;
+        pt.AddHeader(header);
+		pt.AddRows(rows);
+        pt.SetAlign(PrettyTable::Align::Internal);
+		std::cout << pt << std::endl;
     }
     return cost;
 }
