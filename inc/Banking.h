@@ -24,6 +24,7 @@ private:
     Manager& mgr;
     std::vector<FF *> FFs;
     std::vector<Cluster> clusters;
+    std::unordered_map<int, int> clusterNum;
 
 public:
     explicit Banking(Manager& mgr);
@@ -37,6 +38,7 @@ public:
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
     void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();
+    void restoreUnclusterFFCoor();
     void ClusterResult();
 
 };
