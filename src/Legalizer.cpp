@@ -140,7 +140,7 @@ void Legalizer::Abacus(){
 
         // search down
         int down_row_idx = closest_row_idx - 1;
-        while(down_row_idx >= 0 /*&& std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement*/){
+        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
             minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
             down_row_idx--;
@@ -148,7 +148,7 @@ void Legalizer::Abacus(){
 
         // search up
         int up_row_idx = closest_row_idx + 1;
-        while(up_row_idx < numrows /*&& std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement*/){
+        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
             double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
             minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
             up_row_idx++;
