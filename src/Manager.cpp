@@ -381,13 +381,13 @@ double Manager::getOverallCost(bool verbose){
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
         size_t numAfterDot = 4;
-        std::vector<std::string> header = {"Cost", "Value", "Percentage(%)"};
+        std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
         std::vector<std::vector<std::string>> rows = {
-            {"TNS", toStringWithPrecision(TNS_cost, numAfterDot), toStringWithPrecision(TNS_percentage, numAfterDot) + "(%)"},
-            {"Power", toStringWithPrecision(Power_cost, numAfterDot), toStringWithPrecision(Power_percentage, numAfterDot) + "(%)"},
-            {"Area", toStringWithPrecision(Area_cost, numAfterDot), toStringWithPrecision(Area_percentage, numAfterDot) + "(%)"},
-            {"Bin", toStringWithPrecision(Bin_cost, numAfterDot), toStringWithPrecision(Bin_percentage, numAfterDot) + "(%)"},
-            {"Total", toStringWithPrecision(cost, numAfterDot), "100.00(%)"}
+            {"TNS", toStringWithPrecision(alpha, numAfterDot), toStringWithPrecision(TNS_cost, numAfterDot), toStringWithPrecision(TNS_percentage, numAfterDot) + "(%)"},
+            {"Power", toStringWithPrecision(beta, numAfterDot), toStringWithPrecision(Power_cost, numAfterDot), toStringWithPrecision(Power_percentage, numAfterDot) + "(%)"},
+            {"Area", toStringWithPrecision(gamma, numAfterDot), toStringWithPrecision(Area_cost, numAfterDot), toStringWithPrecision(Area_percentage, numAfterDot) + "(%)"},
+            {"Bin", toStringWithPrecision(lambda, numAfterDot), toStringWithPrecision(Bin_cost, numAfterDot), toStringWithPrecision(Bin_percentage, numAfterDot) + "(%)"},
+            {"Total", "-", toStringWithPrecision(cost, numAfterDot), "100.00(%)"}
         };
 
         PrettyTable pt;
