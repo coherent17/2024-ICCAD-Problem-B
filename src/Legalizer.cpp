@@ -116,8 +116,8 @@ void Legalizer::SliceRows(){
 void Legalizer::Abacus(){
     // Sort cell by cost function
     std::sort(ffs.begin(), ffs.end(), [](Node *a, Node *b){
-        double costA = a->getH() * HEIGHT_WEIGHT + a->getW() * WIDTH_WEIGHT + a->getGPCoor().x * X_WEIGHT;
-        double costB = b->getH() * HEIGHT_WEIGHT + b->getW() * WIDTH_WEIGHT + b->getGPCoor().x * X_WEIGHT;;
+        double costA = a->getH() * a->getW() * AREA_WEIGHT + a->getH() * HEIGHT_WEIGHT + a->getW() * WIDTH_WEIGHT + a->getGPCoor().x * X_WEIGHT;
+        double costB = b->getH() * b->getW() * AREA_WEIGHT + b->getH() * HEIGHT_WEIGHT + b->getW() * WIDTH_WEIGHT + b->getGPCoor().x * X_WEIGHT;;
         return costA > costB;
     });
     
