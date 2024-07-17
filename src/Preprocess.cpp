@@ -26,8 +26,11 @@ void Preprocess::Debank(){
         if(mgr.cell_library.isFF(cell_m.first) && cell_m.second->getBits() == 1){
             if(!targetCell)
                 targetCell = cell_m.second;
-            else if(targetCell->getW() > cell_m.second->getW())
+            else if(mgr.alpha * targetCell->getQpinDelay() + mgr.beta * targetCell->getGatePower() + mgr.gamma * targetCell->getW() * targetCell->getH() > 
+                    mgr.alpha * cell_m.second->getQpinDelay() + mgr.beta * cell_m.second->getGatePower() + mgr.gamma * cell_m.second->getW() * cell_m.second->getH()){
                 targetCell = cell_m.second; 
+            }
+                
         }
     }
 
@@ -45,12 +48,11 @@ void Preprocess::Debank(){
                 const Cell* ff_cell;
                 if(cur_cell.getBits() == 1){
                     ff_coor = cur_ff.getCoor();
-                    ff_cell = cur_ff.getCell();
                 }
                 else{
                     ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor();
-                    ff_cell = targetCell;
                 }
+                ff_cell = targetCell;
                 double slack = cur_ff.getTimingSlack(pinName);
                 // set original coor for D port and Q port
                 Coor d_coor = cur_ff.getCoor() + cur_cell.getPinCoor(pinName);
@@ -154,7 +156,7 @@ void Preprocess::optimal_FF_location(){
     std::cout << "Slack statistic before Optimize" << std::endl;
     double prevTNS = getSlackStatistic(true);
     const double terminateThreshold = 0.001;
-    for(i=0;i<=100;i++){
+    for(i=0;i<=1000;i++){
         optimizer.Step(true);
         // CAL new slack
         updateSlack();
