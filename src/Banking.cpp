@@ -11,12 +11,15 @@ Banking::~Banking(){}
 void Banking::run(){
     std::cout << "Running cluster..." << std::endl;
     libScoring();
-    doClustering();
+    if(bitOrder[0] != 1){
+        doClustering();
+    }
     restoreUnclusterFFCoor();
     ClusterResult();
 }
 
 void Banking::libScoring(){
+    std::vector<std::pair<double, int>> bitScoreVector;
     for(auto &pair: mgr.Bit_FF_Map){
         std::vector<Cell *> &cell_vector = pair.second;
         for(size_t i = 0; i < cell_vector.size(); i++){
@@ -25,6 +28,7 @@ void Banking::libScoring(){
             cell_vector[i]->setScore(score);
         }
         sortCell(cell_vector);
+        bitScoreVector.push_back({cell_vector[0]->getScore()/pair.first, pair.first});
         //DEBUG
         // for(size_t i = 0; i < pair.second.size(); i++){
         //     std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
@@ -35,6 +39,14 @@ void Banking::libScoring(){
     // for(auto &pair: bit_map){
     //     std::cout << pair.second[0]->getCellName() << ": " << pair.second[0]->getScore() << std::endl; 
     // }
+    std::sort(bitScoreVector.begin(), bitScoreVector.end());
+    std::cout << "[LIB MBFF SCORE]" << std::endl;
+    for(auto const& bit_pair: bitScoreVector){
+        bitOrder.push_back(bit_pair.second);
+        // DEBUG
+        std::cout <<"         "<< bit_pair.second << ": " << bit_pair.first << std::endl;
+    }
+
 }
 
 void Banking::sortCell(std::vector<Cell *> &cell_vector){
@@ -63,7 +75,7 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
                 
         }
     }
-    // assert (!nearFFs.empty());
+
     if(nearFFs.size() > 0){
         sortFFs(nearFFs);
         Cell* chooseCell = chooseCellLib(nearFFs.size()+1);
@@ -84,12 +96,18 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
 }
 
 Cell* Banking::chooseCellLib(int bitNum){
-    int bitMin = bitNum;
-    while(mgr.Bit_FF_Map.find(bitMin) == mgr.Bit_FF_Map.end() && bitMin > 0){
-        bitMin--;
+    int order = 0;
+    int targetBit = bitOrder[order];
+    while(bitNum != targetBit && order < (int)bitOrder.size()){
+        if(targetBit > bitNum){
+            order++;
+            targetBit = bitOrder[order];
+            continue;
+        }
+        bitNum--;
     }
-    assert(bitMin > 0);
-    return mgr.Bit_FF_Map[bitMin][0];
+    assert(bitNum > 0);
+    return mgr.Bit_FF_Map[bitNum][0];
 }
 
 
