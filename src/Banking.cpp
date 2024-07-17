@@ -223,11 +223,5 @@ void Banking::ClusterResult(){
     //     }
     //     std::cout << std::endl;
     // }
-
-    // give to legalizer
-    for(const auto &pair : mgr.FF_Map){
-        mgr.FFs.push_back(pair.second);
-    }
-
 }
     

@@ -45,15 +45,14 @@ void Legalizer::LoadFF(){
     // Construct FF database
     DEBUG_LGZ("Load FF to Databse");
     numffs = mgr.FF_Map.size();
-    assert(mgr.FFs.size() == mgr.FF_Map.size());
-    for(size_t i = 0; i < mgr.FFs.size(); i++){
+    for(const auto &pair : mgr.FF_Map){
         Node *ff = new Node();
-        ff->setName(mgr.FFs[i]->getInstanceName());
-        ff->setGPCoor(mgr.FFs[i]->getNewCoor());
+        ff->setName(pair.second->getInstanceName());
+        ff->setGPCoor(pair.second->getNewCoor());
         ff->setLGCoor(Coor(DBL_MAX, DBL_MAX));
-        ff->setW(mgr.FFs[i]->getW());
-        ff->setH(mgr.FFs[i]->getH());
-        ff->setWeight(mgr.FFs[i]->getPinCount());
+        ff->setW(pair.second->getW());
+        ff->setH(pair.second->getH());
+        ff->setWeight(pair.second->getPinCount());
         ff->setIsPlace(false);
         ffs.push_back(ff);
     }
@@ -91,7 +90,6 @@ void Legalizer::LoadPlacementRow(){
         subrow->setStartX(PlacementRows[i].startCoor.x);
         subrow->setEndX(PlacementRows[i].startCoor.x + PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
         subrow->setFreeWidth(PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
-        subrow->setLastCluster(nullptr);
         row->addSubrows(subrow);
         rows.push_back(row);
         minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);

@@ -4,12 +4,9 @@ Subrow::Subrow(){
     startX = 0;
     endX = 0;
     freeWidth = 0;
-    lastCluster = nullptr;
 }
 
-Subrow::~Subrow(){
-    lastCluster = nullptr;
-}
+Subrow::~Subrow(){}
 
 // Setters
 void Subrow::setStartX(double startX){
@@ -24,10 +21,6 @@ void Subrow::setFreeWidth(double freeWidth){
     this->freeWidth = freeWidth;
 }
 
-void Subrow::setLastCluster(SubrowCluster *lastCluster){
-    this->lastCluster = lastCluster;
-}
-
 // Getters
 double Subrow::getStartX()const{
     return startX;
@@ -39,10 +32,6 @@ double Subrow::getEndX()const{
 
 double Subrow::getFreeWidth()const{
     return freeWidth;
-}
-
-SubrowCluster *Subrow::getLastCluster()const{
-    return lastCluster;
 }
 
 std::ostream &operator<<(std::ostream &os, const Subrow &subrow){

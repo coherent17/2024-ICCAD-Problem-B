@@ -86,6 +86,11 @@ v2:
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i testcase/sample_visual.txt.out -m die_pic.png -t sample -g -p -nl -o
 
+v3:
+	./$(BIN) testcase/testcase1.txt testcase/testcase1.txt.out testcase/testcase1_visual.txt.out
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i testcase/testcase1_visual.txt.out -m die_pic.png -t testcase1 -g -p -nl -o
+
 v4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie

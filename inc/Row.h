@@ -3,6 +3,7 @@
 
 #include "Subrow.h"
 #include "Coor.h"
+#include "Node.h"
 #include <vector>
 #include <cmath>
 

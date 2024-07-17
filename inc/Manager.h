@@ -70,11 +70,6 @@ public:
     // parameter
     Param param;
 
-    // ######################################### used in cluster ########################################################
-    // all should be single bit ff in here.    
-    std::vector<FF *> FFs;// need to delete in legalizer 
-    // ######################################### used in cluster ########################################################
-
 public:
     Manager();
     ~Manager();
