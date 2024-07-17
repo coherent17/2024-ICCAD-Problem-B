@@ -30,7 +30,6 @@ int main(int argc, char *argv[]){
     std::cout << "Slack after banking" << std::endl;
     mgr.showNS();
     mgr.getOverallCost(cost_verbose);
-    mgr.dump(argv[2]);
     // if(argc == 4){
     //     mgr.dumpVisual(argv[3]);
     // }
@@ -42,5 +41,6 @@ int main(int argc, char *argv[]){
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
     }
+    mgr.dump(argv[2]);
     return 0;
 }

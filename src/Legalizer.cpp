@@ -121,74 +121,66 @@ void Legalizer::Abacus(){
         return costA > costB;
     });
     
-    // Find the ff that has multi-row height and legalize it first
-    std::vector<Node *> multiRowHeightFFs;
-    std::vector<Node *> normalHeightFFs;
+
+    DEBUG_LGZ("Start Legalize FF");
     for(const auto &ff : ffs){
-        if(ff->getH() > minRowHeight){
-            multiRowHeightFFs.push_back(ff);
+        int closest_row_idx = FindClosestRow(ff);
+        double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
+
+        // search down
+        int down_row_idx = closest_row_idx - 1;
+        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+            down_row_idx--;
+        }
+
+        // search up
+        int up_row_idx = closest_row_idx + 1;
+        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
+            double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+            up_row_idx++;
+        }
+
+        if(ff->getIsPlace()){
+            for(auto &row : rows){
+                row->slicing(ff);
+            }
         }
         else{
-            normalHeightFFs.push_back(ff);
-        }
-    }
+            // Global search mode
+            DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
+            int closest_row_idx = FindClosestRow(ff);
+            double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
 
-    DEBUG_LGZ("Legalize Multi-Row Height FF");
-    for(const auto &ff : multiRowHeightFFs){
-        int closest_row_idx = FindClosestRow(ff);
-        double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-
-        // search down
-        int down_row_idx = closest_row_idx - 1;
-        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
-            down_row_idx--;
-        }
-
-        // search up
-        int up_row_idx = closest_row_idx + 1;
-        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
-            double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-            up_row_idx++;
-        }
-
-        if(ff->getIsPlace()){
-            for(auto &row : rows){
-                row->slicing(ff);
+            // search down
+            int down_row_idx = closest_row_idx - 1;
+            while(down_row_idx >= 0){
+                double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+                minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+                down_row_idx--;
             }
-        }
-        else DEBUG_LGZ("Legalize Multi-Row Height FF Failed");
-    }
 
-    DEBUG_LGZ("Legalize Normal Height FF");
-    for(const auto & ff : normalHeightFFs){
-        int closest_row_idx = FindClosestRow(ff);
-        double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-
-        // search down
-        int down_row_idx = closest_row_idx - 1;
-        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
-            down_row_idx--;
-        }
-
-        // search up
-        int up_row_idx = closest_row_idx + 1;
-        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
-            double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-            up_row_idx++;
-        }
-
-        if(ff->getIsPlace()){
-            for(auto &row : rows){
-                row->slicing(ff);
+            // search up
+            int up_row_idx = closest_row_idx + 1;
+            while(up_row_idx < numrows){
+                double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+                minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+                up_row_idx++;
             }
-        }
-        else DEBUG_LGZ("Legalize Normal Height FF Failed");
+
+            if(ff->getIsPlace()){
+                for(auto &row : rows){
+                    row->slicing(ff);
+                }
+            }
+            else{
+                DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed");
+                DEBUG_LGZ("Check if die area or placement row is enough to place...");
+                DEBUG_LGZ("Check area parameter is 0 or not...");
+            }
+        } 
     }
 }
 

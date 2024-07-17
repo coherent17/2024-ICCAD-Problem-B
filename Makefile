@@ -71,6 +71,11 @@ run4:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
+run5:
+	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
+
 visual4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
@@ -95,6 +100,12 @@ v4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o
+
+v5:
+	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out testcase/testcase1_0718_visual.txt.out
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i testcase/testcase1_0718_visual.txt.out -m die_pic.png -t testcase1_0718 -g -p -nl -o
+
 
 valgrind:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
