@@ -95,6 +95,10 @@ public:
     // the FF after debank will be assign to debankCellType (maybe this can be a vector)
     void getNS(double& TNS, double& WNS, bool show); // this retunr TNS and WNS of whole design (all FF in FF_Map)
     void showNS();
+    // for lib cell scoring
+    void libScoring();
+    void sortCell(std::vector<Cell *> &cell_vector);
+    
     double getOverallCost(bool verbose);
     friend class Parser;
     friend class Dumper;

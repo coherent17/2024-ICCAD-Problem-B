@@ -398,3 +398,32 @@ double Manager::getOverallCost(bool verbose){
     }
     return cost;
 }
+
+void Manager::libScoring(){
+    for(auto &pair: Bit_FF_Map){
+        std::vector<Cell *> &cell_vector = pair.second;
+        for(size_t i = 0; i < cell_vector.size(); i++){
+            double area = cell_vector[i]->getW() * cell_vector[i]->getH();
+            double score = alpha*cell_vector[i]->getQpinDelay() + beta*cell_vector[i]->getGatePower() + gamma*area;
+            cell_vector[i]->setScore(score);
+        }
+        sortCell(cell_vector);
+        //DEBUG
+        // for(size_t i = 0; i < pair.second.size(); i++){
+        //     std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
+        // }
+    }
+    // DEBUG
+    // std::map<int, std::vector<Cell *>> bit_map(Bit_FF_Map.begin(), Bit_FF_Map.end());
+    // for(auto &pair: bit_map){
+    //     std::cout << pair.second[0]->getCellName() << ": " << pair.second[0]->getScore() << std::endl; 
+    // }
+
+}
+
+void Manager::sortCell(std::vector<Cell *> &cell_vector){
+    auto scoreCmp = [](const Cell * cell1, const Cell * cell2){
+        return cell1->getScore() < cell2->getScore();
+    };
+    std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
+}

@@ -33,8 +33,7 @@ public:
 
     void run();
 
-    void libScoring();
-    void sortCell(std::vector<Cell *> &cell_vector);
+    void bitOrdering();
     Cell* chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
     Cell* chooseCellLib(int bitNum);
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);

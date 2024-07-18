@@ -10,7 +10,7 @@ Banking::~Banking(){}
 
 void Banking::run(){
     std::cout << "Running cluster..." << std::endl;
-    libScoring();
+    bitOrdering();
     if(bitOrder[0] != 1){
         doClustering();
     }
@@ -18,42 +18,21 @@ void Banking::run(){
     ClusterResult();
 }
 
-void Banking::libScoring(){
+void Banking::bitOrdering(){
     std::vector<std::pair<double, int>> bitScoreVector;
     for(auto &pair: mgr.Bit_FF_Map){
         std::vector<Cell *> &cell_vector = pair.second;
-        for(size_t i = 0; i < cell_vector.size(); i++){
-            double area = cell_vector[i]->getW() * cell_vector[i]->getH();
-            double score = mgr.alpha*cell_vector[i]->getQpinDelay() + mgr.beta*cell_vector[i]->getGatePower() + mgr.gamma*area;
-            cell_vector[i]->setScore(score);
-        }
-        sortCell(cell_vector);
         bitScoreVector.push_back({cell_vector[0]->getScore()/pair.first, pair.first});
-        //DEBUG
-        // for(size_t i = 0; i < pair.second.size(); i++){
-        //     std::cout << pair.second[i]->getCellName() << ": " << pair.second[i]->getScore() << std::endl;
-        // }
     }
-    // DEBUG
-    // std::map<int, std::vector<Cell *>> bit_map(mgr.Bit_FF_Map.begin(), mgr.Bit_FF_Map.end());
-    // for(auto &pair: bit_map){
-    //     std::cout << pair.second[0]->getCellName() << ": " << pair.second[0]->getScore() << std::endl; 
-    // }
+    
     std::sort(bitScoreVector.begin(), bitScoreVector.end());
     std::cout << "[LIB MBFF SCORE]" << std::endl;
+
     for(auto const& bit_pair: bitScoreVector){
         bitOrder.push_back(bit_pair.second);
         // DEBUG
         std::cout <<"         "<< bit_pair.second << ": " << bit_pair.first << std::endl;
     }
-
-}
-
-void Banking::sortCell(std::vector<Cell *> &cell_vector){
-    auto scoreCmp = [](const Cell * cell1, const Cell * cell2){
-        return cell1->getScore() < cell2->getScore();
-    };
-    std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
 }
 
 Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank){
