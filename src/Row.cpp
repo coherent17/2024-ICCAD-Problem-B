@@ -62,15 +62,18 @@ void Row::slicing(Node *gate) {
     // Gate's coordinates and dimensions
     double gateStartX = gate->getLGCoor().x;
     double gateEndX = gateStartX + gate->getW();
+    double gateStartY = gate->getLGCoor().y;
+    double rowStartY = getStartCoor().y;
 
-    if(gate->getLGCoor().y >= getStartCoor().y + siteHeight || gate->getLGCoor().y + gate->getH() <= getStartCoor().y){
+    if(gateStartY >= rowStartY+ siteHeight || gateStartY + gate->getH() <= rowStartY){
         return;
-    }
+    }// todo revise siteHeight
 
     std::vector<Subrow *> newSubrows;
     for(auto subrow : subrows){
         double subrowStartX = subrow->getStartX();
         double subrowEndX = subrow->getEndX();
+        double subrowHeight = subrow->getHeight();
 
         // Check if subrow overlap with the gate
         if(subrowEndX > gateStartX && subrowStartX < gateEndX){
@@ -81,21 +84,60 @@ void Row::slicing(Node *gate) {
                 newSubrowBefore->setStartX(subrowStartX);
                 newSubrowBefore->setEndX(gateStartX);
                 newSubrowBefore->setFreeWidth(newSubrowBefore->getEndX() - newSubrowBefore->getStartX());
+                newSubrowBefore->setHeight(subrowHeight);
                 newSubrows.push_back(newSubrowBefore);
+                // std::cout << "StartX: " << newSubrowBefore->getStartX() << std::endl;
+                // std::cout << "EndX: " << newSubrowBefore->getEndX() << std::endl;
+                // std::cout << "H: " << newSubrowBefore->getHeight() << std::endl;
+
+            }
+            // Part under gate 
+            if(gateStartY > rowStartY){
+                // std::cout << "Under Gate\n";
+                double newSubrowStartX;
+                double newSubrowEndX;
+                if(gateStartX <= subrowStartX){
+                    newSubrowStartX = subrowStartX;
+                }else{
+                    // double alignedStartX = subrowStartX + std::ceil((int)(gateStartX - subrowStartX) / getSiteWidth()) * getSiteWidth();
+                    newSubrowStartX = gateStartX;
+                } 
+                if(gateEndX >= subrowEndX){
+                    newSubrowEndX = subrowEndX;
+                }else{
+                    newSubrowEndX = gateEndX;
+                }
+                
+                Subrow *newSubrow = new Subrow();
+                newSubrow->setStartX(newSubrowStartX);
+                newSubrow->setEndX(newSubrowEndX);
+                newSubrow->setFreeWidth(newSubrow->getEndX() - newSubrow->getStartX());
+                newSubrow->setHeight(gateStartY - rowStartY);
+                // std::cout << "StartX: " << newSubrow->getStartX() << std::endl;
+                // std::cout << "EndX: " << newSubrow->getEndX() << std::endl;
+                // std::cout << "H: " << newSubrow->getHeight() << std::endl;
+                newSubrows.push_back(newSubrow);
             }
 
             // Part after the gate
             if(subrowEndX > gateEndX){
                 Subrow *newSubrowAfter = new Subrow();
                 // make subrow startX always on site
-                double alignedStartX = getStartCoor().x + std::ceil((int)(gateEndX - getStartCoor().x) / getSiteWidth()) * getSiteWidth();
-                newSubrowAfter->setStartX(alignedStartX);
+                // double alignedStartX = getStartCoor().x + std::ceil((int)(gateEndX - getStartCoor().x) / getSiteWidth()) * getSiteWidth();
+                newSubrowAfter->setStartX(gateEndX);
                 newSubrowAfter->setEndX(subrowEndX);
                 newSubrowAfter->setFreeWidth(newSubrowAfter->getEndX() - newSubrowAfter->getStartX());
-                if(newSubrowAfter->getStartX() < newSubrowAfter->getEndX()){
+                newSubrowAfter->setHeight(subrowHeight);
+                if(newSubrowAfter->getStartX() <= newSubrowAfter->getEndX()){
                     newSubrows.push_back(newSubrowAfter);
+                    // std::cout << "StartX: " << newSubrowAfter->getStartX() << std::endl;
+                    // std::cout << "EndX: " << newSubrowAfter->getEndX() << std::endl;
+                    // std::cout << "H: " << newSubrowAfter->getHeight() << std::endl;
                 }
             }
+
+            
+            
 
         }
         else{
@@ -110,11 +152,20 @@ void Row::slicing(Node *gate) {
     // std::cout << *this << std::endl;
 }
 
-bool Row::canPlace(double startX, double endX){
+bool Row::canPlace(double startX, double endX, double h){
+    double traverseX = startX;
     for(const auto &subrow : subrows){
-        if(subrow->getStartX() <= startX && subrow->getEndX() >= endX){
+        if(subrow->getStartX() <= traverseX && subrow->getEndX() >= traverseX && subrow->getHeight() >= h){
+            traverseX = subrow->getEndX();
+            // std::cout << "X:" << traverseX << std::endl;
+            // std::cout << "Y:" << subrow->getHeight() << std::endl;
+        }
+        if(traverseX >= endX){
             return true;
         }
+        // if(subrow->getStartX() <= startX && subrow->getEndX() >= endX){
+        //     return true;
+        // }
     }
     return false;
 }

@@ -4,6 +4,7 @@ Subrow::Subrow(){
     startX = 0;
     endX = 0;
     freeWidth = 0;
+    height = 0;
 }
 
 Subrow::~Subrow(){}
@@ -21,6 +22,10 @@ void Subrow::setFreeWidth(double freeWidth){
     this->freeWidth = freeWidth;
 }
 
+void Subrow::setHeight(double height){
+    this->height = height;
+}
+
 // Getters
 double Subrow::getStartX()const{
     return startX;
@@ -32,6 +37,10 @@ double Subrow::getEndX()const{
 
 double Subrow::getFreeWidth()const{
     return freeWidth;
+}
+
+double Subrow::getHeight()const{
+    return height;
 }
 
 std::ostream &operator<<(std::ostream &os, const Subrow &subrow){

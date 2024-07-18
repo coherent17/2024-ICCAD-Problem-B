@@ -90,6 +90,7 @@ void Legalizer::LoadPlacementRow(){
         subrow->setStartX(PlacementRows[i].startCoor.x);
         subrow->setEndX(PlacementRows[i].startCoor.x + PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
         subrow->setFreeWidth(PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
+        subrow->setHeight(PlacementRows[i].siteHeight);
         row->addSubrows(subrow);
         rows.push_back(row);
         minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);
@@ -224,9 +225,14 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
 
         // check if the current row is complete beyond the target endY
         if(rowStartY >= endY) break;
-
+        double placeH;
+        if(h >= rows[i]->getSiteHeight()){
+            placeH = rows[i]->getSiteHeight();
+        }else{
+            placeH = h;
+        }
         // check if this row can place the cell from startX to startX + w
-        if(rows[i]->canPlace(startX, startX + w)){
+        if(rows[i]->canPlace(startX, startX + w, placeH)){
             // Ensure the row covers the currentY to at least part of the target range
             if(rowStartY <= currentY && rowEndY > currentY){
                 currentY = rowEndY;
@@ -290,10 +296,11 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
 
     for(const auto &subrow : rows[row_idx]->getSubrows()){
         // no space in this subrow
-        if(subrow->getFreeWidth() < ff->getW()) continue;
+        // if(subrow->getFreeWidth() < ff->getW()) continue;
         // for each subrow, try to place on site if has place
         // [TODO]: modify to bisection method
-        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+        double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
+        for(int x = alignedStartX; x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);

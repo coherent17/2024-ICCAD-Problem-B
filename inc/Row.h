@@ -38,7 +38,7 @@ public:
 
     // If Node *gate overlap the current row, split current row
     void slicing(Node *gate);
-    bool canPlace(double startX, double endX);
+    bool canPlace(double startX, double endX, double h);
 
     // Operator overloading for sorting
     bool operator<(const Row &rhs)const;
