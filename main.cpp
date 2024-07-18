@@ -15,6 +15,7 @@ int main(int argc, char *argv[]){
 
     Manager mgr;
     mgr.parse(argv[1]);
+    mgr.libScoring();
     mgr.getOverallCost(cost_verbose);
     mgr.preprocess();
     std::cout << "Slack after preprocess" << std::endl;
