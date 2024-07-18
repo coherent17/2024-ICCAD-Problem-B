@@ -19,20 +19,8 @@ void Preprocess::run(){
 void Preprocess::Debank(){
 
     // select cell use after debank
-    // if alread single bit it will use same cell as input given
-    // map each FF to a single bit cell
-    Cell* targetCell = nullptr;
-    for(auto& cell_m : mgr.cell_library.getCellMap()){
-        if(mgr.cell_library.isFF(cell_m.first) && cell_m.second->getBits() == 1){
-            if(!targetCell)
-                targetCell = cell_m.second;
-            else if(mgr.alpha * targetCell->getQpinDelay() + mgr.beta * targetCell->getGatePower() + mgr.gamma * targetCell->getW() * targetCell->getH() > 
-                    mgr.alpha * cell_m.second->getQpinDelay() + mgr.beta * cell_m.second->getGatePower() + mgr.gamma * cell_m.second->getW() * cell_m.second->getH()){
-                targetCell = cell_m.second; 
-            }
-                
-        }
-    }
+    // use the FF with lowest cost
+    Cell* targetCell = mgr.Bit_FF_Map[1][0];
 
     // debank and save all the FF in logic_FF;
     // which is all one bit ff without technology mapping(no cell library)
