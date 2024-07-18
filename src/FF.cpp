@@ -218,6 +218,30 @@ void FF::getNS(double& TNS, double& WNS){
             WNS = std::min(slack_m.second, WNS);
         }
     }
+    TNS = std::abs(TNS);
+    WNS = std::abs(WNS);
+}
+
+double FF::getTNS(){
+    double TNS = 0;
+    for(const auto& slack_m : TimingSlack){
+        if(slack_m.second < 0){
+            TNS += slack_m.second;
+        }
+    }
+    TNS = std::abs(TNS);
+    return TNS;
+}
+
+double FF::getWNS(){
+    double WNS = 0;
+    for(const auto& slack_m : TimingSlack){
+        if(slack_m.second < 0){
+            WNS = std::min(slack_m.second, WNS);
+        }
+    }
+    WNS = std::abs(WNS);
+    return WNS;
 }
 
 void FF::updateSlack(Manager& mgr){
