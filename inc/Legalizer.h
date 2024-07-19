@@ -55,6 +55,7 @@ private:
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
     void CheckSubrowsAttribute();
     int FindClosestRow(Node *ff);
+    int FindClosestSubrow(Row *row, Node *ff);
     double PlaceMultiHeightFFOnRow(Node *ff, int row_idx);
 };
 

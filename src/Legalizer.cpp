@@ -232,12 +232,16 @@ void Legalizer::Abacus(){
     
 
     DEBUG_LGZ("Start Legalize FF");
+    int closest_row_idx = 0;
+    int down_row_idx = 0;
+    int up_row_idx = 0;
+
     for(const auto &ff : ffs){
-        int closest_row_idx = FindClosestRow(ff);
+        closest_row_idx = FindClosestRow(ff);
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
 
         // search down
-        int down_row_idx = closest_row_idx - 1;
+        down_row_idx = closest_row_idx - 1;
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
             minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
@@ -245,7 +249,7 @@ void Legalizer::Abacus(){
         }
 
         // search up
-        int up_row_idx = closest_row_idx + 1;
+        up_row_idx = closest_row_idx + 1;
         while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
             double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
             minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
@@ -260,11 +264,6 @@ void Legalizer::Abacus(){
         else{
             // Global search mode
             DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
-            int closest_row_idx = FindClosestRow(ff);
-            double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-
-            // search down
-            int down_row_idx = closest_row_idx - 1;
             while(down_row_idx >= 0){
                 double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
                 minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
@@ -272,7 +271,6 @@ void Legalizer::Abacus(){
             }
 
             // search up
-            int up_row_idx = closest_row_idx + 1;
             while(up_row_idx < numrows){
                 double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
                 minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
@@ -384,48 +382,102 @@ int Legalizer::FindClosestRow(Node *ff){
     return min_idx;
 }
 
+// find a closest subrow index to trial place
+int Legalizer::FindClosestSubrow(Row *row, Node *ff){
+    double startX = ff->getGPCoor().x;
+    std::vector<Subrow *> subrows = row->getSubrows();
+    for(size_t i = 0; i < subrows.size(); i++){
+        if(subrows[i]->getStartX() > startX){
+            return i;
+        }
+    }
+    return 0;
+}
+
 
 // Try to place on this row, for multi-row height, must check upper row can place or not
 // Return the displacement from the global placement coordinate
 double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
-
-    // Should make use of this trend:
-    // if the ff->getGPCoor() > subrow->getEndX(), then the displacement will be decreasing
-    // if the ff->getGPCoor() < subrow->getStartX() then the displacement will be increasing
-    // otherwise, will decrease then increasing
-
     double minDisplacement = ff->getDisplacement(ff->getLGCoor());
-
-    // Exhausted search to place
-    // iterate through subrow in this row
-    // [TODO]: find the best entry to the subrow
-    // std::cout << "All row: " << *rows[row_idx];
-
-
     for(const auto &subrow : rows[row_idx]->getSubrows()){
-        // no space in this subrow
-        // if(subrow->getFreeWidth() < ff->getW()) continue;
-        // for each subrow, try to place on site if has place
-        // [TODO]: modify to bisection method
         double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
-        
         for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
             if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
-                // std::cout << "Ori Disp.: " << minDisplacement << ", cur Disp.: " << ff->getDisplacement(currCoor) << std::endl;
-                // std::cout << "ff: " << currCoor << ", w = " <<  ff->getW() << std::endl;
-                // std::cout << *subrow << std::endl;
                 ff->setLGCoor(currCoor);
                 minDisplacement = ff->getDisplacement(currCoor);
                 ff->setIsPlace(true);
             }
-            //if not placeable, increase the step size to escape
-            // else{
-            //     x += 20 * rows[row_idx]->getSiteWidth();
-            // }
         }
     }
     return minDisplacement;
 }
+
+
+// should develope the left search loop start from the end and onsite point, and make sure if it degrade the displacment, then break
+// double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx) {
+//     double initialDisplacement = ff->getDisplacement(ff->getLGCoor());
+//     double minDisplacement = initialDisplacement;
+//     Coor bestCoor = ff->getLGCoor();
+//     bool isPlaceable = false;
+
+//     Row *row = rows[row_idx];
+//     int closestSubrowIdx = FindClosestSubrow(row, ff);
+//     const auto &subrows = row->getSubrows();
+
+//     // Helper lambda to search within a subrow and return the number of placeable solutions found
+//     auto searchSubrow = [&](int subrowIdx) -> bool {
+//         bool foundBetter = false;
+//         const auto &subrow = subrows[subrowIdx];
+//         double alignedStartX = row->getStartCoor().x + std::ceil((int)(subrow->getStartX() - row->getStartCoor().x) / row->getSiteWidth()) * row->getSiteWidth();
+//         for (int x = alignedStartX; x <= subrow->getEndX(); x += row->getSiteWidth()) {
+//             bool placeable = ContinousAndEmpty(x, row->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
+//             Coor currCoor = Coor(x, row->getStartCoor().y);
+//             double displacement = ff->getDisplacement(currCoor);
+//             if (placeable && displacement < minDisplacement) {
+//                 minDisplacement = displacement;
+//                 bestCoor = currCoor;
+//                 isPlaceable = true;
+//                 foundBetter = true;
+//             }
+//         }
+//         return foundBetter && isPlaceable;
+//     };
+
+//     // Search to the right of the closest subrow
+//     int consecutiveWorseCount = 0;
+//     for (int i = closestSubrowIdx; i < subrows.size(); ++i) {
+//         bool foundBetter = searchSubrow(i);
+//         if (!foundBetter) {
+//             consecutiveWorseCount++;
+//             if (consecutiveWorseCount >= 2) {
+//                 break;  // Stop searching to the right after 2 consecutive worse displacements
+//             }
+//         } else {
+//             consecutiveWorseCount = 0;
+//         }
+//     }
+
+//     // Search to the left of the closest subrow
+//     consecutiveWorseCount = 0;
+//     for (int i = closestSubrowIdx - 1; i >= 0; --i) {
+//         bool foundBetter = searchSubrow(i);
+//         if (!foundBetter) {
+//             consecutiveWorseCount++;
+//             if (consecutiveWorseCount >= 2) {
+//                 break;  // Stop searching to the left after 2 consecutive worse displacements
+//             }
+//         } else {
+//             consecutiveWorseCount = 0;
+//         }
+//     }
+
+//     if (isPlaceable) {
+//         ff->setLGCoor(bestCoor);
+//         ff->setIsPlace(true);
+//     }
+
+//     return minDisplacement;
+// }
