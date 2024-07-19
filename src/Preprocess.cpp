@@ -129,15 +129,16 @@ void Preprocess::Build_Circuit_Gragh(){
 void Preprocess::optimal_FF_location(){
     // create FF logic
     std::unordered_map<std::string, int> idx_map;
-    int i=0;
-    for(auto&FF_m : FF_list){ // initial location and set index
-        idx_map[FF_m.second->getInstanceName()] = i;
+    std::vector<FF*> FFs(FF_list.size());
+    size_t i=0;
+    for(auto& FF_m : FF_list){
+        FFs[i] = FF_m.second;
         i++;
     }
 
-    preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size());
+    preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size(), FFs);
     const double kAlpha = 100;
-    Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size());
+    Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size(), FFs);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     double prevTNS = getSlackStatistic(true);

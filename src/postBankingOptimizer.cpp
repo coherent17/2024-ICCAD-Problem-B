@@ -14,16 +14,18 @@ void postBankingOptimizer::run(){
     // create FF logic
     int totalFF = mgr.preprocessor->getFFList().size();
     std::unordered_map<std::string, int> idx_map;
-    int i=0;
-    for(auto&FF_m : mgr.FF_Map){ // initial location and set index
-        idx_map[FF_m.second->getInstanceName()] = i;
+    std::vector<FF*> FFs(mgr.FF_Map.size());
+    size_t i=0;
+    for(auto& FF_m : mgr.FF_Map){
+        FFs[i] = FF_m.second;
         i++;
     }
 
 
-    postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, totalFF);
+
+    postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, totalFF, FFs);
     const double kAlpha = 100;
-    Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, mgr.FF_Map.size());
+    Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, mgr.FF_Map.size(), FFs);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
