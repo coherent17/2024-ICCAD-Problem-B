@@ -96,6 +96,8 @@ public:
     // ######################################### used in cluster ########################################################
 
     void getNS(double& TNS, double& WNS); // pls call update slack before get TNS and WNS
+    double getTNS();
+    double getWNS();
     void updateSlack(Manager&);
     
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);

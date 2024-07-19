@@ -311,12 +311,30 @@ void Manager::getNS(double& TNS, double& WNS, bool show){
         FF_m.second->updateSlack(*this);
         FF_m.second->getNS(curTNS, curWNS);
         TNS += curTNS;
-        WNS = std::min(WNS, curWNS);
+        WNS = std::max(WNS, curWNS);
     }
     if(show){
         std::cout << "\tWorst negative slack : " << WNS << std::endl;
         std::cout << "\tTotal negative slack : " << TNS << std::endl << std::endl;
     }
+}
+
+double Manager::getTNS(){
+    double TNS = 0;
+    for(auto& FF_m : FF_Map){
+        FF_m.second->updateSlack(*this);
+        TNS += FF_m.second->getTNS();
+    }
+    return TNS;
+}
+
+double Manager::getWNS(){
+    double WNS = 0;
+    for(auto& FF_m : FF_Map){
+        FF_m.second->updateSlack(*this);
+        WNS = std::max(WNS, FF_m.second->getWNS());
+    }
+    return WNS;
 }
 
 void Manager::showNS(){
@@ -332,10 +350,9 @@ double Manager::getOverallCost(bool verbose){
     double Area_cost = 0;
     double Bin_cost = 0;
     for(const auto & ff_pair : FF_Map){
-        double curTNS, curWNS;
         ff_pair.second->updateSlack(*this);
-        ff_pair.second->getNS(curTNS, curWNS);
-        TNS_cost += alpha * (-curTNS);
+        double curTNS = ff_pair.second->getTNS();
+        TNS_cost += alpha * (curTNS);
         Power_cost += beta * ff_pair.second->getCell()->getGatePower();
         Area_cost += gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
     }
