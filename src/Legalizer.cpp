@@ -300,7 +300,8 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
         // for each subrow, try to place on site if has place
         // [TODO]: modify to bisection method
         double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
-        for(int x = alignedStartX; x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+        
+        for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
