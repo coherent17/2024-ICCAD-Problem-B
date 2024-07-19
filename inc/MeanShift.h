@@ -41,7 +41,7 @@ public:
 
 private:
     void buildRtree(Manager &mgr);
-    void initKNN(Manager &mgr);
+    void initKNN(const Manager &mgr);
     void shiftFFs();
     void FFrunKNN(const Manager &mgr, int ffidx);
 };

@@ -31,7 +31,7 @@ class Preprocess{
         void optimal_FF_location();
 
         // function for build circuit gragh
-        void findDrivingCell(const Net& n, std::string& driving_cell, std::string& driving_pin, 
+        static void findDrivingCell(const Net& n, std::string& driving_cell, std::string& driving_pin, 
                              bool& is_CLK, bool& has_driving_cell);
         void connectNet(const Net& n, std::string& driving_cell, std::string& driving_pin);
         void setLargestOutput(Instance* cur_instance);

@@ -54,6 +54,7 @@ public:
     int getBits()const;
     double getW()const;
     double getH()const;
+    double getArea()const;
     double getScore()const;
     int getPinCount()const;
     int getInputCount()const;

@@ -73,7 +73,7 @@ class Exception :public exception {
 private:
     string m_str_error;
 public:
-    Exception(const string& str_error) :exception{}, m_str_error{ str_error }{}
+    explicit Exception(const string& str_error) :exception{}, m_str_error{ str_error }{}
     const char* what() {
         return m_str_error.c_str();
     }
@@ -195,7 +195,7 @@ protected:
      * @param str
      * @return
      */
-    wstring StringToWString(const string& str);
+    static wstring StringToWString(const string& str);
     /**
      *  In UTF-8,
      *  If string include Chinese characters, it will obtain obvious characters
@@ -204,13 +204,13 @@ protected:
      * @param raw_str
      * @return
      */
-    int StringCapacity(const string& raw_str);
+    static int StringCapacity(const string& raw_str);
     /**
      * Get number of Chinese characters from a string
      * @param str
      * @return
      */
-    int _get_Chinese_len(const string& str);
+    static int _get_Chinese_len(const string& str);
 private:
     stringstream m_innerOss;
     int m_Rows;

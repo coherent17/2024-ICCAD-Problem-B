@@ -104,7 +104,7 @@ public:
     void showNS();
     // for lib cell scoring
     void libScoring();
-    void sortCell(std::vector<Cell *> &cell_vector);
+    static void sortCell(std::vector<Cell *> &cell_vector);
     
     // pointer recycle
     FF* getNewFF();

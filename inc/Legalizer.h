@@ -31,12 +31,10 @@ private:
     std::vector<Node *> ffs;
     std::vector<Node *> gates;
     std::vector<Row *> rows;
-    double minRowHeight;
 
 public:
-    Legalizer(Manager& mgr);
+    explicit Legalizer(Manager& mgr);
     ~Legalizer();
-
     bool run();
 
 private:

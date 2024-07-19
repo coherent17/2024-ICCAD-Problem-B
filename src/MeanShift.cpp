@@ -30,7 +30,7 @@ void MeanShift::buildRtree(Manager &mgr){
     rtree.insert(pointwithids.begin(), pointwithids.end());
 }
 
-void MeanShift::initKNN(Manager &mgr){
+void MeanShift::initKNN(const Manager &mgr){
 
     #pragma omp parallel for num_threads(MAX_THREADS)
     for(size_t i = 0; i < FFs.size(); i++){

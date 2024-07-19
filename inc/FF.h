@@ -49,7 +49,7 @@ private:
     int slot;
 public:
     FF();
-    FF(int size);
+    explicit FF(int size);
     ~FF();
 
     // Setters

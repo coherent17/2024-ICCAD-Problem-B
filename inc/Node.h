@@ -25,7 +25,7 @@ public:
     // Setters
     void setName(const std::string &name);
     void setGPCoor(const Coor &gpCoor);
-    void setLGCoor(const Coor &lgzCoor);
+    void setLGCoor(const Coor &lgCoor);
     void setW(double w);
     void setH(double h);
     void setWeight(double weight);

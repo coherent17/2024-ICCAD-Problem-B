@@ -39,7 +39,7 @@ void PrettyTable::AddHeader(const PrettyTable::StringArray& _header, Align _alig
 }
 
 void PrettyTable::AddRow(const PrettyTable::StringArray& _row) {
-    if(_row.size()<=0)
+    if(_row.size()==0)
         return;
     m_multiRows.push_back(_row);
     m_Rows++;

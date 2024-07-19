@@ -86,6 +86,10 @@ double Cell::getH()const{
     return h;
 }
 
+double Cell::getArea()const{
+    return w * h;
+}
+
 double Cell::getScore()const{
     return score;
 }

@@ -4,7 +4,6 @@ Legalizer::Legalizer(Manager& mgr) : mgr(mgr){
     numffs = 0;
     numgates = 0;
     numrows = 0;
-    minRowHeight = DBL_MAX;
 }
 
 Legalizer::~Legalizer(){
@@ -96,7 +95,6 @@ void Legalizer::LoadPlacementRow(){
         subrow->setHeight(mgr.die.getDieBorder().y - PlacementRows[i].startCoor.y);
         row->addSubrows(subrow);
         rows.push_back(row);
-        minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);//todo
     }
 
     // sort row by the y coordinate in ascending order, if tie, sort by x in ascending order
@@ -397,20 +395,29 @@ int Legalizer::FindClosestSubrow(Row *row, Node *ff){
 
 // Try to place on this row, for multi-row height, must check upper row can place or not
 // Return the displacement from the global placement coordinate
-double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
+double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx) {
     double minDisplacement = ff->getDisplacement(ff->getLGCoor());
-    for(const auto &subrow : rows[row_idx]->getSubrows()){
+    const auto &subrows = rows[row_idx]->getSubrows();
+    Coor bestCoor = ff->getLGCoor();        // Track of the best coordinate
+    bool isPlaceable = false;               // Track of whether a placement was made
+
+    for(size_t i = 0; i < subrows.size(); i++){
+        const auto &subrow = subrows[i];
         double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
         for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
-            // check if upper row can be used...
             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
-            if(placeable && ff->getDisplacement(currCoor) < minDisplacement){
-                ff->setLGCoor(currCoor);
-                minDisplacement = ff->getDisplacement(currCoor);
-                ff->setIsPlace(true);
+            double displacement = ff->getDisplacement(currCoor);
+            if (placeable && displacement < minDisplacement){
+                minDisplacement = displacement;
+                bestCoor = currCoor;
+                isPlaceable = true;
             }
         }
+    }
+    if (isPlaceable) {
+        ff->setLGCoor(bestCoor);
+        ff->setIsPlace(true);
     }
     return minDisplacement;
 }

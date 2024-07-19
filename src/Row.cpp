@@ -1,10 +1,10 @@
 #include "Row.h"
 
-Row::Row(){
-    startCoor = {0, 0};
+Row::Row() :startCoor(Coor(0, 0)){
     siteHeight = 0;
     siteWidth = 0;
     numOfSites = 0;
+    endX = 0;
 }
 
 Row::~Row(){}

@@ -1,10 +1,7 @@
 #include "Node.h"
 #include <cfloat>
 
-Node::Node(){
-    name = "";
-    gpCoor = {0, 0};
-    lgCoor = {DBL_MAX, DBL_MAX};
+Node::Node() :name(""), gpCoor(0, 0), lgCoor(DBL_MAX, DBL_MAX){
     w = 0;
     h = 0;
     weight = 0;
