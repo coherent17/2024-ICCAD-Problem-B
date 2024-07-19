@@ -26,6 +26,10 @@ void Row::setNumOfSite(int numOfSites){
     this->numOfSites = numOfSites;
 }
 
+void Row::setEndX(double endX){
+    this->endX = endX;
+}
+
 void Row::addSubrows(Subrow *subrow){
     subrows.push_back(subrow);
 }
@@ -45,6 +49,10 @@ double Row::getSiteWidth()const{
 
 int Row::getNumOfSite()const{
     return numOfSites;
+}
+
+double Row::getEndX()const{
+    return endX;
 }
 
 std::vector<Subrow *> &Row::getSubrows(){
@@ -76,7 +84,7 @@ void Row::slicing(Node *gate) {
         double subrowHeight = subrow->getHeight();
 
         // Check if subrow overlap with the gate
-        if(subrowEndX > gateStartX && subrowStartX < gateEndX){
+        if(subrowEndX > gateStartX && subrowStartX < gateEndX && gateStartY < rowStartY + subrowHeight){
 
             // Part before the gate
             if(subrowStartX < gateStartX){
@@ -161,12 +169,15 @@ bool Row::canPlace(double startX, double endX, double h){
             // std::cout << "Y:" << subrow->getHeight() << std::endl;
         }
         if(traverseX >= endX){
+            // std::cout << "Success:" << startX << " " << endX << std::endl;
             return true;
         }
         // if(subrow->getStartX() <= startX && subrow->getEndX() >= endX){
         //     return true;
         // }
     }
+    // std::cout << "Fail:" << startX << " " << endX << std::endl;
+    // std::cout << traverseX << std::endl;
     return false;
 }
 

@@ -17,6 +17,11 @@
 #define X_WEIGHT 100
 #define SEARCH_FAILURE -1
 
+struct XTour{
+    double startX;
+    double endX;
+};
+
 class Legalizer{
 private:
     Manager& mgr;
@@ -39,7 +44,9 @@ private:
     void LoadFF();
     void LoadGate();
     void LoadPlacementRow();
-    void SliceRows();
+    void SliceRowsByRows();
+    void updateXList(double start, double end, std::list<XTour> & xList);
+    void SliceRowsByGate();
     void Abacus();
     void LegalizeResultWriteBack();
 

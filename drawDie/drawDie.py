@@ -235,11 +235,11 @@ def drawDie(DieSize, BinWidth, BinHeight, SiteRows, images_title, show_grid):
             downRow = curSite[1]
             upRow = downRow + siteH
             leftX = curSite[0]
-            rightX = leftX + siteW * (siteNum + 1)
+            rightX = leftX + siteW * siteNum
             # draw site lines
             plt.hlines(downRow, leftX, rightX, color='gainsboro', alpha=1, linewidth=2.1, linestyle="--", zorder=3)
             plt.hlines(upRow, leftX, rightX, color='gainsboro', alpha=1, linewidth=2.1, linestyle="--", zorder=3)
-            for col_x in range(siteNum+2):
+            for col_x in range(siteNum+1):
                 curX = leftX + col_x*siteW
                 plt.vlines(curX, downRow, upRow, color='gainsboro', alpha=1, linewidth=2.1, linestyle="--", zorder=3)
 
