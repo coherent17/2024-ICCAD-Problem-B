@@ -94,6 +94,8 @@ public:
     std::vector<FF*> debankFF(FF* MBFF, Cell* debankCellType);
     // the FF after debank will be assign to debankCellType (maybe this can be a vector)
     void getNS(double& TNS, double& WNS, bool show); // this retunr TNS and WNS of whole design (all FF in FF_Map)
+    double getTNS();
+    double getWNS();
     void showNS();
     // for lib cell scoring
     void libScoring();

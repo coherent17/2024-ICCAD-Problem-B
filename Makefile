@@ -112,7 +112,7 @@ v6:
 	./drawDie/drawDie -i testcase/sample_0718_visual.txt.out -m die_pic.png -t sample_0718 -p -nl -o
 
 valgrind:
-	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
 	cat valgrind.log
 
 cppcheck:
