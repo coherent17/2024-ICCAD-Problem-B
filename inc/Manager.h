@@ -72,6 +72,9 @@ public:
     // parameter
     Param param;
 
+    // pointer recycle
+    std::queue<FF*> FFGarbageCollector;
+
 public:
     Manager();
     ~Manager();
@@ -102,6 +105,10 @@ public:
     // for lib cell scoring
     void libScoring();
     void sortCell(std::vector<Cell *> &cell_vector);
+    
+    // pointer recycle
+    FF* getNewFF();
+    void deleteFF(FF*);
     
     double getOverallCost(bool verbose);
     friend class Parser;

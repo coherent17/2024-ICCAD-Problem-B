@@ -68,6 +68,7 @@ public:
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     void setOriginalQpinDelay(double);
     void setPhysicalFF(FF* targetFF, int slot);
+    void setClusterSize(int);
     
     // Getter
     double getTimingSlack(const std::string &pinName)const;
@@ -100,6 +101,8 @@ public:
     double getWNS();
     void updateSlack(Manager&);
     
+    void clear(); // clear all the data
+
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
     friend class postBankingObjFunction;
 private:

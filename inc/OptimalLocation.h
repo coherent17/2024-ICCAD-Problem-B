@@ -18,9 +18,10 @@ class objFunction{
         double loss;
         double gamma;
         vector<double> x_pos, x_neg, y_pos, y_neg;
+        std::vector<FF*>& FFs;
     public:
         objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
-                    unordered_map<string, int>& idx_map, int totalFF);
+                    unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
         virtual double forward() = 0;
         virtual vector<Coor>& backward(int step, bool onlyNegative) = 0;
         virtual const vector<Coor>& grad()const {return grad_;}
@@ -30,7 +31,7 @@ class objFunction{
 class preprocessObjFunction : public objFunction{
     public:
         preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
-                            unordered_map<string, int>& idx_map, int totalFF);
+                            unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
         ~preprocessObjFunction();
         double forward();
         vector<Coor>& backward(int step, bool onlyNegative);
@@ -51,11 +52,12 @@ class Gradient{
     unordered_map<string, int>& idx_map;
     Manager& mgr;
     std::unordered_map<std::string, FF*>& FF_list;
+    std::vector<FF*>& FFs;
 
    public:
     Gradient(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
             objFunction &obj, const double &alpha, 
-            unordered_map<string, int>& idx_map, size_t kNumModule);
+            unordered_map<string, int>& idx_map, size_t kNumModule, std::vector<FF*>& FFs);
     ~Gradient();
 
     void Initialize(double);
@@ -65,7 +67,7 @@ class Gradient{
 class postBankingObjFunction : public objFunction{
     public:
         postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
-                            unordered_map<string, int>& idx_map, int totalFF);
+                            unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
         ~postBankingObjFunction();
         double forward();
         vector<Coor>& backward(int step, bool onlyNegative);

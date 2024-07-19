@@ -1,14 +1,15 @@
 #include "OptimalLocation.h"
 
-objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF)
+objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : mgr(mgr), FF_list(FF_list), idx_map(idx_map),
     x_pos(totalFF*2), x_neg(totalFF*2), 
-    y_pos(totalFF*2), y_neg(totalFF*2){
+    y_pos(totalFF*2), y_neg(totalFF*2),
+    FFs(FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
 }
 
-preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF)
-    : objFunction(mgr, FF_list, idx_map, totalFF){
+preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
+    : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FF_list.size());
 }
@@ -142,7 +143,8 @@ Gradient::Gradient( Manager &mgr,
                     objFunction &obj,
                     const double &alpha,
                     unordered_map<string, int>& idx_map,
-                    size_t kNumModule)
+                    size_t kNumModule,
+                    std::vector<FF*>& FFs)
     : grad_prev_(kNumModule),
       dir_prev_(kNumModule),
       step_(0),
@@ -152,7 +154,8 @@ Gradient::Gradient( Manager &mgr,
       dir(kNumModule),
       idx_map(idx_map),
       mgr(mgr),
-      FF_list(FF_list){
+      FF_list(FF_list),
+      FFs(FFs){
     Initialize(alpha);
 }
 
@@ -202,15 +205,17 @@ void Gradient::Step(bool onlyNegative) {
 
     // Update the solution
     // Please be aware of the updating directions, i.e., the sign for each term.
-    int idx=0;
-    for(auto& ff_m : FF_list){
-        FF* ff = ff_m.second;
+    // int idx=0;
+    // for(auto& ff_m : FF_list){
+    // #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t idx=0;idx<kNumModule;idx++){
+        // FF* ff = ff_m.second;
+        FF* ff = FFs[idx];
         Coor coor = ff->getCoor();
         coor.x = coor.x + alpha_ * dir[idx].x;
         coor.y = coor.y + alpha_ * dir[idx].y;
         ff->setCoor(coor);
         ff->setNewCoor(coor);
-        idx++;
     }
 
     // Update the cache data members
@@ -219,8 +224,8 @@ void Gradient::Step(bool onlyNegative) {
     step_++;
 }
 
-postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF)
-    : objFunction(mgr, FF_list, idx_map, totalFF){
+postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
+    : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(mgr.FF_Map.size());
 }
