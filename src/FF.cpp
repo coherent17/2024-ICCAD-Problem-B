@@ -91,6 +91,11 @@ void FF::setPhysicalFF(FF* targetFF, int slot){
     this->slot = slot;
 }
 
+void FF::setClusterSize(int n){
+    assert(n == cell->getBits() && "clusterFF size should be equal to cell bit");
+    clusterFF = vector<FF*>(n, nullptr);
+}
+
 void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
     this->originalD = coorD;
     this->originalQ = coorQ;
@@ -256,6 +261,16 @@ void FF::updateSlack(Manager& mgr){
         }
         curSlot++;
     }
+}
+
+void FF::clear(){
+    TimingSlack.clear();
+    clusterFF.clear();
+    NeighborFFs.clear();
+    prevStage = {nullptr, nullptr, ""};
+    prevInstance = {nullptr, ""};
+    nextStage.clear();
+    physicalFF = nullptr;
 }
 
 std::ostream &operator<<(std::ostream &os, const FF &ff){

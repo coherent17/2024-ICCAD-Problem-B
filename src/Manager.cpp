@@ -38,7 +38,7 @@ void Manager::preprocess(){
     // assign new FF after debank and optimal location to FF_Map and FFs
     const std::unordered_map<std::string, FF*>& FF_list = preprocessor->getFFList();
     for(const auto& ff_m : FF_list){
-        FF* newFF = new FF(1);
+        FF* newFF = getNewFF();
         FF* curFF = ff_m.second;
         Coor coor = curFF->getNewCoor();
         std::string instanceName = getNewFFName("FF_1_");
@@ -50,6 +50,7 @@ void Manager::preprocess(){
         newFF->setClkIdx(clkIdx);
         newFF->setCell(cell);
         newFF->setCellName(curFF->getCellName());
+        newFF->setClusterSize(1);
         newFF->addClusterFF(curFF, 0);
 
         curFF->setPhysicalFF(newFF, 0);
@@ -236,18 +237,19 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     // delete all MBFF to be cluster from FF_Map
     for(auto& MBFF : FFToBank){
         FF_Map.erase(MBFF->getInstanceName());
-        delete MBFF;
+        deleteFF(MBFF);
     }
 
     // assign new FF
     assert(bit == bankCellType->getBits() && "Floating input is allowed???");
-    FF* newFF = new FF(bit);
+    FF* newFF = getNewFF();
     std::string newName = getNewFFName("FF_" + std::to_string(bit) + "_");
     newFF->setInstanceName(newName);
     newFF->setCoor(newbankCoor);
     newFF->setNewCoor(newbankCoor);
     newFF->setCell(bankCellType);
     newFF->setCellName(bankCellType->getCellName());
+    newFF->setClusterSize(bit);
     newFF->setClkIdx(clkIdx);
     FF_Map[newName] = newFF;
 
@@ -289,7 +291,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
     int slot = 0;
     int clkIdx = MBFF->getClkIdx();
     for(auto& ff : clusterFF){
-        FF* newFF = new FF(1);
+        FF* newFF = getNewFF();
         // use coor for same D pin coor
         Coor coor = MBFF->getCoor() + MBFF->getPinCoor("D" + std::to_string(slot)) - debankCellType->getPinCoor("D");
         std::string instanceName = getNewFFName("FF_1_");
@@ -298,6 +300,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
         newFF->setNewCoor(coor);
         newFF->setCell(debankCellType);
         newFF->setCellName(debankCellType->getCellName());
+        newFF->setClusterSize(1);
         newFF->addClusterFF(ff, 0);
         newFF->setClkIdx(clkIdx);
         ff->setPhysicalFF(newFF, 0);
@@ -308,7 +311,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
     }
 
     FF_Map.erase(MBFF->getInstanceName());
-    delete MBFF;
+    deleteFF(MBFF);
 
     return outputFF;
 }
@@ -350,6 +353,23 @@ double Manager::getWNS(){
 void Manager::showNS(){
     double _0, _1;
     this->getNS(_0, _1, true);
+}
+
+FF* Manager::getNewFF(){
+    if(FFGarbageCollector.empty()){
+        FF* temp = new FF;
+        return temp;
+    }
+    else{
+        FF* temp = FFGarbageCollector.front();
+        FFGarbageCollector.pop();
+        return temp;
+    }
+}
+
+void Manager::deleteFF(FF* in){
+    in->clear();
+    FFGarbageCollector.push(in);
 }
 
 // the cost function without evaluate the bin density
