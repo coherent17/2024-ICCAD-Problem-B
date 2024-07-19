@@ -127,19 +127,17 @@ void Preprocess::Build_Circuit_Gragh(){
 }
 
 void Preprocess::optimal_FF_location(){
-       // create FF logic
-    std::vector<Coor> c(FF_list.size());
+    // create FF logic
     std::unordered_map<std::string, int> idx_map;
     int i=0;
     for(auto&FF_m : FF_list){ // initial location and set index
         idx_map[FF_m.second->getInstanceName()] = i;
-        c[i] = FF_m.second->getCoor();
         i++;
     }
 
-    obj_function obj(mgr, FF_list, idx_map);
+    preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size());
     const double kAlpha = 100;
-    Gradient optimizer(mgr, FF_list, obj, c, kAlpha, idx_map);
+    Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size());
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     double prevTNS = getSlackStatistic(true);
@@ -153,7 +151,6 @@ void Preprocess::optimal_FF_location(){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
             cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
-            cur_ff->setNewCoor(cur_ff->getCoor());
         }
         if(i % 25 == 0){
             std::cout << "phase 1 step : " << i << std::endl;
