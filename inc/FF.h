@@ -101,6 +101,7 @@ public:
     void updateSlack(Manager&);
     
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
+    friend class postBankingObjFunction;
 private:
     double getSlack(Manager&); // don't touch is only for FF in FF_list
 };

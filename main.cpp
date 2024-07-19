@@ -31,6 +31,12 @@ int main(int argc, char *argv[]){
     std::cout << "Slack after banking" << std::endl;
     mgr.showNS();
     mgr.getOverallCost(cost_verbose);
+
+    mgr.postBankingOptimize();
+    std::cout << "Slack after postBankingOptimize" << std::endl;
+    mgr.showNS();
+    mgr.getOverallCost(cost_verbose);
+
     // if(argc == 4){
     //     mgr.dumpVisual(argv[3]);
     // }

@@ -70,6 +70,11 @@ void Manager::banking(){
     banking.run();
 }
 
+void Manager::postBankingOptimize(){
+    postBankingOptimizer postOptimize(*this);
+    postOptimize.run();
+}
+
 void Manager::legalize(){
     // do abacus legalize algorithm
     Legalizer legalizer(*this);
@@ -235,12 +240,13 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     // assign new FF
     assert(bit == bankCellType->getBits() && "Floating input is allowed???");
     FF* newFF = new FF(bit);
-    newFF->setInstanceName(getNewFFName("FF_" + std::to_string(bit) + "_"));
+    std::string newName = getNewFFName("FF_" + std::to_string(bit) + "_");
+    newFF->setInstanceName(newName);
     newFF->setCoor(newbankCoor);
     newFF->setNewCoor(newbankCoor);
     newFF->setCell(bankCellType);
     newFF->setCellName(bankCellType->getCellName());
-    FF_Map[newFF->getInstanceName()] = newFF;
+    FF_Map[newName] = newFF;
 
 
     // Greedy from smallest slack

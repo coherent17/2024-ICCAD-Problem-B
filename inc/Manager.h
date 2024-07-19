@@ -21,6 +21,7 @@
 #include "Legalizer.h"
 #include "Util.h"
 #include "PrettyTable.h"
+#include "postBankingOptimizer.h"
 
 class FF;
 class Preprocess;
@@ -80,6 +81,7 @@ public:
     void meanshift();
     void banking();
     void legalize();
+    void postBankingOptimize();
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
