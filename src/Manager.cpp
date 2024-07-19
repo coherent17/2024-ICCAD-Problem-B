@@ -223,7 +223,9 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     // get all FF to be bank
     std::vector<FF*> FFs(bankCellType->getBits());
     int bit = 0;
+    int clkIdx = FFToBank[0]->getClkIdx();
     for(auto& MBFF : FFToBank){
+        assert(clkIdx == MBFF->getClkIdx() && "different clk cannot be banked together");
         std::vector<FF*>& clusterFF = MBFF->getClusterFF();
         for(auto& ff : clusterFF){
             FFs[bit] = ff;
@@ -246,6 +248,7 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     newFF->setNewCoor(newbankCoor);
     newFF->setCell(bankCellType);
     newFF->setCellName(bankCellType->getCellName());
+    newFF->setClkIdx(clkIdx);
     FF_Map[newName] = newFF;
 
 
@@ -284,6 +287,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
     std::vector<FF*> outputFF;
     std::vector<FF*>& clusterFF = MBFF->getClusterFF();
     int slot = 0;
+    int clkIdx = MBFF->getClkIdx();
     for(auto& ff : clusterFF){
         FF* newFF = new FF(1);
         // use coor for same D pin coor
@@ -295,7 +299,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
         newFF->setCell(debankCellType);
         newFF->setCellName(debankCellType->getCellName());
         newFF->addClusterFF(ff, 0);
-
+        newFF->setClkIdx(clkIdx);
         ff->setPhysicalFF(newFF, 0);
 
         FF_Map[instanceName] = newFF;
