@@ -21,7 +21,8 @@ Legalizer::~Legalizer(){
 
 bool Legalizer::run(){
     ConstructDB();
-    SliceRows();
+    SliceRowsByRows();
+    SliceRowsByGate();
     //CheckSubrowsAttribute();     // Should remove when release the binary
     Abacus();
     LegalizeResultWriteBack();
@@ -82,17 +83,20 @@ void Legalizer::LoadPlacementRow(){
     for(size_t i = 0; i < PlacementRows.size(); i++){
         Row *row = new Row();
         row->setStartCoor(PlacementRows[i].startCoor);
-        row->setSiteHeight(PlacementRows[i].siteHeight);
+        row->setSiteHeight(mgr.die.getDieBorder().y - PlacementRows[i].startCoor.y);
         row->setSiteWidth(PlacementRows[i].siteWidth);
         row->setNumOfSite(PlacementRows[i].NumOfSites);
+        double endX = PlacementRows[i].startCoor.x + PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites;
+        row->setEndX(endX);
         // init the first subrow in row class
         Subrow *subrow = new Subrow();
         subrow->setStartX(PlacementRows[i].startCoor.x);
         subrow->setEndX(PlacementRows[i].startCoor.x + PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
         subrow->setFreeWidth(PlacementRows[i].siteWidth * PlacementRows[i].NumOfSites);
+        subrow->setHeight(mgr.die.getDieBorder().y - PlacementRows[i].startCoor.y);
         row->addSubrows(subrow);
         rows.push_back(row);
-        minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);
+        minRowHeight = std::min(minRowHeight, PlacementRows[i].siteHeight);//todo
     }
 
     // sort row by the y coordinate in ascending order, if tie, sort by x in ascending order
@@ -102,7 +106,112 @@ void Legalizer::LoadPlacementRow(){
     
 }
 
-void Legalizer::SliceRows(){
+void Legalizer::SliceRowsByRows(){
+    for(size_t i = 0; i < rows.size()-1; i++){
+        double startX = rows[i]->getStartCoor().x;
+        double endX = rows[i]->getEndX();
+        std::list<XTour> xList;
+        double siteHeight = rows[i]->getSiteHeight();
+        for(size_t j = i + 1; j < rows.size(); j++){
+            if(rows[j]->getEndX() <= startX || rows[j]->getStartCoor().x >= endX) continue;
+            else{
+                Node * upRow = new Node();
+                upRow->setGPCoor(rows[j]->getStartCoor());
+                upRow->setLGCoor(rows[j]->getStartCoor());
+                upRow->setW(rows[j]->getEndX() - rows[j]->getStartCoor().x);
+                upRow->setH(rows[j]->getSiteHeight());
+                rows[i]->slicing(upRow);
+                updateXList(rows[j]->getStartCoor().x, rows[j]->getEndX(), xList);
+            }
+            if((*xList.begin()).startX <= startX && (*xList.begin()).endX >= endX){
+                siteHeight = rows[j]->getStartCoor().y - rows[i]->getStartCoor().y;
+                break;
+            }
+        }
+        rows[i]->setSiteHeight(siteHeight);
+        
+    }
+    // DEBUG
+    // for(size_t i = 0; i < rows.size(); i++){
+    //     Row* row = rows[i];
+    //     vector<Subrow*> subrows = row->getSubrows();
+    //     std::cout << row-> getSiteHeight() << std::endl;
+    //     for(size_t j = 0; j < subrows.size(); j++){
+    //         std::cout << subrows[j]-> getStartX() << " " << subrows[j]-> getEndX() << " " << subrows[j]-> getHeight() << std::endl;
+    //     }
+    // }
+    // DEBUG
+    // std::list<XTour> xList;
+    // updateXList(2, 4, xList);
+    // updateXList(6, 12, xList);
+    // updateXList(13, 16, xList);
+    // updateXList(2, 19, xList);
+    // updateXList(5, 8, xList);
+    // for(XTour xtour : xList){
+    //     std::cout << xtour.startX << " " << xtour.endX << std::endl;
+    // }
+
+
+
+}
+
+void Legalizer::updateXList(double start, double end, std::list<XTour> & xList){
+    if(xList.empty()){
+        XTour insertRow;
+        insertRow.startX = start;
+        insertRow.endX = end;
+        xList.push_back(insertRow);
+        return;
+    }
+
+    auto iter1 = xList.begin();
+    bool startIsFound = false;
+    while(iter1 != xList.end() && start >= (*iter1).startX){
+        if(start >= (*iter1).startX && start <= (*iter1).endX){
+            startIsFound = true;
+            break;
+        } 
+        iter1++;
+    }
+    auto iter2 = iter1;
+    bool endIsFound = false;
+    while(iter2 != xList.end() && end >= (*iter2).startX){
+        if(end >= (*iter2).startX && end <= (*iter2).endX){
+            endIsFound = true;
+            break;
+        }
+        iter2++;
+    }
+    // std::cout << "iter1:"<< (*iter1).startX << " " << (*iter1).endX << std::endl;
+    // std::cout << "iter2:"<< (*iter2).startX << " " << (*iter2).endX << std::endl;
+    if(!startIsFound && !endIsFound){
+        std::cout << "All Not Found!" << std::endl;
+        XTour insertRow = {start, end};
+        if(iter1 != iter2){
+            auto iter = xList.erase(iter1, iter2);
+            xList.insert(iter, insertRow);
+        }else{
+            xList.insert(iter1, insertRow);
+        }
+    }else{
+        if(iter1 == iter2){
+            (*iter1).endX = ((*iter1).endX >= end) ? (*iter1).endX : end;
+        }else{
+            XTour insertRow = {start, end};
+            std::list<XTour>::iterator eraseEnd;
+            if(endIsFound){
+                eraseEnd = next(iter2);
+            }else{
+                eraseEnd = iter2;
+            }
+            auto iter = xList.erase(iter1, eraseEnd);
+            xList.insert(iter, insertRow);
+        }
+    }
+
+}
+
+void Legalizer::SliceRowsByGate(){
     DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
     // for each gate, if it occupies a placement row, slice the row
     for(const auto &gate : gates){
@@ -224,9 +333,14 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
 
         // check if the current row is complete beyond the target endY
         if(rowStartY >= endY) break;
-
+        double placeH;
+        if(h >= rows[i]->getSiteHeight()){
+            placeH = rows[i]->getSiteHeight();
+        }else{
+            placeH = h;
+        }
         // check if this row can place the cell from startX to startX + w
-        if(rows[i]->canPlace(startX, startX + w)){
+        if(rows[i]->canPlace(startX, startX + w, placeH)){
             // Ensure the row covers the currentY to at least part of the target range
             if(rowStartY <= currentY && rowEndY > currentY){
                 currentY = rowEndY;
@@ -290,10 +404,12 @@ double Legalizer::PlaceMultiHeightFFOnRow(Node *ff, int row_idx){
 
     for(const auto &subrow : rows[row_idx]->getSubrows()){
         // no space in this subrow
-        if(subrow->getFreeWidth() < ff->getW()) continue;
+        // if(subrow->getFreeWidth() < ff->getW()) continue;
         // for each subrow, try to place on site if has place
         // [TODO]: modify to bisection method
-        for(int x = subrow->getStartX(); x + ff->getW() < subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+        double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
+        
+        for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
             // check if upper row can be used...
             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
