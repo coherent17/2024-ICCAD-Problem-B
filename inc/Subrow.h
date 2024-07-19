@@ -9,6 +9,7 @@ private:
     double startX;
     double endX;
     double freeWidth;
+    double height;
 
 public:
     Subrow();
@@ -18,11 +19,13 @@ public:
     void setStartX(double startX);
     void setEndX(double endX);
     void setFreeWidth(double freeWidth);
+    void setHeight(double height);
 
     // Getters
     double getStartX()const;
     double getEndX()const;
     double getFreeWidth()const;
+    double getHeight()const;
 
     friend std::ostream &operator<<(std::ostream &os, const Subrow &subrow);
 };

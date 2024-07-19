@@ -16,6 +16,7 @@ private:
     double siteHeight;
     double siteWidth;
     int numOfSites;
+    double endX;
     std::vector<Subrow *> subrows;  // Use list
 
 public:
@@ -27,6 +28,7 @@ public:
     void setSiteHeight(double siteHeight);
     void setSiteWidth(double siteWidth);
     void setNumOfSite(int numOfSites);
+    void setEndX(double endX);
     void addSubrows(Subrow *subrow);
 
     // Getters
@@ -34,11 +36,12 @@ public:
     double getSiteHeight()const;
     double getSiteWidth()const;
     int getNumOfSite()const;
+    double getEndX()const;
     std::vector<Subrow *> &getSubrows();
 
     // If Node *gate overlap the current row, split current row
     void slicing(Node *gate);
-    bool canPlace(double startX, double endX);
+    bool canPlace(double startX, double endX, double h);
 
     // Operator overloading for sorting
     bool operator<(const Row &rhs)const;
