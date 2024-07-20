@@ -28,6 +28,12 @@ void Parser::parse(Manager &mgr){
 void Parser::readWeight(Manager &mgr){
     std::string _;
     fin >> _ >> mgr.alpha >> _ >> mgr.beta >> _ >> mgr.gamma >> _ >> mgr.lambda;
+    
+    // check weight if valid...
+    mgr.alpha = std::max(mgr.alpha, MIN_WEIGHT);
+    mgr.beta = std::max(mgr.beta, MIN_WEIGHT);
+    mgr.gamma = std::max(mgr.gamma, MIN_WEIGHT);
+    mgr.lambda = std::max(mgr.lambda, MIN_WEIGHT);
 }
 
 void Parser::readDieBorder(Manager &mgr){
