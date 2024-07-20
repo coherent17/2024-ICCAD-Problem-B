@@ -1,5 +1,5 @@
 #include "FF.h"
-
+double FF::DisplacementDelay = 0;
 FF::FF() : Instance(){
     ffIdx = UNSET_IDX;
     clusterIdx = UNSET_IDX;
@@ -8,7 +8,7 @@ FF::FF() : Instance(){
     isShifting = true;
     clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
-    prevInstance = {nullptr, ""};
+    prevInstance = {nullptr, CellType::IO, ""};
 }
 
 FF::FF(int size) : Instance(), clusterFF(size, nullptr){
@@ -19,7 +19,7 @@ FF::FF(int size) : Instance(), clusterFF(size, nullptr){
     isShifting = true;
     clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
-    prevInstance = {nullptr, ""};
+    prevInstance = {nullptr, CellType::IO, ""};
 }
 
 FF::~FF(){}
@@ -78,7 +78,7 @@ void FF::setPrevStage(PrevStage inputStage){
     this->prevStage = inputStage;
 }
 
-void FF::setPrevInstance(std::pair<Instance*, std::string> inputInstance){
+void FF::setPrevInstance(PrevInstance inputInstance){
     this->prevInstance = inputInstance;
 }
 
@@ -158,7 +158,7 @@ PrevStage FF::getPrevStage()const{
     return this->prevStage;
 }
 
-std::pair<Instance*, std::string> FF::getPrevInstance()const{
+PrevInstance FF::getPrevInstance()const{
     return this->prevInstance;
 }
 
@@ -215,6 +215,7 @@ double FF::shift(std::vector<FF *> &FFs){
 }
 
 void FF::getNS(double& TNS, double& WNS){
+    this->updateSlack();
     TNS = 0;
     WNS = 0;
     for(const auto& slack_m : TimingSlack){
@@ -228,6 +229,7 @@ void FF::getNS(double& TNS, double& WNS){
 }
 
 double FF::getTNS(){
+    this->updateSlack();
     double TNS = 0;
     for(const auto& slack_m : TimingSlack){
         if(slack_m.second < 0){
@@ -239,6 +241,7 @@ double FF::getTNS(){
 }
 
 double FF::getWNS(){
+    this->updateSlack();
     double WNS = 0;
     for(const auto& slack_m : TimingSlack){
         if(slack_m.second < 0){
@@ -249,10 +252,10 @@ double FF::getWNS(){
     return WNS;
 }
 
-void FF::updateSlack(Manager& mgr){
+void FF::updateSlack(){
     int curSlot = 0;
     for(auto& FF : clusterFF){
-        double slack = FF->getSlack(mgr);
+        double slack = FF->getSlack();
         if(clusterFF.size() == 1){
             TimingSlack["D"] = slack;
         }
@@ -268,7 +271,7 @@ void FF::clear(){
     clusterFF.clear();
     NeighborFFs.clear();
     prevStage = {nullptr, nullptr, ""};
-    prevInstance = {nullptr, ""};
+    prevInstance = {nullptr, CellType::IO, ""};
     nextStage.clear();
     physicalFF = nullptr;
 }
@@ -283,32 +286,30 @@ std::ostream &operator<<(std::ostream &os, const FF &ff){
 }
 
 
-double FF::getSlack(Manager& mgr){
+double FF::getSlack(){
     FF* cur_ff = this;
-    std::unordered_map<std::string, FF*>& FF_list =  mgr.preprocessor->getFFList();
     // update slack for new location
     Coor newCoorD = this->physicalFF->getNewCoor() + this->physicalFF->getPinCoor("D" + this->getPhysicalPinName());
     double delta_hpwl = 0;
     double delta_q = 0; // delta q pin delay
     Coor inputCoor;
     // D pin delta HPWL
-    if(cur_ff->getPrevInstance().first){
-        std::string inputInstanceName = cur_ff->getPrevInstance().first->getInstanceName();
-        std::string inputPinName = cur_ff->getPrevInstance().second;
-        if(mgr.IO_Map.count(inputInstanceName)){
-            inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+    PrevInstance prevInstance = cur_ff->getPrevInstance();
+    if(prevInstance.instance){
+        if(prevInstance.cellType == CellType::IO){
+            inputCoor = prevInstance.instance->getCoor();
             double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
             double new_hpwl = HPWL(inputCoor, newCoorD);
             delta_hpwl += old_hpwl - new_hpwl;
         }
-        else if(mgr.Gate_Map.count(inputInstanceName)){
-            inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+        else if(prevInstance.cellType == CellType::GATE){
+            inputCoor = prevInstance.instance->getCoor() + prevInstance.instance->getPinCoor(prevInstance.pinName);
             double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
             double new_hpwl = HPWL(inputCoor, newCoorD);
             delta_hpwl += old_hpwl - new_hpwl;
         }
         else{
-            FF* inputFF = FF_list[inputInstanceName];
+            FF* inputFF = dynamic_cast<FF*>(prevInstance.instance);
             inputCoor = inputFF->getOriginalQ();
             Coor newCoorQ = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
             double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
@@ -320,33 +321,20 @@ double FF::getSlack(Manager& mgr){
     // Q pin delta HPWL (prev stage FFs Qpin)
     const PrevStage& prev = cur_ff->getPrevStage();
     if(prev.ff){
-        std::string prevInstanceName = prev.ff->getInstanceName();
         Coor originalInput, newInput;
-        if(FF_list.count(prevInstanceName)){
-            FF* inputFF = FF_list[prevInstanceName];
-            originalInput = inputFF->getOriginalQ();
-            newInput = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
-            delta_q = inputFF->getOriginalQpinDelay() - inputFF->physicalFF->getCell()->getQpinDelay();
-        }
-        else{
-            assert(0 && "Prev shold always be FF");
-        }
 
-        if(prev.outputGate){
-            std::string outputInstanceName = prev.outputGate->getInstanceName();
-            if(mgr.Gate_Map.count(outputInstanceName)){
-                inputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(prev.pinName);
-                double old_hpwl = HPWL(inputCoor, originalInput);
-                double new_hpwl = HPWL(inputCoor, newInput);
-                delta_hpwl += old_hpwl - new_hpwl;
-            }
-            else{
-                assert(0 && "prev output should always be std cell");
-            }
-        }
+        FF* inputFF = prev.ff;
+        originalInput = inputFF->getOriginalQ();
+        newInput = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+        delta_q = inputFF->getOriginalQpinDelay() - inputFF->physicalFF->getCell()->getQpinDelay();
+        
+        inputCoor = prev.outputGate->getCoor() + prev.outputGate->getPinCoor(prev.pinName);
+        double old_hpwl = HPWL(inputCoor, originalInput);
+        double new_hpwl = HPWL(inputCoor, newInput);
+        delta_hpwl += old_hpwl - new_hpwl;
     }
     // get new slack
-    double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + mgr.DisplacementDelay * delta_hpwl;
+    double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + FF::DisplacementDelay * delta_hpwl;
     return newSlack;
 }
 

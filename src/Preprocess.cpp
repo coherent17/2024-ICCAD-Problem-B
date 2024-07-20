@@ -10,6 +10,7 @@ Preprocess::~Preprocess(){
 }
 
 void Preprocess::run(){
+    FF::DisplacementDelay = mgr.DisplacementDelay;
     Debank();
     Build_Circuit_Gragh();
     optimal_FF_location();
@@ -276,7 +277,7 @@ void Preprocess::DelayPropagation(){
                 const std::string& instanceName = outputVector.first;
                 const std::string& pinName = outputVector.second;
                 if(FF_list.count(instanceName)){// output to FF
-                    FF_list[instanceName]->setPrevInstance({input, drivingPin});
+                    FF_list[instanceName]->setPrevInstance({input, CellType::IO, drivingPin});
                     q.push(FF_list[instanceName]);
                 }
                 else if(mgr.Gate_Map.count(instanceName)){ // output to std cell
@@ -327,7 +328,7 @@ void Preprocess::propagaFF(std::queue<Instance*>& q, FF* ff){
             const std::string& pinName = outputVector.second;
 
             if(FF_list.count(instanceName)){// FF output to FF
-                FF_list[instanceName]->setPrevInstance({ff, "Q"});
+                FF_list[instanceName]->setPrevInstance({ff, CellType::FF, "Q"});
                 q.push(FF_list[instanceName]);
                 ff->addNextStage({FF_list[instanceName], nullptr, " "});
             }
@@ -359,7 +360,7 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
             const std::string& pinName = outputVector.second;
 
             if(FF_list.count(instanceName)){// std cell output to FF
-                FF_list[instanceName]->setPrevInstance({gate, outputPin});
+                FF_list[instanceName]->setPrevInstance({gate, CellType::GATE, outputPin});
                 q.push(FF_list[instanceName]);
 
                 // set up for prev stage FF
@@ -419,25 +420,25 @@ void Preprocess::updateSlack(){
         double delta_q = 0; // delta q pin delay
         Coor inputCoor;
         // D pin delta HPWL
-        if(cur_ff->getPrevInstance().first){
-            std::string inputInstanceName = cur_ff->getPrevInstance().first->getInstanceName();
-            std::string inputPinName = cur_ff->getPrevInstance().second;
-            if(mgr.IO_Map.count(inputInstanceName)){
-                inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+        PrevInstance prevInstance = cur_ff->getPrevInstance();
+        if(prevInstance.instance){
+            if(prevInstance.cellType == CellType::IO){
+                inputCoor = prevInstance.instance->getCoor();
                 double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
                 double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
                 delta_hpwl += old_hpwl - new_hpwl;
             }
-            else if(mgr.Gate_Map.count(inputInstanceName)){
-                inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+            else if(prevInstance.cellType == CellType::GATE){
+                inputCoor = prevInstance.instance->getCoor() + prevInstance.instance->getPinCoor(prevInstance.pinName);
                 double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
                 double new_hpwl = HPWL(inputCoor, cur_ff->getCoor() + cur_ff->getPinCoor("D"));
                 delta_hpwl += old_hpwl - new_hpwl;
             }
             else{
-                inputCoor = FF_list[inputInstanceName]->getOriginalQ();
+                FF* prevFF = dynamic_cast<FF*>(prevInstance.instance);
+                inputCoor = prevFF->getOriginalQ();
                 double old_hpwl = HPWL(inputCoor, cur_ff->getOriginalD());
-                double new_hpwl = HPWL(FF_list[inputInstanceName]->getCoor() + FF_list[inputInstanceName]->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
+                double new_hpwl = HPWL(prevFF->getCoor() + prevFF->getPinCoor("Q"), cur_ff->getCoor() + cur_ff->getPinCoor("D"));
                 delta_hpwl += old_hpwl - new_hpwl;
             }
         }
@@ -445,29 +446,15 @@ void Preprocess::updateSlack(){
         // Q pin delta HPWL (prev stage FFs Qpin)
         const PrevStage& prev = cur_ff->getPrevStage();
         if(prev.ff){
-            std::string prevInstanceName = prev.ff->getInstanceName();
             Coor originalInput, newInput;
-            if(FF_list.count(prevInstanceName)){
-                originalInput = FF_list[prevInstanceName]->getOriginalQ();
-                newInput = FF_list[prevInstanceName]->getCoor() + FF_list[prevInstanceName]->getPinCoor("Q");
-                delta_q = FF_list[prevInstanceName]->getOriginalQpinDelay() - FF_list[prevInstanceName]->getCell()->getQpinDelay();
-            }
-            else{
-                assert(0 && "Prev shold always be FF");
-            }
+            originalInput = prev.ff->getOriginalQ();
+            newInput = prev.ff->getCoor() + prev.ff->getPinCoor("Q");
+            delta_q = prev.ff->getOriginalQpinDelay() - prev.ff->getCell()->getQpinDelay();
 
-            if(prev.outputGate){
-                std::string outputInstanceName = prev.outputGate->getInstanceName();
-                if(mgr.Gate_Map.count(outputInstanceName)){
-                    inputCoor = mgr.Gate_Map[outputInstanceName]->getCoor() + mgr.Gate_Map[outputInstanceName]->getPinCoor(prev.pinName);
-                    double old_hpwl = HPWL(inputCoor, originalInput);
-                    double new_hpwl = HPWL(inputCoor, newInput);
-                    delta_hpwl += old_hpwl - new_hpwl;
-                }
-                else{
-                    assert("you should never go here");
-                }
-            }
+            inputCoor = prev.outputGate->getCoor() + prev.outputGate->getPinCoor(prev.pinName);
+            double old_hpwl = HPWL(inputCoor, originalInput);
+            double new_hpwl = HPWL(inputCoor, newInput);
+            delta_hpwl += old_hpwl - new_hpwl;
         }
         // get new slack
         double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + mgr.DisplacementDelay * delta_hpwl;

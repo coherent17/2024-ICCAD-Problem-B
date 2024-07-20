@@ -321,7 +321,6 @@ void Manager::getNS(double& TNS, double& WNS, bool show){
     WNS = 0;
     for(auto& FF_m : FF_Map){
         double curTNS, curWNS;
-        FF_m.second->updateSlack(*this);
         FF_m.second->getNS(curTNS, curWNS);
         TNS += curTNS;
         WNS = std::max(WNS, curWNS);
@@ -335,7 +334,6 @@ void Manager::getNS(double& TNS, double& WNS, bool show){
 double Manager::getTNS(){
     double TNS = 0;
     for(auto& FF_m : FF_Map){
-        FF_m.second->updateSlack(*this);
         TNS += FF_m.second->getTNS();
     }
     return TNS;
@@ -344,7 +342,6 @@ double Manager::getTNS(){
 double Manager::getWNS(){
     double WNS = 0;
     for(auto& FF_m : FF_Map){
-        FF_m.second->updateSlack(*this);
         WNS = std::max(WNS, FF_m.second->getWNS());
     }
     return WNS;
@@ -380,7 +377,6 @@ double Manager::getOverallCost(bool verbose){
     double Area_cost = 0;
     double Bin_cost = 0;
     for(const auto & ff_pair : FF_Map){
-        ff_pair.second->updateSlack(*this);
         double curTNS = ff_pair.second->getTNS();
         TNS_cost += alpha * (curTNS);
         Power_cost += beta * ff_pair.second->getCell()->getGatePower();
