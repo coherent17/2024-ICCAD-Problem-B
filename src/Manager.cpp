@@ -9,8 +9,7 @@ Manager::Manager():
     NumOutput(0),
     MaxBit(0),
     NumInstances(0),
-    NumNets(0),
-    preprocessor(new Preprocess(*this))
+    NumNets(0)
     {}
 
 Manager::~Manager(){
@@ -31,6 +30,7 @@ void Manager::parse(const std::string &filename){
 }
 
 void Manager::preprocess(){
+    preprocessor = new Preprocess(*this);
     preprocessor->run();
     // delete all FF before preprocess
     originalFF_Map = FF_Map;
