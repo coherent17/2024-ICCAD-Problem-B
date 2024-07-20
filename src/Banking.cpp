@@ -45,7 +45,7 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
         }
         else if (dis < SQUARE_EPSILON && nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
         {   
-            FFs[resultFFs[i].second]->updateSlack(mgr);            
+            FFs[resultFFs[i].second]->updateSlack();            
             double slack = FFs[resultFFs[i].second]->getTimingSlack("D") - std::sqrt(dis)*mgr.DisplacementDelay;
             if(slack > 0){
                 // std::cout << "slack:" << slack << std::endl;

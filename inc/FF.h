@@ -23,6 +23,18 @@ typedef PrevStage NextStage; // ff -> the end of critical path
                              // outputGate -> your output gate for this critical path
                              // outputGate's pinName
 
+enum class CellType{
+    IO = 0,
+    FF = 1,
+    GATE = 2
+};
+
+struct PrevInstance{
+    Instance* instance;
+    CellType cellType;
+    std::string pinName;
+};
+
 class FF : public Instance{
 private:
     std::unordered_map<std::string, double> TimingSlack;
@@ -41,7 +53,7 @@ private:
     PrevStage prevStage; // {prev stage FF/INPUT, {prevFF's output cell on critical path, output cell pin}}
                                                                     // if prev stage FF is nullptr, cur(this) FF is directly connect with prev stage or is IO
                                                                     // use prevInstance
-    std::pair<Instance*, std::string> prevInstance; // prev instance on critical path and its putput pin
+    PrevInstance prevInstance; // prev instance on critical path and its putput pin
     std::vector<NextStage> nextStage;
     Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
     double originalQpinDelay;
@@ -63,7 +75,7 @@ public:
     void addNeighbor(int ffIdx, double euclidean_distance);
     void setIsShifting(bool shift);
     void setPrevStage(PrevStage);
-    void setPrevInstance(std::pair<Instance*, std::string>);
+    void setPrevInstance(PrevInstance);
     void addNextStage(NextStage);
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     void setOriginalQpinDelay(double);
@@ -83,7 +95,7 @@ public:
     int getNeighborSize()const;
     bool getIsShifting()const;
     PrevStage getPrevStage()const;
-    std::pair<Instance*, std::string> getPrevInstance()const;
+    PrevInstance getPrevInstance()const;
     std::vector<NextStage> getNextStage()const;
     Coor getOriginalD()const;
     Coor getOriginalQ()const;
@@ -96,17 +108,18 @@ public:
     double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
-    void getNS(double& TNS, double& WNS); // pls call update slack before get TNS and WNS
+    void getNS(double& TNS, double& WNS); // getNS, getTNS, getWNS will call updateSlack
     double getTNS();
     double getWNS();
-    void updateSlack(Manager&);
+    void updateSlack();
     
     void clear(); // clear all the data
 
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
     friend class postBankingObjFunction;
+    static double DisplacementDelay;
 private:
-    double getSlack(Manager&); // don't touch is only for FF in FF_list
+    double getSlack(); // don't touch is only for FF in FF_list
 };
 
 
