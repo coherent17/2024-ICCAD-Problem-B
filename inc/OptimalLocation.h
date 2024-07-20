@@ -38,6 +38,16 @@ class preprocessObjFunction : public objFunction{
         void getWeight(FF* cur_ff, vector<double>& weight);
 };
 
+class postBankingObjFunction : public objFunction{
+    public:
+        postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
+                            unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
+        ~postBankingObjFunction();
+        double forward();
+        vector<Coor>& backward(int step, bool onlyNegative);
+        void getWeight(FF* cur_ff, vector<double>& weight);
+};
+
 class Gradient{
     private:
     vector<Coor> grad_prev_;  // Gradient of the objective function at the previous
@@ -62,16 +72,6 @@ class Gradient{
 
     void Initialize(double);
     void Step(bool);
-};
-
-class postBankingObjFunction : public objFunction{
-    public:
-        postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
-                            unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
-        ~postBankingObjFunction();
-        double forward();
-        vector<Coor>& backward(int step, bool onlyNegative);
-        void getWeight(FF* cur_ff, vector<double>& weight);
 };
 
 #endif

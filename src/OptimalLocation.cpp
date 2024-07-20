@@ -51,7 +51,6 @@ double preprocessObjFunction::forward(){
         // output net
         const vector<NextStage>& nextStage = cur_ff->getNextStage();
         if(nextStage.size()){
-            // cout << nextStage.size() << endl;
             for(auto& next_p : nextStage){
                 std::string outputInstanceName;
                 if(next_p.outputGate)
@@ -138,92 +137,6 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
     }
 }
 
-Gradient::Gradient( Manager &mgr,
-                    std::unordered_map<std::string, FF*>& FF_list,
-                    objFunction &obj,
-                    const double &alpha,
-                    unordered_map<string, int>& idx_map,
-                    size_t kNumModule,
-                    std::vector<FF*>& FFs)
-    : grad_prev_(kNumModule),
-      dir_prev_(kNumModule),
-      step_(0),
-      alpha_(alpha),
-      kNumModule(kNumModule),
-      obj_(obj),
-      dir(kNumModule),
-      idx_map(idx_map),
-      mgr(mgr),
-      FF_list(FF_list),
-      FFs(FFs){
-    Initialize(alpha);
-}
-
-Gradient::~Gradient(){
-
-}
-
-void Gradient::Initialize(double kAlpha) {
-    step_ = 0;
-    alpha_ = kAlpha;
-}
-
-void Gradient::Step(bool onlyNegative) {
-    // Compute the gradient direction
-    obj_.forward(); // Forward, compute the function value and cache from the input
-    obj_.backward(step_, onlyNegative);  // Backward, compute the gradient according to the cache
-    // Compute the Polak-Ribiere coefficient and conjugate directions
-    double beta;                                  // Polak-Ribiere coefficient
-    if (step_ == 0) {
-        // For the first step, we will set beta = 0 and d_0 = -g_0
-        beta = 0.;
-        for (size_t i = 0; i < kNumModule; ++i) {
-            dir[i].x = -obj_.grad().at(i).x;
-            dir[i].y = -obj_.grad().at(i).y;
-        }
-    } else {
-        // For the remaining steps, we will calculate the Polak-Ribiere coefficient and
-        // conjugate directions normally
-        double t1 = 0.;  // Store the numerator of beta
-        double t2 = 0.;  // Store the denominator of beta
-        for (size_t i = 0; i < kNumModule; ++i) {
-            Coor g = obj_.grad().at(i);
-            Coor t3;
-            t3.x = g.x * (g.x - grad_prev_.at(i).x);
-            t3.y = g.y * (g.y - grad_prev_.at(i).y);
-            t1 += t3.x + t3.y;
-            t2 += std::abs(g.x) + std::abs(g.y);
-        }
-        beta = t1 / (t2 * t2 + 0.00001);
-        for (size_t i = 0; i < kNumModule; ++i) {
-            dir[i].x = -obj_.grad().at(i).x + beta * dir_prev_.at(i).x;
-            dir[i].y = -obj_.grad().at(i).y + beta * dir_prev_.at(i).y;
-        }
-    }
-    // Assume the step size is constant
-    // TODO(Optional): Change to dynamic step-size control
-
-    // Update the solution
-    // Please be aware of the updating directions, i.e., the sign for each term.
-    // int idx=0;
-    // for(auto& ff_m : FF_list){
-    // #pragma omp parallel for num_threads(MAX_THREADS)
-    for(size_t idx=0;idx<kNumModule;idx++){
-        // FF* ff = ff_m.second;
-        FF* ff = FFs[idx];
-        Coor coor = ff->getCoor();
-        coor.x = coor.x + alpha_ * dir[idx].x;
-        coor.y = coor.y + alpha_ * dir[idx].y;
-        ff->setCoor(coor);
-        ff->setNewCoor(coor);
-    }
-
-    // Update the cache data members
-    grad_prev_ = obj_.grad();
-    dir_prev_ = dir;
-    step_++;
-}
-
 postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
@@ -271,7 +184,6 @@ double postBankingObjFunction::forward(){
             // output net (only for the ff output to IO, to avoid double calculation)
             const vector<NextStage>& nextStage = cur_ff->getNextStage();
             if(nextStage.size()){
-                // cout << nextStage.size() << endl;
                 for(auto& next_p : nextStage){
                     std::string outputInstanceName;
                     if(next_p.outputGate)
@@ -381,3 +293,82 @@ void postBankingObjFunction::getWeight(FF* MBFF, vector<double>& weight){
     }
 }
 
+Gradient::Gradient( Manager &mgr,
+                    std::unordered_map<std::string, FF*>& FF_list,
+                    objFunction &obj,
+                    const double &alpha,
+                    unordered_map<string, int>& idx_map,
+                    size_t kNumModule,
+                    std::vector<FF*>& FFs)
+    : grad_prev_(kNumModule),
+      dir_prev_(kNumModule),
+      step_(0),
+      alpha_(alpha),
+      kNumModule(kNumModule),
+      obj_(obj),
+      dir(kNumModule),
+      idx_map(idx_map),
+      mgr(mgr),
+      FF_list(FF_list),
+      FFs(FFs){
+    Initialize(alpha);
+}
+
+Gradient::~Gradient(){
+
+}
+
+void Gradient::Initialize(double kAlpha) {
+    step_ = 0;
+    alpha_ = kAlpha;
+}
+
+void Gradient::Step(bool onlyNegative) {
+    // Compute the gradient direction
+    obj_.forward();
+    obj_.backward(step_, onlyNegative);
+    // Compute the Polak-Ribiere coefficient and conjugate directions
+    double beta;                                  // Polak-Ribiere coefficient
+    if (step_ == 0) {
+        // For the first step, we will set beta = 0 and d_0 = -g_0
+        beta = 0.;
+        for (size_t i = 0; i < kNumModule; ++i) {
+            dir[i].x = -obj_.grad().at(i).x;
+            dir[i].y = -obj_.grad().at(i).y;
+        }
+    } else {
+        // For the remaining steps, we will calculate the Polak-Ribiere coefficient and
+        // conjugate directions normally
+        double t1 = 0.;  // Store the numerator of beta
+        double t2 = 0.;  // Store the denominator of beta
+        for (size_t i = 0; i < kNumModule; ++i) {
+            Coor g = obj_.grad().at(i);
+            Coor t3;
+            t3.x = g.x * (g.x - grad_prev_.at(i).x);
+            t3.y = g.y * (g.y - grad_prev_.at(i).y);
+            t1 += t3.x + t3.y;
+            t2 += std::abs(g.x) + std::abs(g.y);
+        }
+        beta = t1 / (t2 * t2 + 0.00001);
+        for (size_t i = 0; i < kNumModule; ++i) {
+            dir[i].x = -obj_.grad().at(i).x + beta * dir_prev_.at(i).x;
+            dir[i].y = -obj_.grad().at(i).y + beta * dir_prev_.at(i).y;
+        }
+    }
+    // Update the solution
+    // #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t idx=0;idx<kNumModule;idx++){
+        // FF* ff = ff_m.second;
+        FF* ff = FFs[idx];
+        Coor coor = ff->getCoor();
+        coor.x = coor.x + alpha_ * dir[idx].x;
+        coor.y = coor.y + alpha_ * dir[idx].y;
+        ff->setCoor(coor);
+        ff->setNewCoor(coor);
+    }
+
+    // Update the cache data members
+    grad_prev_ = obj_.grad();
+    dir_prev_ = dir;
+    step_++;
+}

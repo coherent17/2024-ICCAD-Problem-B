@@ -18,7 +18,6 @@ void Preprocess::run(){
 
 // Preprocess function
 void Preprocess::Debank(){
-
     // select cell use after debank
     // use the FF with lowest cost
     Cell* targetCell = mgr.Bit_FF_Map[1][0];
@@ -66,16 +65,6 @@ void Preprocess::Debank(){
     }
 
     std::cout << "Total number of FF : " << FF_list.size() << std::endl;
-
-    // /* for debug
-    // for(auto& lm : FF_list_Map){
-    //     FF temp = *FF_list[lm.second];
-    //     std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-    //     std::cout << "With timing slacke : " << temp.getTimingSlack("D0") << " And Coor : " << temp.getCoor() << std::endl;
-    //     std::cout << "Original D&Q coordinate : (" << temp.getOriginalD() << ", " << temp.getOriginalQ() << ")" << std::endl;
-    //     std::cout << std::endl;
-    // }
-    // */
 }
 
 void Preprocess::Build_Circuit_Gragh(){
@@ -85,8 +74,6 @@ void Preprocess::Build_Circuit_Gragh(){
         std::string driving_pin;
         bool is_CLK = false; // ignore clock net (maybe can done in parser)
         bool has_driving_cell = false;
-        // if(n.getNumPins() == 1) // ignore single pin nets
-        //     continue;
         findDrivingCell(n, driving_cell, driving_pin, is_CLK, has_driving_cell);
         
         if(is_CLK || !has_driving_cell)
@@ -99,32 +86,6 @@ void Preprocess::Build_Circuit_Gragh(){
 
     // go study STA
     DelayPropagation();
-
-    // for debug
-    // for(auto& lm : FF_list_Map){
-    //     FF& temp = *FF_list[lm.second];
-    //     std::cout << lm.first << " map to logic ff " << temp.getInstanceName() << std::endl;
-    //     if(temp.getLargestInput() != nullptr)
-    //         std::cout << "Input largest cell : " << temp.getLargestInput()->getInstanceName() << std::endl;
-    //     else
-    //         std::cout << "Input is floating" << std::endl << std::endl;
-    //     if(temp.getLargestOutput().first != nullptr)
-    //         std::cout << "Output largest cell : " << temp.getLargestOutput().first->getInstanceName() << std::endl << std::endl; 
-    //     else
-    //         std::cout << "Output is floating" << std::endl << std::endl;
-    // }
-    /*
-    for(auto& lm : FF_list_Map){
-        FF temp = FF_list[lm.second];
-        cout << lm.first << " map to logic ff " << temp.getInstanceName() << endl;
-        cout << "Its input from " << temp.getInput()[0] << endl;
-        if(temp.getOutput().size())
-            for(size_t i=0;i<temp.getOutput().size();i++)
-                cout << "Its output to " << temp.getOutput()[i] << endl;
-        else
-            cout << "Its output is floating" << endl;
-    }
-    */
 }
 
 void Preprocess::optimal_FF_location(){
@@ -166,24 +127,12 @@ void Preprocess::optimal_FF_location(){
             break;
         }
         prevTNS = newTNS;
-        // if(i%50 == 0){
-        //     mgr.FF_Map = FF_list;
-        //     mgr.dumpVisual("after_" + std::to_string(i) + "_gradient");
-        // }
     }
 }
 
 //---------------------------------------------
 //---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
 // utils
-//---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
-//---------------------------------------------
 //---------------------------------------------
 //---------------------------------------------
 void Preprocess::findDrivingCell(const Net& n, std::string& driving_cell, std::string& driving_pin, 
@@ -304,9 +253,7 @@ void Preprocess::DelayPropagation(){
         q.pop();
 
         if(mgr.Gate_Map.count(curInst->getInstanceName())){
-            //cout <<"gate" << endl;
             propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
-            //cout <<"Finish gate" << endl;
         }
         else{
             assert("Something wrong!!!");
@@ -354,7 +301,6 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
     const std::unordered_map<std::string, std::vector<std::pair<std::string, std::string>>>& outputMap = gate->getOutputInstances();
     for(const auto& output_m : outputMap){
         const std::string& outputPin = output_m.first;
-        // cout << "Propagete cell : " << gate->getInstanceName() << " with output pin : " << outputPin << endl;
         for(const auto& outputVector : output_m.second){
             const std::string& instanceName = outputVector.first;
             const std::string& pinName = outputVector.second;
@@ -377,9 +323,7 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
                 curGate->updateVisitedTime();
                 if(curGate->getVisitedTime() == curGate->getCell()->getInputCount()){
                     q.push(curGate);
-                    // cout << "push new : " << curGate->getInstanceName() << endl;
                 }
-                // cout << curGate->getInstanceName() << " " << curGate->getVisitedTime() << " " << curGate->getCell()->getInputCount() << endl;
             }
         }
     }
@@ -390,7 +334,7 @@ double Preprocess::getSlackStatistic(bool show){
     double TNS = 0;
     double AVS = 0; // average slack
     double MAS = -DBL_MAX; // max slack
-    //
+
     for(auto& ff_m : FF_list){
         FF* temp = ff_m.second;
         double slack = temp->getTimingSlack("D");
