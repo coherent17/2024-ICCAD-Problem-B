@@ -19,22 +19,18 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.preprocess();
     std::cout << "Slack after preprocess" << std::endl;
-    mgr.showNS();
     mgr.getOverallCost(cost_verbose);
 
     mgr.meanshift();
     std::cout << "Slack after meanshift" << std::endl;
-    mgr.showNS();
     mgr.getOverallCost(cost_verbose);
     
     mgr.banking();
     std::cout << "Slack after banking" << std::endl;
-    mgr.showNS();
     mgr.getOverallCost(cost_verbose);
 
     mgr.postBankingOptimize();
     std::cout << "Slack after postBankingOptimize" << std::endl;
-    mgr.showNS();
     mgr.getOverallCost(cost_verbose);
 
     // if(argc == 4){
@@ -43,7 +39,6 @@ int main(int argc, char *argv[]){
 
     // place holder method for runing legalize algorithm
     mgr.legalize();
-    mgr.showNS();
     mgr.getOverallCost(cost_verbose);
     if(argc == 4){
         mgr.dumpVisual(argv[3]);
