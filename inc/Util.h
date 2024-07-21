@@ -4,7 +4,7 @@
 #define DEBUG_MSG(message) std::cout << "[DEBUG: " << message << "]" << std::endl;
 
 // Parameter for cost function, used in Parser::readWeight
-# define MIN_WEIGHT 0.000001
+# define MIN_WEIGHT 0.0000000001
 
 #define UNSET_IDX -1
 #define P_PER_NODE 16

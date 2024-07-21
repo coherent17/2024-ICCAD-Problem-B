@@ -1,4 +1,4 @@
-#include "postBankingOptimizer.h"
+#include "PostBankingOptimizer.h"
 #include "OptimalLocation.h"
 
 postBankingOptimizer::postBankingOptimizer(Manager& mgr) : mgr(mgr){

@@ -3,7 +3,6 @@
 Legalizer::Legalizer(Manager& mgr) : mgr(mgr){
     numffs = 0;
     numgates = 0;
-    numrows = 0;
 }
 
 Legalizer::~Legalizer(){
@@ -220,10 +219,10 @@ void Legalizer::SliceRowsByGate(){
 }
 
 void Legalizer::Abacus(){
-    // Sort cell by cost function
+    // Sort cell by cost function, consider timing in first order?
     std::sort(ffs.begin(), ffs.end(), [](Node *a, Node *b){
-        double costA = a->getH() * a->getW() * AREA_WEIGHT + a->getH() * HEIGHT_WEIGHT + a->getW() * WIDTH_WEIGHT + a->getGPCoor().x * X_WEIGHT;
-        double costB = b->getH() * b->getW() * AREA_WEIGHT + b->getH() * HEIGHT_WEIGHT + b->getW() * WIDTH_WEIGHT + b->getGPCoor().x * X_WEIGHT;;
+        double costA = a->getH() * a->getW();
+        double costB = b->getH() * b->getW();
         return costA > costB;
     });
     
@@ -247,7 +246,7 @@ void Legalizer::Abacus(){
 
         // search up
         up_row_idx = closest_row_idx + 1;
-        while(up_row_idx < numrows && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
+        while(up_row_idx < rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
             double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
             minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
             up_row_idx++;
@@ -258,20 +257,29 @@ void Legalizer::Abacus(){
                 row->slicing(ff);
             }
         }
+
+        // change cell type, iterate throught the cell library, consider area and aspect ratio
+        
+
         else{
             // Global search mode
             DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
+
+            // search up
+            while(up_row_idx < rows.size()){
+                double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+                minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+                up_row_idx++;
+
+                if(ff->getIsPlace()) break;
+            }
+
             while(down_row_idx >= 0){
                 double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
                 minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
                 down_row_idx--;
-            }
 
-            // search up
-            while(up_row_idx < numrows){
-                double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-                minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-                up_row_idx++;
+                if(ff->getIsPlace()) break;
             }
 
             if(ff->getIsPlace()){

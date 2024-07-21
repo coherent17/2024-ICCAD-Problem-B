@@ -27,7 +27,6 @@ private:
     Manager& mgr;
     int numffs;
     int numgates;
-    int numrows;
     std::vector<Node *> ffs;
     std::vector<Node *> gates;
     std::vector<Row *> rows;

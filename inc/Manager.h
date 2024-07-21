@@ -21,7 +21,7 @@
 #include "Legalizer.h"
 #include "Util.h"
 #include "PrettyTable.h"
-#include "postBankingOptimizer.h"
+#include "PostBankingOptimizer.h"
 
 #define SKIP_BIN_CALC true
 

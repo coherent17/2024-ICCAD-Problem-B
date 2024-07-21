@@ -74,6 +74,7 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
     return nullptr;
 }
 
+// Can construct the LUT first...
 Cell* Banking::chooseCellLib(int bitNum){
     int order = 0;
     int targetBit = bitOrder[order];
@@ -88,7 +89,6 @@ Cell* Banking::chooseCellLib(int bitNum){
     assert(bitNum > 0);
     return mgr.Bit_FF_Map[bitNum][0];
 }
-
 
 Coor Banking::getMedian(std::vector<PointWithID>& toRemoveFFs){
     std::vector<double> median_x, median_y;

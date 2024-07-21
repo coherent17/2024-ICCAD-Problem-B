@@ -9,7 +9,8 @@ Manager::Manager():
     NumOutput(0),
     MaxBit(0),
     NumInstances(0),
-    NumNets(0)
+    NumNets(0),
+    preprocessor(nullptr)
     {}
 
 Manager::~Manager(){
@@ -453,7 +454,7 @@ void Manager::libScoring(){
     for(auto &pair: Bit_FF_Map){
         std::vector<Cell *> &cell_vector = pair.second;
         for(size_t i = 0; i < cell_vector.size(); i++){
-            double area = cell_vector[i]->getW() * cell_vector[i]->getH();
+            double area = cell_vector[i]->getArea();
             double score = alpha*cell_vector[i]->getQpinDelay() + beta*cell_vector[i]->getGatePower() + gamma*area;
             cell_vector[i]->setScore(score);
         }
