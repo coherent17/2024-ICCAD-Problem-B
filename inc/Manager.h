@@ -23,6 +23,8 @@
 #include "PrettyTable.h"
 #include "postBankingOptimizer.h"
 
+#define SKIP_BIN_CALC true
+
 class FF;
 class Preprocess;
 class Cluster;

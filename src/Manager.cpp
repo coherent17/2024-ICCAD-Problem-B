@@ -384,38 +384,44 @@ double Manager::getOverallCost(bool verbose){
     }
 
     // check for the bin density
-    int numBins = 0;
-    int numViolationBins = 0;
-    int DieStartX = die.getDieOrigin().x;
-    int DieStartY = die.getDieOrigin().y;
-    int DieEndX = die.getDieBorder().x;
-    int DieEndY = die.getDieBorder().y;
-    int BinW = die.getBinWidth();
-    int BinH = die.getBinHeight();
-    #pragma omp parallel for reduction(+:numBins, numViolationBins) collapse(2)
-    for(int _x = DieStartX; _x < DieEndX; _x += BinW){
-        for(int _y = DieStartY; _y < DieEndY; _y += BinH){
-            numBins++;
-            double area = 0;
-            for(const auto &ff : FF_Map){
-                if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
-                    area += ff.second->getW() * ff.second->getH();
+    if(!SKIP_BIN_CALC){
+        int numBins = 0;
+        int numViolationBins = 0;
+        int DieStartX = die.getDieOrigin().x;
+        int DieStartY = die.getDieOrigin().y;
+        int DieEndX = die.getDieBorder().x;
+        int DieEndY = die.getDieBorder().y;
+        int BinW = die.getBinWidth();
+        int BinH = die.getBinHeight();
+        #pragma omp parallel for reduction(+:numBins, numViolationBins) collapse(2)
+        for(int _x = DieStartX; _x < DieEndX; _x += BinW){
+            for(int _y = DieStartY; _y < DieEndY; _y += BinH){
+                numBins++;
+                double area = 0;
+                for(const auto &ff : FF_Map){
+                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
+                        area += ff.second->getW() * ff.second->getH();
+                    }
                 }
-            }
 
-            for(const auto &gate : Gate_Map){
-                if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
-                    area += gate.second->getW() * gate.second->getH();
+                for(const auto &gate : Gate_Map){
+                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
+                        area += gate.second->getW() * gate.second->getH();
+                    }
                 }
-            }
-            
-            // check if over bin max util
-            if(area / (die.getBinWidth() * die.getBinHeight()) > die.getBinMaxUtil()){
-                numViolationBins++;
+                
+                // check if over bin max util
+                if(area / (die.getBinWidth() * die.getBinHeight()) > die.getBinMaxUtil()){
+                    numViolationBins++;
+                }
             }
         }
+        Bin_cost = lambda * numViolationBins;
     }
-    Bin_cost = lambda * numViolationBins;
+    else{
+        std::cout << "[Warning] Skip bin density calculation!" << std::endl;
+    }
+
 
     double cost = TNS_cost + Power_cost + Area_cost + Bin_cost;
     double TNS_percentage = TNS_cost / cost * 100;
@@ -430,7 +436,8 @@ double Manager::getOverallCost(bool verbose){
             {"Power", toStringWithPrecision(beta, numAfterDot), toStringWithPrecision(Power_cost, numAfterDot), toStringWithPrecision(Power_percentage, numAfterDot) + "(%)"},
             {"Area", toStringWithPrecision(gamma, numAfterDot), toStringWithPrecision(Area_cost, numAfterDot), toStringWithPrecision(Area_percentage, numAfterDot) + "(%)"},
             {"Bin", toStringWithPrecision(lambda, numAfterDot), toStringWithPrecision(Bin_cost, numAfterDot), toStringWithPrecision(Bin_percentage, numAfterDot) + "(%)"},
-            {"Total", "-", toStringWithPrecision(cost, numAfterDot), "100.00(%)"}
+            {"Total", "-", toStringWithPrecision(cost, numAfterDot), "100.00(%)"},
+            {"WNS", toStringWithPrecision(getWNS(), numAfterDot), "TNS", toStringWithPrecision(getTNS(), numAfterDot)}
         };
 
         PrettyTable pt;
