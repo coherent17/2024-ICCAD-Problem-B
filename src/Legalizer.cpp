@@ -3,6 +3,7 @@
 Legalizer::Legalizer(Manager& mgr) : mgr(mgr){
     numffs = 0;
     numgates = 0;
+    timer.start();
 }
 
 Legalizer::~Legalizer(){
@@ -26,9 +27,11 @@ bool Legalizer::run(){
     for(const auto &ff : ffs){
         if(!ff->getIsPlace()){
             DEBUG_LGZ("Legalization Failed...");
+            timer.stop();
             return false;
         }
     }
+    timer.stop();
     return true;
 }
 

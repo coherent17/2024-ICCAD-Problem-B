@@ -5,6 +5,7 @@
 #include "Row.h"
 #include "Subrow.h"
 #include "Manager.h"
+#include "Timer.h"
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -30,6 +31,7 @@ private:
     std::vector<Node *> ffs;
     std::vector<Node *> gates;
     std::vector<Row *> rows;
+    Timer timer;
 
 public:
     explicit Legalizer(Manager& mgr);
