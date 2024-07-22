@@ -50,10 +50,8 @@ void Manager::preprocess(){
         newFF->setNewCoor(coor);
         newFF->setClkIdx(clkIdx);
         newFF->setCell(cell);
-        newFF->setCellName(curFF->getCellName());
         newFF->setClusterSize(1);
         newFF->addClusterFF(curFF, 0);
-
         curFF->setPhysicalFF(newFF, 0);
 
         FF_Map[instanceName] = newFF;
@@ -133,11 +131,11 @@ void Manager::dumpVisual(const std::string &filename){
     fout << "NumInstances " << FF_Map.size() + Gate_Map.size() << std::endl;
     std::map<std::string, FF *> ff_map(FF_Map.begin(), FF_Map.end());
     for(const auto &pair: ff_map){
-        fout << "Inst " << pair.first << " " << pair.second->getCellName() << " " << pair.second->getNewCoor().x << " " << pair.second->getNewCoor().y << std::endl;
+        fout << "Inst " << pair.first << " " << pair.second->getCell()->getCellName() << " " << pair.second->getNewCoor().x << " " << pair.second->getNewCoor().y << std::endl;
     }
     std::map<std::string, Gate *> gate_map(Gate_Map.begin(), Gate_Map.end());
     for(const auto &pair: gate_map){
-        fout << "Inst " << pair.first << " " << pair.second->getCellName() << " " << pair.second->getCoor().x << " " << pair.second->getCoor().y << std::endl;
+        fout << "Inst " << pair.first << " " << pair.second->getCell()->getCellName() << " " << pair.second->getCoor().x << " " << pair.second->getCoor().y << std::endl;
     }
 
     std::map<std::string, Net> net_map(Net_Map.begin(), Net_Map.end());
@@ -249,7 +247,6 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     newFF->setCoor(newbankCoor);
     newFF->setNewCoor(newbankCoor);
     newFF->setCell(bankCellType);
-    newFF->setCellName(bankCellType->getCellName());
     newFF->setClusterSize(bit);
     newFF->setClkIdx(clkIdx);
     FF_Map[newName] = newFF;
@@ -300,7 +297,6 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
         newFF->setCoor(coor);
         newFF->setNewCoor(coor);
         newFF->setCell(debankCellType);
-        newFF->setCellName(debankCellType->getCellName());
         newFF->setClusterSize(1);
         newFF->addClusterFF(ff, 0);
         newFF->setClkIdx(clkIdx);

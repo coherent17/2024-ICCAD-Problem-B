@@ -2,7 +2,6 @@
 
 Instance::Instance() : 
     instanceName(""),
-    cellName(""),
     coor(0, 0),
     cell(nullptr)
     {}
@@ -12,10 +11,6 @@ Instance::~Instance(){}
 // Setters
 void Instance::setInstanceName(const std::string &instanceName){
     this->instanceName = instanceName;
-}
-
-void Instance::setCellName(const std::string &cellName){
-    this->cellName = cellName;
 }
 
 void Instance::setCoor(const Coor &coor){
@@ -37,10 +32,6 @@ void Instance::addOutput(const std::string& pinName, const std::string& output, 
 // Getters
 const std::string &Instance::getInstanceName()const{
     return instanceName;
-}
-
-const std::string &Instance::getCellName()const{
-    return cellName;
 }
 
 Coor Instance::getCoor()const{

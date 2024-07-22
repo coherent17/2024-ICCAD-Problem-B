@@ -57,7 +57,6 @@ void Preprocess::Debank(){
                 temp->setOriginalQpinDelay(cur_cell.getQpinDelay());
                 temp->setClkIdx(ff_clk);
                 temp->setCell(ff_cell);
-                temp->setCellName(ff_cell->getCellName());
                 FF_list[temp->getInstanceName()] = temp;
                 FF_list_Map[cur_name+'/'+pinName] = temp->getInstanceName();
             }

@@ -31,7 +31,7 @@ void Banking::bitOrdering(){
     for(auto const& bit_pair: bitScoreVector){
         bitOrder.push_back(bit_pair.second);
         // DEBUG
-        std::cout <<"         "<< bit_pair.second << ": " << bit_pair.first << std::endl;
+        std::cout <<"         " <<  mgr.Bit_FF_Map[bit_pair.second][0]->getCellName() << "(" << bit_pair.second  <<  "): " << bit_pair.first << std::endl;
     }
 }
 
@@ -167,8 +167,6 @@ void Banking::restoreUnclusterFFCoor(){
         if(clusterFFs.size() == 1){
             Coor originalCoor = MBFF.second->getCoor();
             MBFF.second->setNewCoor(originalCoor);
-            MBFF.second->setCell(mgr.Bit_FF_Map[1][0]);// preprocess choose better 1-bit FF?
-            MBFF.second->setCellName(mgr.Bit_FF_Map[1][0]->getCellName());
         }
     }
 }

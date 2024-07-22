@@ -10,7 +10,6 @@
 class Instance{
 protected:
     std::string instanceName;
-    std::string cellName;
     Coor coor;
     const Cell *cell;
 
@@ -24,7 +23,6 @@ public:
 
     // Setters
     void setInstanceName(const std::string &instanceName);
-    void setCellName(const std::string &cellName);
     void setCoor(const Coor &coor);
     void setCell(const Cell *cell);
     void addInput(const std::string& pinName, const std::string &input, const std::string& instPinName);
@@ -32,7 +30,6 @@ public:
 
     // Getters
     const std::string &getInstanceName()const;
-    const std::string &getCellName()const;
     Coor getCoor()const;
     const Cell *getCell()const;
     double getW()const;

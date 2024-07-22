@@ -20,7 +20,7 @@ void Dumper::dump(Manager &mgr){
         std::string newInstanceName = GenNewInstanceName(pair.second->getInstanceName());
         fout << "Inst " 
              << newInstanceName << " " 
-             << pair.second->getCellName() << " " 
+             << pair.second->getCell()->getCellName() << " " 
              << pair.second->getCoor().x << " " 
              << pair.second->getCoor().y << std::endl;
     }

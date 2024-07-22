@@ -143,7 +143,6 @@ void Parser::readInstance(Manager &mgr){
         if(mgr.cell_library.isFF(cellType)){
             FF *ff = new FF();
             ff->setInstanceName(instanceName);
-            ff->setCellName(cellType);
             ff->setCoor(coor);
             ff->setCell(mgr.cell_library.getCell(cellType));
             mgr.FF_Map[instanceName] = ff;
@@ -151,7 +150,6 @@ void Parser::readInstance(Manager &mgr){
         else{
             Gate *gate = new Gate();
             gate->setInstanceName(instanceName);
-            gate->setCellName(cellType);
             gate->setCoor(coor);
             gate->setCell(mgr.cell_library.getCell(cellType));
             mgr.Gate_Map[instanceName] = gate;

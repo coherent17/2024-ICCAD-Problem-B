@@ -278,9 +278,61 @@ void Legalizer::Abacus(){
         }
 
         // change cell type, iterate throught the cell library, consider area and aspect ratio
-        
+        if((!ff->getIsPlace()) && ENABLE_CHANGE_CELL_TYPE){
+            int numBits = mgr.FF_Map[ff->getName()]->getCell()->getBits();
+            for(size_t i = 0; i < mgr.Bit_FF_Map[numBits].size(); i++){
+                mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numBits][i]);
+                ff->setW(mgr.Bit_FF_Map[numBits][i]->getW());
+                ff->setH(mgr.Bit_FF_Map[numBits][i]->getH());
 
-        else{
+                closest_row_idx = FindClosestRow(ff);
+                double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
+                double localMinDisplacementDown = std::numeric_limits<double>::max();
+                double localMinDisplacementUp = std::numeric_limits<double>::max();
+
+                // [TODO, need to return the best coor from up and down, and assgin the coordinate from the better one]
+                #pragma omp parallel
+                {
+                    #pragma omp sections
+                    {
+                        #pragma omp section
+                        {
+                            // search down
+                            down_row_idx = closest_row_idx - 1;
+                            while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < localMinDisplacementDown){
+                                double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
+                                localMinDisplacementDown = localMinDisplacementDown < downDisplacement ? localMinDisplacementDown : downDisplacement;
+                                down_row_idx--;
+                            }
+                        }
+
+                        #pragma omp section
+                        {
+                            // search up
+                            up_row_idx = closest_row_idx + 1;
+                            while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < localMinDisplacementUp){
+                                double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
+                                localMinDisplacementUp = localMinDisplacementUp < upDisplacement ? localMinDisplacementUp : upDisplacement;
+                                up_row_idx++;
+                            }
+                        }
+                    }
+                }
+                if(ff->getIsPlace()){
+                    DEBUG_LGZ("Change Type LGZ success");
+                    break;
+                } 
+            }
+        }
+
+        if(ff->getIsPlace()){
+            for(auto &row : rows){
+                row->slicing(ff);
+            }
+        }
+
+
+        if(!ff->getIsPlace()){
             // Global search mode
             DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
             localMinDisplacementDown = std::numeric_limits<double>::max();
