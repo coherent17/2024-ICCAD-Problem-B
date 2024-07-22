@@ -480,9 +480,14 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
     double costPower = 0;
     double costArea = 0;
     for(auto& MBFF : FFToBank){
-        costHPWL += (MBFF->getClusterFF().size() + 1) * HPWL(MBFF->getNewCoor(), newbankCoor); 
+        Coor oldCoor = MBFF->getNewCoor();
+        MBFF->setNewCoor(newbankCoor);
+        costHPWL += MBFF->getTNS();
+        for(auto& ff : MBFF->getClusterFF())
+            costHPWL += ff->getSlack();
         costPower -= MBFF->getCell()->getGatePower();
         costArea -= MBFF->getCell()->getArea();
+        MBFF->setNewCoor(oldCoor);
     }
     costPower += bankCellType->getGatePower();
     costArea += bankCellType->getArea();
