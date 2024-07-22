@@ -43,11 +43,11 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
         if(dis == 0){
             curFF = resultFFs[i];
         }
-        else if (dis < SQUARE_EPSILON && nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
+        else if (nowFF->getClkIdx() == FFs[resultFFs[i].second]->getClkIdx())
         {   
             FFs[resultFFs[i].second]->updateSlack();            
             double slack = FFs[resultFFs[i].second]->getTimingSlack("D") - std::sqrt(dis)*mgr.DisplacementDelay;
-            if(slack > 0){
+            if(slack > 0 || 1){
                 // std::cout << "slack:" << slack << std::endl;
                 nearFFs.push_back ({i, slack});
             }
@@ -141,6 +141,8 @@ void Banking::doClustering(){
         
         if(!toRemoveFFs.empty()){
             Coor clusterCoor = getMedian(toRemoveFFs);
+            if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
+                continue;
             mgr.bankFF(clusterCoor, chooseCell, FFToBank);
             c.setCoor(clusterCoor);
             for (size_t j = 0; j < toRemoveFFs.size(); j++)
