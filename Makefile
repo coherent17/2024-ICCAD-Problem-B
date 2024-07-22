@@ -124,7 +124,7 @@ v6:
 vTNS:
 	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out testcase/cornerTNS_visual.txt.out
 	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/cornerTNS_visual.txt.out -m die_pic.png -t cornerTNS -p -nl -o
+	./drawDie/drawDie -i testcase/cornerTNS_visual.txt.out -m die_pic.png -t cornerTNS -g -p -nl -o
 
 
 valgrind:
