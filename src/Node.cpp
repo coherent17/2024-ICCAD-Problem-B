@@ -2,9 +2,9 @@
 #include <cfloat>
 
 Node::Node() :name(""), gpCoor(0, 0), lgCoor(DBL_MAX, DBL_MAX){
+    cell = nullptr;
     w = 0;
     h = 0;
-    weight = 0;
     isPlace = false;
 }
 
@@ -23,16 +23,16 @@ void Node::setLGCoor(const Coor &lgCoor){
     this->lgCoor = lgCoor;
 }
 
+void Node::setCell(Cell *cell){
+    this->cell = cell;
+}
+
 void Node::setW(double w){
     this->w = w;
 }
 
 void Node::setH(double h){
     this->h = h;
-}
-
-void Node::setWeight(double weight){
-    this->weight = weight;
 }
 
 void Node::setIsPlace(bool isPlace){
@@ -52,6 +52,10 @@ const Coor &Node::getLGCoor()const{
     return lgCoor;
 }
 
+const Cell *Node::getCell()const{
+    return cell;
+}
+
 double Node::getW()const{
     return w;
 }
@@ -60,20 +64,22 @@ double Node::getH()const{
     return h;
 }
 
-double Node::getWeight()const{
-    return weight;
-}
-
 bool Node::getIsPlace()const{
     return isPlace;
 }
 
-double Node::getDisplacement(const Coor &candidateCoor)const{
-    return std::sqrt(std::pow(gpCoor.x - candidateCoor.x, 2) + std::pow(gpCoor.y - candidateCoor.y, 2));
+double Node::getDisplacement()const{
+    return std::sqrt(std::pow(gpCoor.x - lgCoor.x, 2) + std::pow(gpCoor.y - lgCoor.y, 2));
+}
+
+double Node::getDisplacement(const Coor &otherCoor)const{
+    return std::sqrt(std::pow(gpCoor.x - otherCoor.x, 2) + std::pow(gpCoor.y - otherCoor.y, 2));
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node){
-    os << "GPCoor" << node.gpCoor << std::endl;
+    os << "Name: " << node.name << std::endl;
+    os << "GPCoor: " << node.gpCoor << std::endl;
+    os << "LGCoor: " << node.lgCoor << std::endl;
     os << "W: " << node.w << std::endl;
     os << "H: " << node.h << std::endl;
     return os;

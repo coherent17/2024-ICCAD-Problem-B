@@ -53,7 +53,6 @@ void Legalizer::LoadFF(){
         ff->setLGCoor(Coor(DBL_MAX, DBL_MAX));
         ff->setW(pair.second->getW());
         ff->setH(pair.second->getH());
-        ff->setWeight(pair.second->getPinCount());
         ff->setIsPlace(false);
         ffs.push_back(ff);
     }
@@ -70,7 +69,6 @@ void Legalizer::LoadGate(){
         gate->setLGCoor(pair.second->getCoor());
         gate->setW(pair.second->getW());
         gate->setH(pair.second->getH());
-        gate->setWeight(pair.second->getPinCount());
         gate->setIsPlace(false);
         gates.push_back(gate);
     }
@@ -238,37 +236,37 @@ void Legalizer::Abacus(){
     for(const auto &ff : ffs){
         closest_row_idx = FindClosestRow(ff);
         double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-        double localMinDisplacementDown = std::numeric_limits<double>::max();
-        double localMinDisplacementUp = std::numeric_limits<double>::max();
+        // double localMinDisplacementDown = std::numeric_limits<double>::max();
+        // double localMinDisplacementUp = std::numeric_limits<double>::max();
 
         // [TODO, need to return the best coor from up and down, and assgin the coordinate from the better one]
-        #pragma omp parallel
-        {
-            #pragma omp sections
-            {
-                #pragma omp section
-                {
+        // #pragma omp parallel
+        // {
+        //     #pragma omp sections
+        //     {
+        //         #pragma omp section
+        //         {
                     // search down
                     down_row_idx = closest_row_idx - 1;
-                    while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < localMinDisplacementDown){
+                    while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
                         double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-                        localMinDisplacementDown = localMinDisplacementDown < downDisplacement ? localMinDisplacementDown : downDisplacement;
+                        minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
                         down_row_idx--;
                     }
-                }
+                // }
 
-                #pragma omp section
-                {
+                // #pragma omp section
+                // {
                     // search up
                     up_row_idx = closest_row_idx + 1;
-                    while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < localMinDisplacementUp){
+                    while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
                         double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-                        localMinDisplacementUp = localMinDisplacementUp < upDisplacement ? localMinDisplacementUp : upDisplacement;
+                        minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
                         up_row_idx++;
                     }
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
 
 
         if(ff->getIsPlace()){
@@ -288,37 +286,37 @@ void Legalizer::Abacus(){
 
                 closest_row_idx = FindClosestRow(ff);
                 double minDisplacement = PlaceMultiHeightFFOnRow(ff, closest_row_idx);
-                double localMinDisplacementDown = std::numeric_limits<double>::max();
-                double localMinDisplacementUp = std::numeric_limits<double>::max();
+                // double localMinDisplacementDown = std::numeric_limits<double>::max();
+                // double localMinDisplacementUp = std::numeric_limits<double>::max();
 
                 // [TODO, need to return the best coor from up and down, and assgin the coordinate from the better one]
-                #pragma omp parallel
-                {
-                    #pragma omp sections
-                    {
-                        #pragma omp section
-                        {
+                // #pragma omp parallel
+                // {
+                //     #pragma omp sections
+                //     {
+                //         #pragma omp section
+                //         {
                             // search down
                             down_row_idx = closest_row_idx - 1;
-                            while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < localMinDisplacementDown){
+                            while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
                                 double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-                                localMinDisplacementDown = localMinDisplacementDown < downDisplacement ? localMinDisplacementDown : downDisplacement;
+                                minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
                                 down_row_idx--;
                             }
-                        }
+                        // }
 
-                        #pragma omp section
-                        {
+                        // #pragma omp section
+                        // {
                             // search up
                             up_row_idx = closest_row_idx + 1;
-                            while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < localMinDisplacementUp){
+                            while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
                                 double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-                                localMinDisplacementUp = localMinDisplacementUp < upDisplacement ? localMinDisplacementUp : upDisplacement;
+                                minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
                                 up_row_idx++;
                             }
-                        }
-                    }
-                }
+                //         }
+                //     }
+                // }
                 if(ff->getIsPlace()){
                     DEBUG_LGZ("Change Type LGZ success");
                     break;
@@ -340,37 +338,38 @@ void Legalizer::Abacus(){
             ff->setH(mgr.Bit_FF_Map[numBits][0]->getH());
             // Global search mode
             DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
-            localMinDisplacementDown = std::numeric_limits<double>::max();
-            localMinDisplacementUp = std::numeric_limits<double>::max();
-            #pragma omp parallel
-            {
-                #pragma omp sections
-                {
-                    #pragma omp section
-                    {
+
+            // localMinDisplacementDown = std::numeric_limits<double>::max();
+            // localMinDisplacementUp = std::numeric_limits<double>::max();
+            // #pragma omp parallel
+            // {
+            //     #pragma omp sections
+            //     {
+            //         #pragma omp section
+            //         {
                         // search down
                         down_row_idx = closest_row_idx - 1;
                         while(down_row_idx >= 0){
                             double downDisplacement = PlaceMultiHeightFFOnRow(ff, down_row_idx);
-                            localMinDisplacementDown = localMinDisplacementDown < downDisplacement ? localMinDisplacementDown : downDisplacement;
+                            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
                             down_row_idx--;
                             if(ff->getIsPlace()) break;
                         }
-                    }
+                    // }
 
-                    #pragma omp section
-                    {
+                    // #pragma omp section
+                    // {
                         // search up
                         up_row_idx = closest_row_idx + 1;
                         while(up_row_idx < (int)rows.size()){
                             double upDisplacement = PlaceMultiHeightFFOnRow(ff, up_row_idx);
-                            localMinDisplacementUp = localMinDisplacementUp < upDisplacement ? localMinDisplacementUp : upDisplacement;
+                            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
                             up_row_idx++;
                             if(ff->getIsPlace()) break;
                         }
-                    }
-                }
-            }
+            //         }
+            //     }
+            // }
 
             if(ff->getIsPlace()){
                 for(auto &row : rows){

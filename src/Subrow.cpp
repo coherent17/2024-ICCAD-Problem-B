@@ -47,5 +47,6 @@ std::ostream &operator<<(std::ostream &os, const Subrow &subrow){
     os << "[Subrow] ";
     os << "(startX: " << subrow.startX << ", ";
     os << "endX: " << subrow.endX << ")";
+    os << " height: " << subrow.height;
     return os;
 }

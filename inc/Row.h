@@ -17,7 +17,7 @@ private:
     double siteWidth;
     int numOfSites;
     double endX;
-    std::vector<Subrow *> subrows;  // Use list
+    std::vector<Subrow *> subrows;
 
 public:
     Row();
@@ -39,11 +39,29 @@ public:
     double getEndX()const;
     std::vector<Subrow *> &getSubrows();
 
-    // If Node *gate overlap the current row, split current row
+    // Helper function
+
+    /**
+    @brief If Node *gate overlap with current row, split the current row.
+    @param param can be either gate of ff
+    @attention 
+    3 types of condition must be consider
+    a) Part before the gate
+    b) Part under the gate
+    c) Part after the gate
+    @bug memory leak in this function, need to consider implement garbage collection
+    */
     void slicing(Node *gate);
+
+    /**
+    @brief Check if the current row start from startX to endX have empty space with height h or not
+    */
     bool canPlace(double startX, double endX, double h);
 
-    // Operator overloading for sorting
+    /**
+    @brief The cmp function for sort the placement row.
+    @attention First sort by y in ascending order, and sort x in ascending order
+    */
     bool operator<(const Row &rhs)const;
 
     friend std::ostream &operator<<(std::ostream &os, const Row &row);
