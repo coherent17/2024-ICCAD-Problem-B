@@ -112,6 +112,7 @@ public:
     FF* getNewFF();
     void deleteFF(FF*);
     
+    double getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank); // > 0 -> after bank cost will be larger
     double getOverallCost(bool verbose);
     friend class Parser;
     friend class Dumper;

@@ -76,6 +76,16 @@ run5:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
 
+runTNS:
+	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/cornerTNS.txt testcase/cornerTNS.txt.out
+
+runPower:
+	./$(BIN) testcase/cornerPower.txt testcase/cornerPower.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/cornerPower.txt testcase/cornerPower.txt.out
+
 visual4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
@@ -110,6 +120,12 @@ v6:
 	./$(BIN) testcase/sample_0718.txt testcase/sample_0718.out testcase/sample_0718_visual.txt.out
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i testcase/sample_0718_visual.txt.out -m die_pic.png -t sample_0718 -p -nl -o
+
+vTNS:
+	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out testcase/cornerTNS_visual.txt.out
+	chmod +x drawDie/drawDie
+	./drawDie/drawDie -i testcase/cornerTNS_visual.txt.out -m die_pic.png -t cornerTNS -p -nl -o
+
 
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out

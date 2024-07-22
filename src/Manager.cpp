@@ -478,3 +478,18 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
     };
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
 }
+
+double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank){
+    double costHPWL = 0;
+    double costPower = 0;
+    double costArea = 0;
+    for(auto& MBFF : FFToBank){
+        costHPWL += (MBFF->getClusterFF().size() + 1) * HPWL(MBFF->getNewCoor(), newbankCoor); 
+        costPower -= MBFF->getCell()->getGatePower();
+        costArea -= MBFF->getCell()->getArea();
+    }
+    costPower += bankCellType->getGatePower();
+    costArea += bankCellType->getArea();
+    costHPWL *= DisplacementDelay;
+    return alpha * costHPWL + beta * costPower + gamma * costArea;
+}
