@@ -118,7 +118,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
     friend class postBankingObjFunction;
     static double DisplacementDelay;
-private:
+
     double getSlack(); // don't touch is only for FF in FF_list
 };
 
