@@ -77,7 +77,7 @@ run5:
 	./sanity_checker/sanity testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
 
 runTNS:
-	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out
+	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out 
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/cornerTNS.txt testcase/cornerTNS.txt.out
 
