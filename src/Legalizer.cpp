@@ -277,8 +277,9 @@ void Legalizer::Abacus(){
             }
         }
 
-        // change cell type, iterate throught the cell library, consider area and aspect ratio
+        // [TODO]change cell type, iterate throught the cell library, consider area and aspect ratio
         if((!ff->getIsPlace()) && ENABLE_CHANGE_CELL_TYPE){
+            DEBUG_LGZ("Enter change cell type Zone");
             int numBits = mgr.FF_Map[ff->getName()]->getCell()->getBits();
             for(size_t i = 0; i < mgr.Bit_FF_Map[numBits].size(); i++){
                 mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numBits][i]);
@@ -333,6 +334,10 @@ void Legalizer::Abacus(){
 
 
         if(!ff->getIsPlace()){
+            int numBits = mgr.FF_Map[ff->getName()]->getCell()->getBits();
+            mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numBits][0]);
+            ff->setW(mgr.Bit_FF_Map[numBits][0]->getW());
+            ff->setH(mgr.Bit_FF_Map[numBits][0]->getH());
             // Global search mode
             DEBUG_LGZ("Legalize " + ff->getName() + " FF Failed => Enter Greedy Global Search Mode");
             localMinDisplacementDown = std::numeric_limits<double>::max();

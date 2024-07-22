@@ -17,7 +17,7 @@
 #define WIDTH_WEIGHT 2000
 #define X_WEIGHT 100
 #define SEARCH_FAILURE -1
-#define ENABLE_CHANGE_CELL_TYPE true
+#define ENABLE_CHANGE_CELL_TYPE 1
 
 struct XTour{
     double startX;
