@@ -51,6 +51,7 @@ void Legalizer::LoadFF(){
         ff->setName(pair.second->getInstanceName());
         ff->setGPCoor(pair.second->getNewCoor());
         ff->setLGCoor(Coor(DBL_MAX, DBL_MAX));
+        ff->setCell(pair.second->getCell());
         ff->setW(pair.second->getW());
         ff->setH(pair.second->getH());
         ff->setIsPlace(false);
@@ -67,6 +68,7 @@ void Legalizer::LoadGate(){
         gate->setName(pair.second->getInstanceName());
         gate->setGPCoor(pair.second->getCoor());
         gate->setLGCoor(pair.second->getCoor());
+        gate->setCell(nullptr);
         gate->setW(pair.second->getW());
         gate->setH(pair.second->getH());
         gate->setIsPlace(false);
@@ -97,10 +99,9 @@ void Legalizer::LoadPlacementRow(){
     }
 
     // sort row by the y coordinate in ascending order, if tie, sort by x in ascending order
-    std::sort(rows.begin(), rows.end(), [](Row *a, Row *b){
+    std::sort(rows.begin(), rows.end(), [](const Row *a, const Row *b){
         return *a < *b;
     });
-    
 }
 
 void Legalizer::SliceRowsByRows(){

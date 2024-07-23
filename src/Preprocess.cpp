@@ -33,7 +33,7 @@ void Preprocess::Debank(){
             if(pinName[0] == 'D'){ // Assume all ff D pin start with D
                 FF* temp = new FF;
                 Coor ff_coor;
-                const Cell* ff_cell;
+                Cell* ff_cell;
                 if(cur_cell.getBits() == 1){
                     ff_coor = cur_ff.getCoor();
                 }

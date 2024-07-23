@@ -12,11 +12,6 @@
 #include <cfloat>
 
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
-#define AREA_WEIGHT 1000
-#define HEIGHT_WEIGHT 2000
-#define WIDTH_WEIGHT 2000
-#define X_WEIGHT 100
-#define SEARCH_FAILURE -1
 #define ENABLE_CHANGE_CELL_TYPE 1
 
 struct XTour{

@@ -44,7 +44,7 @@ void Manager::preprocess(){
         Coor coor = curFF->getNewCoor();
         std::string instanceName = getNewFFName("FF_1_");
         int clkIdx = curFF->getClkIdx();
-        const Cell* cell = curFF->getCell();
+        Cell* cell = curFF->getCell();
         newFF->setInstanceName(instanceName);
         newFF->setCoor(coor);
         newFF->setNewCoor(coor);
@@ -76,9 +76,13 @@ void Manager::postBankingOptimize(){
 }
 
 void Manager::legalize(){
-    // do abacus legalize algorithm
     Legalizer legalizer(*this);
     legalizer.run();
+}
+
+void Manager::checker(){
+    Checker checker(*this);
+    checker.run();
 }
 
 void Manager::dump(const std::string &filename){

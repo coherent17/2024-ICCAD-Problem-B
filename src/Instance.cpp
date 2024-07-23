@@ -17,7 +17,7 @@ void Instance::setCoor(const Coor &coor){
     this->coor = coor;
 }
 
-void Instance::setCell(const Cell *cell){
+void Instance::setCell(Cell *cell){
     this->cell = cell;
 }
 
@@ -38,7 +38,7 @@ Coor Instance::getCoor()const{
     return coor;
 }
 
-const Cell *Instance::getCell()const{
+Cell *Instance::getCell()const{
     return cell;
 }
 

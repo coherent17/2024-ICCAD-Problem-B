@@ -22,6 +22,7 @@
 #include "Util.h"
 #include "PrettyTable.h"
 #include "PostBankingOptimizer.h"
+#include "Checker.h"
 
 #define SKIP_BIN_CALC true
 
@@ -85,8 +86,10 @@ public:
     void preprocess();
     void meanshift();
     void banking();
-    void legalize();
     void postBankingOptimize();
+    void legalize();
+    void checker();
+
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
@@ -120,6 +123,7 @@ public:
     friend class Preprocess;
     friend class Banking;
     friend class Legalize;
+    friend class Checker;
 
 private:
     bool isIOPin(const std::string &pinName);
