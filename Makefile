@@ -86,6 +86,11 @@ runPower:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/cornerPower.txt testcase/cornerPower.txt.out
 
+runMBFF:
+	./$(BIN) testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
+
 visual4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie

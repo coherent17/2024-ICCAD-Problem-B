@@ -23,31 +23,33 @@ double preprocessObjFunction::forward(){
     int i=0;
     for(auto& FF_m : FF_list){
         FF* cur_ff = FF_m.second;
+        Coor curCoor = cur_ff->getOriginalD();
         // input net
         x_pos[i] = 0;
         x_neg[i] = 0;
         y_pos[i] = 0;
         y_neg[i] = 0;
-        assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
-        std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
-        std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
-        Coor inputCoor;
-        if(mgr.IO_Map.count(inputInstanceName)){
-            inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+        if(cur_ff->getInputInstances().size() >= 1){
+            assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
+            std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
+            std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
+            Coor inputCoor;
+            if(mgr.IO_Map.count(inputInstanceName)){
+                inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+            }
+            else if(mgr.Gate_Map.count(inputInstanceName)){
+                inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+            }
+            else{
+                inputCoor = FF_list[inputInstanceName]->getOriginalQ();
+            }
+            x_pos[i] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
+            x_neg[i] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
+            y_pos[i] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
+            y_neg[i] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
+            loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
+            i++;
         }
-        else if(mgr.Gate_Map.count(inputInstanceName)){
-            inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
-        }
-        else{
-            inputCoor = FF_list[inputInstanceName]->getOriginalQ();
-        }
-        Coor curCoor = cur_ff->getOriginalD();
-        x_pos[i] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
-        x_neg[i] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
-        y_pos[i] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
-        y_neg[i] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
-        loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-        i++;
         // output net
         const vector<NextStage>& nextStage = cur_ff->getNextStage();
         if(nextStage.size()){
