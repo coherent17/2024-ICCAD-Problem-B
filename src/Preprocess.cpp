@@ -34,12 +34,7 @@ void Preprocess::Debank(){
                 FF* temp = new FF;
                 Coor ff_coor;
                 Cell* ff_cell;
-                if(cur_cell.getBits() == 1){
-                    ff_coor = cur_ff.getCoor();
-                }
-                else{
-                    ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor();
-                }
+                ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
                 ff_cell = targetCell;
                 double slack = cur_ff.getTimingSlack(pinName);
                 // set original coor for D port and Q port
