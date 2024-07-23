@@ -86,6 +86,11 @@ runPower:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/cornerPower.txt testcase/cornerPower.txt.out
 
+runMBFF:
+	./$(BIN) testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
+
 visual4:
 	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
 	chmod +x drawDie/drawDie
@@ -126,6 +131,12 @@ vTNS:
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i testcase/cornerTNS_visual.txt.out -m die_pic.png -t cornerTNS -g -p -nl -o
 
+drawALL:
+	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
+	./drawDie/drawDie -i Meanshift.out -m 2_Meanshift.png -t Meanshift -g -p -nl -o
+	./drawDie/drawDie -i Banking.out -m 3_Banking.png -t Banking -g -p -nl -o
+	./drawDie/drawDie -i PostCG.out -m 4_PostCG.png -t PostCG -g -p -nl -o
+	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
 
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out

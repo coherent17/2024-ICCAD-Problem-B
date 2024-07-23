@@ -34,12 +34,7 @@ void Preprocess::Debank(){
                 FF* temp = new FF;
                 Coor ff_coor;
                 Cell* ff_cell;
-                if(cur_cell.getBits() == 1){
-                    ff_coor = cur_ff.getCoor();
-                }
-                else{
-                    ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor();
-                }
+                ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
                 ff_cell = targetCell;
                 double slack = cur_ff.getTimingSlack(pinName);
                 // set original coor for D port and Q port
@@ -82,7 +77,15 @@ void Preprocess::Build_Circuit_Gragh(){
         // and its output's input vector
         connectNet(n, driving_cell, driving_pin);
     }
-
+    vector<std::string> deleteFF;
+    for(auto& ff : FF_list_Map){
+        if(FF_list[ff.second]->getInputInstances().size() == 0)
+            deleteFF.push_back(ff.first);
+    }
+    for(size_t i=0;i<deleteFF.size();i++){
+        FF_list.erase(FF_list_Map[deleteFF[i]]);
+        FF_list_Map.erase(deleteFF[i]);
+    }
     // go study STA
     DelayPropagation();
 }
@@ -163,7 +166,7 @@ void Preprocess::connectNet(const Net& n, std::string& driving_cell, std::string
         const Pin& p = n.getPin(i);
         const std::string& instanceName = p.getInstanceName();
         const std::string& pinName = p.getPinName();
-        if(instanceName == driving_cell)
+        if((instanceName == driving_cell) && (pinName == driving_pin))
             continue;
         else{
             if(p.getPinName().substr(0, 3) == "CLK"){

@@ -33,6 +33,8 @@ void Dumper::dump(Manager &mgr){
             if(pinName[0] == 'D' || pinName[0] == 'Q'){
                 std::string MapName = pinName;
                 MapName[0] = 'D';
+                if(!FF_list_Map.count(inputInstance + "/" + MapName))
+                    continue;
                 FF* mapFF = FF_list[FF_list_Map[inputInstance + "/" + MapName]];
                 FF* bankFF = mapFF->getPhysicalFF();
                 std::string newInstanceName = GenNewInstanceName(bankFF->getInstanceName());
