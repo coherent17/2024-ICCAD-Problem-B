@@ -126,14 +126,20 @@ void Row::slicing(Node *gate) {
     subrows = newSubrows;
 }
 
-bool Row::canPlace(double startX, double endX, double h){
+bool Row::canPlace(double startX, double endX, double& lowestH){
     double traverseX = startX;
     for(const auto &subrow : subrows){
         // early break condition
-        if(subrow->getStartX() > startX) break;
+        if(subrow->getStartX() > traverseX) break;
+        // jump condition
+        if(subrow->getEndX() <= startX) continue;
 
-        // check if can use subrow to cover startX ~ endX with enough height h
-        if(subrow->getStartX() <= traverseX && subrow->getEndX() >= traverseX && subrow->getHeight() >= h){
+        // check if subrow is continuous in range startX ~ endX
+        if(subrow->getStartX() <= traverseX && subrow->getEndX() >= traverseX){
+            // update highest space to place FF
+            if(subrow->getHeight() < lowestH){
+                lowestH = subrow->getHeight();
+            }
             traverseX = subrow->getEndX();
         }
         if(traverseX >= endX){

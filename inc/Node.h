@@ -18,6 +18,7 @@ private:
     double w;
     double h;
     bool isPlace;
+    double TNS;
 
 public:
     Node();
@@ -31,6 +32,7 @@ public:
     void setW(double w);
     void setH(double h);
     void setIsPlace(bool isPlace);
+    void setTNS(double TNS);
 
     // Getters
     const std::string &getName()const;
@@ -40,6 +42,7 @@ public:
     double getW()const;
     double getH()const;
     bool getIsPlace()const;
+    double getTNS()const;
 
     // Helper method
     double getDisplacement()const;                      // displacement from lgCoor to gpCoor

@@ -38,6 +38,7 @@ void Legalizer::LoadFF(){
         ff->setW(pair.second->getW());
         ff->setH(pair.second->getH());
         ff->setIsPlace(false);
+        ff->setTNS(pair.second->getTNS());
         ffs.emplace_back(ff);
     }
 }
@@ -127,7 +128,10 @@ void Legalizer::Tetris(){
     std::sort(ffs.begin(), ffs.end(), [](const Node *a, const Node *b){
         double costA = a->getH() * a->getW();
         double costB = b->getH() * b->getW();
-        return costA > costB;
+        if(costA != costB)
+            return costA > costB;
+        else
+            return a->getTNS() > b->getTNS();
     });
 
     // [TODO]: enlarge the window and try to find 
@@ -253,7 +257,7 @@ int Legalizer::FindClosestSubrow(Node *ff, Row *row){
     assert(subrows.size() > 0);
 
     double startX = ff->getGPCoor().x;
-    for(int i = 0; i < subrows.size(); i++){
+    for(int i = 0; i < (int)subrows.size(); i++){
 
         if(subrows[i]->getStartX() > startX){
             return (i - 1) >= 0 ? (i - 1): 0;
@@ -380,22 +384,19 @@ bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double
 
     for(size_t i = row_idx; i < rows.size(); i++){
         double rowStartY = rows[i]->getStartCoor().y;
-        double rowEndY = rowStartY + rows[i]->getSiteHeight();
+        double rowStartX = rows[i]->getStartCoor().x;
+        double rowEndX = rowStartX + rows[i]->getSiteWidth() * rows[i]->getNumOfSite();
 
-        // check if the current row is complete beyond the target endY
-        if(rowStartY >= endY) break;
-        double placeH;
-        if(h >= rows[i]->getSiteHeight()){
-            placeH = rows[i]->getSiteHeight();
-        }else{
-            placeH = h;
-        }
-        // check if this row can place the cell from startX to startX + w
+        // check if the current row is upper than currentY -> early break
+        if(rowStartY > currentY) break;
+        // check if the current row is target row -> jump condition
+        if(rowStartY != currentY || startX < rows[i]->getStartCoor().x || startX + w > rowEndX) continue;
+        // Save highest space can place in range startX to startX + w
+        double placeH = DBL_MAX;
+        // check if this row is continuous from startX to startX + w
         if(rows[i]->canPlace(startX, startX + w, placeH)){
-            // Ensure the row covers the currentY to at least part of the target range
-            if(rowStartY <= currentY && rowEndY > currentY){
-                currentY = rowEndY;
-            }
+            // update current continuous y
+            currentY += placeH;
 
             // Check if we reached the target height
             if(currentY >= endY) return true;
