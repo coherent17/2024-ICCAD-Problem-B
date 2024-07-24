@@ -455,7 +455,7 @@ void Manager::libScoring(){
         std::vector<Cell *> &cell_vector = pair.second;
         for(size_t i = 0; i < cell_vector.size(); i++){
             double area = cell_vector[i]->getArea();
-            double score = alpha*cell_vector[i]->getQpinDelay() + beta*cell_vector[i]->getGatePower() + gamma*area;
+            double score = alpha*cell_vector[i]->getQpinDelay() * (cell_vector[i]->getW() + cell_vector[i]->getH()) + beta*cell_vector[i]->getGatePower() + gamma*area;
             cell_vector[i]->setScore(score);
         }
         sortCell(cell_vector);
@@ -483,10 +483,12 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
     double costHPWL = 0;
     double costPower = 0;
     double costArea = 0;
+    double costQ = 0;
     for(auto& MBFF : FFToBank){
         Coor oldCoor = MBFF->getNewCoor();
         MBFF->setNewCoor(newbankCoor);
         costHPWL += MBFF->getTNS();
+        costQ += (bankCellType->getQpinDelay() - MBFF->getCell()->getQpinDelay()) * MBFF->getClusterFF().size();
         for(auto& ff : MBFF->getClusterFF())
             costHPWL += ff->getSlack();
         costPower -= MBFF->getCell()->getGatePower();
@@ -496,5 +498,5 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
     costPower += bankCellType->getGatePower();
     costArea += bankCellType->getArea();
     costHPWL *= DisplacementDelay;
-    return alpha * costHPWL + beta * costPower + gamma * costArea;
+    return alpha * (costHPWL + costQ) + beta * costPower + gamma * costArea;
 }

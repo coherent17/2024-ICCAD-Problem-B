@@ -120,22 +120,33 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
     const vector<NextStage>& nextStage = cur_ff->getNextStage();
     double sum = 0.0000001;
     // get total
-    if(D_slack < 0)
+    bool hasNegative = false;
+    if(D_slack < 0){
         sum += D_slack;
+        hasNegative = true;
+    }
     for(size_t j=1;j<weight.size();j++){
-        if(nextStage[j-1].ff->getTimingSlack("D") < 0)
+        if(nextStage[j-1].ff->getTimingSlack("D") < 0){
             sum += nextStage[j-1].ff->getTimingSlack("D");
+            hasNegative = true;
+        }
     }
     // get weight
-    if(D_slack < 0)
-        weight[0] = D_slack / sum;
-    else
-        weight[0] = 0;
-    for(size_t j=1;j<weight.size();j++){
-        if(nextStage[j-1].ff->getTimingSlack("D") < 0)
-            weight[j] = nextStage[j-1].ff->getTimingSlack("D") / sum;
+    if(hasNegative){
+        if(D_slack < 0)
+            weight[0] = D_slack / sum;
         else
-            weight[j] = 0;
+            weight[0] = 0;
+        for(size_t j=1;j<weight.size();j++){
+            if(nextStage[j-1].ff->getTimingSlack("D") < 0)
+                weight[j] = nextStage[j-1].ff->getTimingSlack("D") / sum;
+            else
+                weight[j] = 0;
+        }
+    }
+    else{
+        for(size_t i=0;i<weight.size();i++)
+            weight[i] = 0.1/weight.size();
     }
 }
 
