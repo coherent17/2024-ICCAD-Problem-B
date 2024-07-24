@@ -282,7 +282,9 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
     ax = plt.gca()
     instPinList = {}
     for instName in InstList:
-        cellName = InstList[instName][0]
+        
+        instInfo = InstList[instName]
+        cellName = instInfo[0]
         # check if instance's cell in library
         FFInfo = 'none'
         GateInfo = 'none'
@@ -302,8 +304,8 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
             print("Not exist in cell library !!!")
         # print(block)
         # draw block
-        blockX = InstList[instName][1]
-        blockY = InstList[instName][2]
+        blockX = instInfo[1]
+        blockY = instInfo[2]
         blockW = block[0]
         blockH = block[1]
         rect = patches.Rectangle((blockX, blockY),blockW, blockH, linewidth=0.3, ec = blockColor, fc = 'none', zorder=2)
@@ -316,23 +318,23 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
                 plt.text(IOList[IO][1][0], IOList[IO][1][1], "      ", color='cornflowerblue', ha='center', bbox=dict(boxstyle="round",fc='cornflowerblue', ec='none'), size=4)
                 # drawIO(chipArea, IOList, 'cornflowerblue')
         instPinList[instName] = {}
-        if isFF == True:
-            # draw each FF instance pin
-            for PinList in FFPinList[cellName]:
-                pinX = blockX + FFPinList[cellName][PinList][0]
-                pinY = blockY + FFPinList[cellName][PinList][1]
-                instPinList[instName][PinList] = [pinX, pinY]
-                # if pinOff == False and netOff == True:
-                if show_pin == True:
+        
+        if show_pin == True:
+            if isFF == True:
+                # draw each FF instance pin
+                for PinList in FFPinList[cellName]:
+                    pinX = blockX + FFPinList[cellName][PinList][0]
+                    pinY = blockY + FFPinList[cellName][PinList][1]
+                    instPinList[instName][PinList] = [pinX, pinY]
+                    # if pinOff == False and netOff == True:
                     ax.plot(pinX, pinY, marker='*', ms=8, zorder=3, color='crimson')
-        else:
-            # draw each gate instance pin
-            for PinList in GatePinList[cellName]:
-                pinX = blockX + GatePinList[cellName][PinList][0]
-                pinY = blockY + GatePinList[cellName][PinList][1]
-                instPinList[instName][PinList] = [pinX, pinY]
-                # if pinOff == False and netOff == True:
-                if show_pin == True:
+            else:
+                # draw each gate instance pin
+                for PinList in GatePinList[cellName]:
+                    pinX = blockX + GatePinList[cellName][PinList][0]
+                    pinY = blockY + GatePinList[cellName][PinList][1]
+                    instPinList[instName][PinList] = [pinX, pinY]
+                    # if pinOff == False and netOff == True:
                     ax.plot(pinX, pinY, marker='*', ms=8, zorder=3, color='crimson')
 
         # draw instance name 
@@ -342,15 +344,16 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
         if len(InstList) < 20:
             ax.annotate(instName, xy=(centerX, centerY), fontsize = 10, ha='center', va='center', zorder=4)
         
-        # update inst info
-        InstList[instName].append(blockW)
-        InstList[instName].append(blockH)
-        InstList[instName].append(centerX)
-        InstList[instName].append(centerY)
+         
+        if show_overlap == True:
+            # update inst info
+            InstList[instName].append(blockW)
+            InstList[instName].append(blockH)
+            InstList[instName].append(centerX)
+            InstList[instName].append(centerY)
 
-        # save instance info for drawing overlapping region
-        InstSave.append([blockX, blockX+blockW, blockY, blockY+blockH])     
-    # print(InstList)
+            # save instance info for drawing overlapping region
+            InstSave.append([blockX, blockX+blockW, blockY, blockY+blockH])     
     if show_overlap == True:
         drawOverlap(InstSave)
     return InstList, instPinList
@@ -593,4 +596,3 @@ if __name__ == "__main__":
     print("Total Runtime : ", execution_time, "s")
 
     plt.savefig(images_name, dpi=600)
-    plt.show()
