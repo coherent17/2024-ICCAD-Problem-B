@@ -5,20 +5,33 @@
 
 #include "Manager.h"
 
+struct Rect{
+    double startX;
+    double startY;
+    double endX;
+    double endY;
+    string instName;
+};
+
 class Checker{
 private:
     Manager& mgr;
+    vector<Rect> FFs;
+    vector<Rect> Gates;
     // [TODO] Construct the placement info from Manager::die
 
 public:
     explicit Checker(Manager& mgr);
     ~Checker();
-    bool run();
+    void run();
 
 private:
-    bool checkOnSite();
-    bool checkOverlap();
-    bool checkDieBoundary();
+    void initialChecker();
+    void checkOnSite();
+    void checkOverlap();
+    void checkDieBoundary();
+    bool overlap(Rect rect1, Rect rect2);
+    void sortRects(std::vector<Rect> &rect);
 };
 
 #endif
