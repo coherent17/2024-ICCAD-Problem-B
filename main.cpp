@@ -33,7 +33,6 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("PostCG.out");
 
-    // place holder method for runing legalize algorithm
     mgr.legalize();
     mgr.checker();
     mgr.getOverallCost(cost_verbose);

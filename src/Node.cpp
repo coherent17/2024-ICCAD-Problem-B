@@ -82,5 +82,6 @@ std::ostream &operator<<(std::ostream &os, const Node &node){
     os << "LGCoor: " << node.lgCoor << std::endl;
     os << "W: " << node.w << std::endl;
     os << "H: " << node.h << std::endl;
+    os << "Displacement: " << node.getDisplacement() << std::endl;
     return os;
 }

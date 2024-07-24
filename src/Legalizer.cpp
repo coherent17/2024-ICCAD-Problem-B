@@ -114,6 +114,7 @@ void Legalizer::SliceRowsByGate(){
     DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
     for(const auto &gate : gates){
         for(auto &row : rows){
+            if(row->getStartCoor().y > gate->getGPCoor().y + gate->getH()) break;
             row->slicing(gate);
         }
         gate->setIsPlace(true);
@@ -135,12 +136,14 @@ void Legalizer::Tetris(){
         int down_row_idx = closest_row_idx - 1;
         int up_row_idx = closest_row_idx + 1;
 
+        // local search down
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
             double downDisplacement = PlaceFF(ff, down_row_idx);
             minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
             down_row_idx--;
         }
 
+        // local search up
         while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
             double upDisplacement = PlaceFF(ff, up_row_idx);
             minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
@@ -149,13 +152,14 @@ void Legalizer::Tetris(){
 
         if(ff->getIsPlace()){
             for(auto &row : rows){
+                if(row->getStartCoor().y > ff->getLGCoor().y + ff->getH()) break;
                 row->slicing(ff);
             }
+            continue;
         }
 
-        else{
-            DEBUG_LGZ("Legalize Failed");
-        }
+        // change cell type (in top 3) and local search
+        DEBUG_LGZ("Legalize Failed");
     }
 }
 
@@ -164,6 +168,7 @@ void Legalizer::LegalizeWriteBack(){
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
+            //std::cout << *ff << std::endl;
         }
         else{
             mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));
@@ -249,6 +254,7 @@ double Legalizer::PlaceFF(Node *ff, size_t row_idx){
             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
             if(ff->getDisplacement(currCoor) > minDisplacement){
                 Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
+                // If current subrow can't find better solution
                 if(ff->getDisplacement(subrowEndCoor) > minDisplacement) break;
                 continue;
             } 

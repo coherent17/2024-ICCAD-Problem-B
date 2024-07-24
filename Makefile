@@ -157,7 +157,7 @@ gitlog:
 	git log --graph --decorate --oneline
 
 clean:
-	rm -rf $(OBJDIR) $(BIN) testcase/*.out *.log *.out
+	rm -rf $(OBJDIR) $(BIN) testcase/*.out *.log *.out *.png
 
 
 # TODO, make release to compile with static-linking
