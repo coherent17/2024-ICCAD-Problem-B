@@ -229,7 +229,6 @@ void Preprocess::DelayPropagation(){
                 const std::string& pinName = outputVector.second;
                 if(FF_list.count(instanceName)){// output to FF
                     FF_list[instanceName]->setPrevInstance({input, CellType::IO, drivingPin});
-                    q.push(FF_list[instanceName]);
                 }
                 else if(mgr.Gate_Map.count(instanceName)){ // output to std cell
                     Gate* curGate = mgr.Gate_Map[instanceName];
@@ -258,7 +257,7 @@ void Preprocess::DelayPropagation(){
             propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
         }
         else{
-            assert("Something wrong!!!");
+            assert(0 && "Something wrong!!!");
             // should never go here
             // its OUTPUT PIN
         }
@@ -278,7 +277,6 @@ void Preprocess::propagaFF(std::queue<Instance*>& q, FF* ff){
 
             if(FF_list.count(instanceName)){// FF output to FF
                 FF_list[instanceName]->setPrevInstance({ff, CellType::FF, "Q"});
-                q.push(FF_list[instanceName]);
                 ff->addNextStage({FF_list[instanceName], nullptr, " "});
             }
             else if(mgr.Gate_Map.count(instanceName)){ // FF output to std cell
@@ -309,7 +307,6 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
 
             if(FF_list.count(instanceName)){// std cell output to FF
                 FF_list[instanceName]->setPrevInstance({gate, CellType::GATE, outputPin});
-                q.push(FF_list[instanceName]);
 
                 // set up for prev stage FF
                 if(prevFF){ // ignore when start of critical path is INPUT
@@ -332,7 +329,7 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
 }
 
 double Preprocess::getSlackStatistic(bool show){
-    double WNS = DBL_MAX;
+    double WNS = 0;
     double TNS = 0;
     double AVS = 0; // average slack
     double MAS = -DBL_MAX; // max slack
@@ -350,8 +347,8 @@ double Preprocess::getSlackStatistic(bool show){
     }
 
     if(show){
-        std::cout << "\tWorst negative slack : " << WNS << std::endl;
-        std::cout << "\tTotal negative slack : " << TNS << std::endl;
+        std::cout << "\tWorst negative slack : " << std::abs(WNS) << std::endl;
+        std::cout << "\tTotal negative slack : " << std::abs(TNS) << std::endl;
         std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
         std::cout << "\tMaximum slack : " << MAS << std::endl;
     }
