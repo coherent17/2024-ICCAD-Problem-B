@@ -63,7 +63,7 @@ void Checker::checkOnSite(){
         for(size_t j = 0; j < PlacementRows.size(); j++){
             double rowStartX = PlacementRows[j].startCoor.x; 
             double rowEndX = rowStartX + PlacementRows[j].siteWidth * PlacementRows[j].NumOfSites;
-            if(ff.startY != PlacementRows[j].startCoor.y){
+            if(ff.startY == PlacementRows[j].startCoor.y){
                 if(ff.startX >= rowStartX && ff.endX <= rowEndX){
                     double devideResult = (ff.startX - rowStartX) / PlacementRows[j].siteWidth;
                     if(floor(devideResult) == devideResult){

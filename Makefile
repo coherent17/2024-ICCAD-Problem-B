@@ -92,9 +92,9 @@ runMBFF:
 	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
 
 v6:
-	./$(BIN) testcase/sample_0718.txt testcase/sample_0718.out testcase/sample_0718_visual.txt.out
+	./$(BIN) testcase/sample_0718.txt testcase/sample_0718.out
 	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/sample_0718_visual.txt.out -m die_pic.png -t sample_0718 -p -nl -o
+	./drawDie/drawDie -i Legalize.out -m die_pic.png -t sample_0718 -p -nl -o
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o

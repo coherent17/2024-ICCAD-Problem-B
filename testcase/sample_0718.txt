@@ -31,7 +31,7 @@ NumInstances 5
 Inst C1 FF1 20.0 0.0
 Inst C2 FF1 20.0 10.0
 Inst C3 FF1 20.0 20.0
-Inst C4 G1 15.0 27.0
+Inst C4 G1 1.0 7.0
 Inst C5 G2 10.0 7.0
 NumNets 7
 Net N1 3
