@@ -481,7 +481,7 @@ def draw_unique_cell(unique_cellm, InstList):
             cellH = InstList[cell][4]
 
             ax = plt.gca()
-            rect = patches.Rectangle((cellX-1, cellY-1),cellW+2, cellH+2, linewidth=1, ec = 'crimson', fc = 'none', zorder=4, linestyle="--")
+            rect = patches.Rectangle((cellX-1, cellY-1),cellW+2, cellH+2, linewidth=0.3, ec = 'crimson', fc = 'none', zorder=4, linestyle="--")
             ax.add_patch(rect)
 
 
@@ -590,9 +590,9 @@ if __name__ == "__main__":
         draw_unique_net(unique_net, NetList, instPinList)
 
 
+    plt.savefig(images_name, dpi=300)
+
     # print total runtime
     end_time = time.time()
     execution_time = end_time - start_time
     print("Total Runtime : ", execution_time, "s")
-
-    plt.savefig(images_name, dpi=600)
