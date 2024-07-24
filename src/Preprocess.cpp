@@ -47,6 +47,7 @@ void Preprocess::Debank(){
                 
                 temp->setInstanceName(mgr.getNewFFName("FF"));
                 temp->setCoor(ff_coor);
+                temp->setNewCoor(ff_coor);
                 temp->setTimingSlack("D", slack);
                 temp->setOriginalCoor(d_coor, q_coor);
                 temp->setOriginalQpinDelay(cur_cell.getQpinDelay());
