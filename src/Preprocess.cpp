@@ -329,7 +329,7 @@ void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
 }
 
 double Preprocess::getSlackStatistic(bool show){
-    double WNS = DBL_MAX;
+    double WNS = 0;
     double TNS = 0;
     double AVS = 0; // average slack
     double MAS = -DBL_MAX; // max slack
