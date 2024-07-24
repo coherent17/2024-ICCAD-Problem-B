@@ -42,3 +42,16 @@ bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, doubl
 std::string toStringWithPrecision(double value, int numAfterDot){
     return std::to_string(value).substr(0, std::to_string(value).find('.') + numAfterDot);
 }
+
+void update_bar(int percent_done){
+	int num_char = percent_done * PRO_BAR_LENGTH / 100;
+	printf("\r[");
+	for(int i = 0; i < num_char; i++){
+		printf("#");
+	}
+	for(int i = 0; i < PRO_BAR_LENGTH - num_char; i++){
+		printf(" ");
+	}
+	printf("] %d%% Done", percent_done);
+	fflush(stdout);
+}

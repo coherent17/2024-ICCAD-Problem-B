@@ -71,7 +71,7 @@ run4:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
 
-run5:
+runArea:
 	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out 
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
@@ -91,51 +91,19 @@ runMBFF:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
 
-visual4:
-	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out drawDie/testcase/testcase1_0614_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i ./drawDie/testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o -c ./drawDie/testcase/cell_lst2.txt -n ./drawDie/testcase/net_lst2.txt
-
-v1:
-	./$(BIN) testcase/sampleCase testcase/sampleCase.out testcase/sampleCase_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/sampleCase_visual.txt.out -m die_pic.png -t sampleCase -g -p -nl -o
-
-v2:
-	./$(BIN) testcase/sample.txt testcase/sample.out testcase/sample_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/sample_visual.txt.out -m die_pic.png -t sample -g -p -nl -o
-
-v3:
-	./$(BIN) testcase/testcase1.txt testcase/testcase1.txt.out testcase/testcase1_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/testcase1_visual.txt.out -m die_pic.png -t testcase1 -g -p -nl -o
-
-v4:
-	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out testcase/testcase1_0614_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/testcase1_0614_visual.txt.out -m die_pic.png -t testcase1_0614 -g -p -nl -o
-
-v5:
-	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out testcase/testcase1_0718_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/testcase1_0718_visual.txt.out -m die_pic.png -t testcase1_0718 -g -p -nl -o
-
 v6:
 	./$(BIN) testcase/sample_0718.txt testcase/sample_0718.out testcase/sample_0718_visual.txt.out
 	chmod +x drawDie/drawDie
 	./drawDie/drawDie -i testcase/sample_0718_visual.txt.out -m die_pic.png -t sample_0718 -p -nl -o
-
-vTNS:
-	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out testcase/cornerTNS_visual.txt.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i testcase/cornerTNS_visual.txt.out -m die_pic.png -t cornerTNS -g -p -nl -o
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
 	./drawDie/drawDie -i Meanshift.out -m 2_Meanshift.png -t Meanshift -g -p -nl -o
 	./drawDie/drawDie -i Banking.out -m 3_Banking.png -t Banking -g -p -nl -o
 	./drawDie/drawDie -i PostCG.out -m 4_PostCG.png -t PostCG -g -p -nl -o
+	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
+
+draw:
 	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
 
 valgrind:

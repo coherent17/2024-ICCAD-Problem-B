@@ -20,10 +20,15 @@
 // OpenMP parallel CPU core
 #define MAX_THREADS 8
 
+
+#define PRO_BAR_LENGTH 50
+
 #include "Coor.h"
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <cstdio>
+#include <unistd.h>
 
 class Param{
     public:
@@ -39,5 +44,6 @@ double GaussianKernel(const Coor &p1, const Coor &p2, double bandwidth);
 double HPWL(const Coor&, const Coor&);
 bool IsOverlap(const Coor &coor1, double w1, double h1, const Coor &coor2, double w2, double h2);
 std::string toStringWithPrecision(double value, int numAfterDot);
+void update_bar(int percent_done);
 
 #endif

@@ -6,6 +6,7 @@
 #include "Subrow.h"
 #include "Manager.h"
 #include "Timer.h"
+#include "Util.h"
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -44,6 +45,7 @@ private:
     // Helper Function
     void UpdateXList(double start, double end, std::list<XTour> & xList);
     size_t FindClosestRow(Node *ff);
+    int FindClosestSubrow(Node *ff, Row *row);
     double PlaceFF(Node *ff, size_t row_idx);
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
     
