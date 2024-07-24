@@ -108,53 +108,61 @@ void Banking::sortFFs(std::vector<std::pair<int, double>> &nearFFs){
 }
 
 void Banking::doClustering(){
-    std::vector<PointWithID> points;
-    points.reserve(mgr.FF_Map.size());
     int clusterTotalNum = 0;
     // make unique id for the flipflop
+    size_t max_clk_idx = 0;
     for(const auto &pair : mgr.FF_Map){
-        FFs.push_back(pair.second);
+        max_clk_idx = std::max((int)max_clk_idx, pair.second->getClkIdx());
     }
 
-    for(size_t i = 0; i < FFs.size(); i++){
-        FF *ff = FFs[i];
-        points.push_back(std::make_pair(Point(ff->getNewCoor().x,ff->getNewCoor().y), i));
-    }
-    bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > rtree;
-    rtree.insert(points.begin(), points.end());
-    std::vector<bool> isClustered (FFs.size(), false);
-    
-    for (size_t index = 0; index < FFs.size(); index++){
-        FF* nowFF = FFs[index];
-        if (isClustered[index]) {continue;}
-        Cluster c;  // DEBUG
-        std::vector<PointWithID> resultFFs, toRemoveFFs;
-        resultFFs.reserve(mgr.MaxBit);
-        rtree.query(bgi::nearest(Point(nowFF->getNewCoor().x, nowFF->getNewCoor().y), mgr.MaxBit), std::back_inserter(resultFFs));
-        std::vector<FF*> FFToBank;
-        Cell* chooseCell = chooseCandidateFF(nowFF, c, resultFFs, toRemoveFFs, FFToBank);
-        
-        
-        if(!toRemoveFFs.empty()){
-            Coor clusterCoor = getMedian(toRemoveFFs);
-            if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
-                continue;
-            mgr.bankFF(clusterCoor, chooseCell, FFToBank);
-            c.setCoor(clusterCoor);
-            for (size_t j = 0; j < toRemoveFFs.size(); j++)
-            {
-                isClustered[toRemoveFFs[j].second] = true;
-                FF* toRemoveFF = FFs[toRemoveFFs[j].second];
-                toRemoveFF->setClusterIdx(clusterTotalNum);
-                toRemoveFF->setNewCoor(clusterCoor);
+    for(size_t i = 0; i <= max_clk_idx; i++){
+        FFs.clear();
+        for(const auto &pair : mgr.FF_Map){
+            if((size_t)pair.second->getClkIdx() == i){
+                FFs.push_back(pair.second);
             }
-            rtree.remove (toRemoveFFs.begin(), toRemoveFFs.end());
-            clusters.push_back (c);
-            clusterTotalNum++;
         }
+        std::vector<PointWithID> points;
+        points.reserve(FFs.size());
+
+        for(size_t i = 0; i < FFs.size(); i++){
+            FF *ff = FFs[i];
+            points.push_back(std::make_pair(Point(ff->getNewCoor().x,ff->getNewCoor().y), i));
+        }
+        bgi::rtree< PointWithID, bgi::quadratic<P_PER_NODE> > rtree;
+        rtree.insert(points.begin(), points.end());
+        std::vector<bool> isClustered (FFs.size(), false);
         
-    }
-    
+        for (size_t index = 0; index < FFs.size(); index++){
+            FF* nowFF = FFs[index];
+            if (isClustered[index]) {continue;}
+            Cluster c;  // DEBUG
+            std::vector<PointWithID> resultFFs, toRemoveFFs;
+            resultFFs.reserve(mgr.MaxBit);
+            rtree.query(bgi::nearest(Point(nowFF->getNewCoor().x, nowFF->getNewCoor().y), mgr.MaxBit), std::back_inserter(resultFFs));
+            std::vector<FF*> FFToBank;
+            Cell* chooseCell = chooseCandidateFF(nowFF, c, resultFFs, toRemoveFFs, FFToBank);
+            
+            
+            if(!toRemoveFFs.empty()){
+                Coor clusterCoor = getMedian(toRemoveFFs);
+                if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
+                    continue;
+                mgr.bankFF(clusterCoor, chooseCell, FFToBank);
+                c.setCoor(clusterCoor);
+                for (size_t j = 0; j < toRemoveFFs.size(); j++)
+                {
+                    isClustered[toRemoveFFs[j].second] = true;
+                    FF* toRemoveFF = FFs[toRemoveFFs[j].second];
+                    toRemoveFF->setClusterIdx(clusterTotalNum);
+                    toRemoveFF->setNewCoor(clusterCoor);
+                }
+                rtree.remove (toRemoveFFs.begin(), toRemoveFFs.end());
+                clusters.push_back (c);
+                clusterTotalNum++;
+            }
+        }
+    }    
 }
 
 void Banking::restoreUnclusterFFCoor(){
@@ -199,4 +207,3 @@ void Banking::ClusterResult(){
     //     std::cout << std::endl;
     // }
 }
-    
