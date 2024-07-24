@@ -132,7 +132,7 @@ void Legalizer::Tetris(){
 
     // [TODO]: enlarge the window and try to find 
     for(size_t i = 0; i < ffs.size(); i++){
-        //update_bar((int) (i  * 100) / ffs.size() + 1);
+        update_bar((int) (i  * 100) / ffs.size() + 1);
         Node *ff = ffs[i];
         size_t closest_row_idx = FindClosestRow(ff);
         double minDisplacement = PlaceFF(ff, closest_row_idx);
