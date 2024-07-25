@@ -240,19 +240,47 @@ void Legalizer::UpdateXList(double start, double end, std::list<XTour> & xList){
     }
 }
 
-size_t Legalizer::FindClosestRow(Node *ff){
-    double min_distance = std::abs(ff->getGPCoor().y - rows[0]->getStartCoor().y);
-    for(size_t i = 1; i < rows.size(); i++){
-        double curr_distance = std::abs(ff->getGPCoor().y - rows[i]->getStartCoor().y);
-        if(curr_distance < min_distance){
-            min_distance = curr_distance;
-        }
-        else{
-            return i - 1;
+// size_t Legalizer::FindClosestRow(Node *ff){
+//     double min_distance = std::abs(ff->getGPCoor().y - rows[0]->getStartCoor().y);
+//     for(size_t i = 1; i < rows.size(); i++){
+//         double curr_distance = std::abs(ff->getGPCoor().y - rows[i]->getStartCoor().y);
+//         if(curr_distance < min_distance){
+//             min_distance = curr_distance;
+//         }
+//         else{
+//             return i - 1;
+//         }
+//     }
+//     return rows.size() - 1;
+// }
+
+
+size_t Legalizer::FindClosestRow(Node *ff) {
+    double targetY = ff->getGPCoor().y;
+    size_t left = 0;
+    size_t right = rows.size() - 1;
+
+    while (left < right) {
+        size_t mid = left + (right - left) / 2;
+        double midY = rows[mid]->getStartCoor().y;
+        
+        if (midY == targetY) {
+            return mid;
+        } else if (midY < targetY) {
+            left = mid + 1;
+        } else {
+            right = mid;
         }
     }
-    return rows.size() - 1;
+
+    // Check the nearest row among the final candidates
+    if (left > 0 && std::abs(targetY - rows[left]->getStartCoor().y) >= std::abs(targetY - rows[left - 1]->getStartCoor().y)) {
+        return left - 1;
+    }
+
+    return left;
 }
+
 
 int Legalizer::FindClosestSubrow(Node *ff, Row *row){
     const auto &subrows = row->getSubrows();
