@@ -56,7 +56,7 @@ public:
     /**
     @brief Check if the current row start from startX to endX have empty space with height h or not
     */
-    bool canPlace(double startX, double endX, double h);
+    bool canPlace(double startX, double endX, double &lowestH);
 
     /**
     @brief The cmp function for sort the placement row.

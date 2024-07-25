@@ -39,6 +39,10 @@ void Node::setIsPlace(bool isPlace){
     this->isPlace = isPlace;
 }
 
+void Node::setTNS(double TNS){
+    this->TNS = TNS;
+}
+
 // Getters
 const std::string &Node::getName()const{
     return name;
@@ -74,6 +78,10 @@ double Node::getDisplacement()const{
 
 double Node::getDisplacement(const Coor &otherCoor)const{
     return std::sqrt(std::pow(gpCoor.x - otherCoor.x, 2) + std::pow(gpCoor.y - otherCoor.y, 2));
+}
+
+double Node::getTNS()const{
+    return TNS;
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node){
