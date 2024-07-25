@@ -1,4 +1,6 @@
 #include "Legalizer.h"
+#include <thread>
+#include <mutex>
 
 Legalizer::Legalizer(Manager& mgr) : mgr(mgr){
     timer.start();
@@ -352,31 +354,73 @@ int Legalizer::FindClosestSubrow(Node *ff, Row *row){
 //     return minDisplacement;
 // }
 
-double Legalizer::PlaceFF(Node *ff, size_t row_idx){
+// double Legalizer::PlaceFF(Node *ff, size_t row_idx){
+//     double minDisplacement = ff->getDisplacement();
+//     const auto &subrows = rows[row_idx]->getSubrows();
+//     for(size_t i = 0; i < subrows.size(); i++){
+//         const auto &subrow = subrows[i];
+//         double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
+//         for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+//             Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
+//             if(ff->getDisplacement(currCoor) > minDisplacement){
+//                 Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
+//                 // If current subrow can't find better solution
+//                 if(ff->getDisplacement(subrowEndCoor) > minDisplacement) break;
+//                 continue;
+//             } 
+//             bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
+//             double displacement = ff->getDisplacement(currCoor);
+//             if(placeable && displacement < minDisplacement){
+//                 minDisplacement = displacement;
+//                 ff->setLGCoor(currCoor);
+//                 ff->setIsPlace(true);
+//             }
+//         }
+//     }
+//     return minDisplacement;
+// }
+
+double Legalizer::PlaceFF(Node *ff, size_t row_idx) {
     double minDisplacement = ff->getDisplacement();
     const auto &subrows = rows[row_idx]->getSubrows();
-    for(size_t i = 0; i < subrows.size(); i++){
-        const auto &subrow = subrows[i];
-        double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
-        for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
-            Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
-            if(ff->getDisplacement(currCoor) > minDisplacement){
-                Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
-                // If current subrow can't find better solution
-                if(ff->getDisplacement(subrowEndCoor) > minDisplacement) break;
-                continue;
-            } 
-            bool placeable = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
-            double displacement = ff->getDisplacement(currCoor);
-            if(placeable && displacement < minDisplacement){
-                minDisplacement = displacement;
-                ff->setLGCoor(currCoor);
-                ff->setIsPlace(true);
+
+    #pragma omp parallel
+    {
+        double localMinDisplacement = minDisplacement;
+        Node* localFF = ff; // Each thread has its own copy to avoid data races
+
+        #pragma omp for nowait
+        for(size_t i = 0; i < subrows.size(); i++) {
+            const auto &subrow = subrows[i];
+            double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
+
+            for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()) {
+                Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
+                double displacement = localFF->getDisplacement(currCoor);
+
+                if(displacement > localMinDisplacement) {
+                    Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
+                    if(localFF->getDisplacement(subrowEndCoor) > localMinDisplacement) break;
+                    continue;
+                } 
+
+                if(ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, localFF->getW(), localFF->getH(), row_idx)) {
+                    #pragma omp critical
+                    {
+                        if(displacement < minDisplacement) {
+                            minDisplacement = displacement;
+                            localFF->setLGCoor(currCoor);
+                            localFF->setIsPlace(true);
+                        }
+                    }
+                }
             }
         }
     }
+
     return minDisplacement;
 }
+    
 
 bool Legalizer::ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx){
     double endY = startY + h;
