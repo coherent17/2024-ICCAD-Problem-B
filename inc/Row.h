@@ -4,6 +4,8 @@
 #include "Subrow.h"
 #include "Coor.h"
 #include "Node.h"
+#include "Cell.h"
+#include <set>
 #include <vector>
 #include <cmath>
 
@@ -18,6 +20,7 @@ private:
     int numOfSites;
     double endX;
     std::vector<Subrow *> subrows;
+    std::set<Cell *> reject_cells;
 
 public:
     Row();
@@ -30,6 +33,7 @@ public:
     void setNumOfSite(int numOfSites);
     void setEndX(double endX);
     void addSubrows(Subrow *subrow);
+    void addRejectCell(Cell *cell);
 
     // Getters
     const Coor &getStartCoor()const;
@@ -38,6 +42,7 @@ public:
     int getNumOfSite()const;
     double getEndX()const;
     std::vector<Subrow *> &getSubrows();
+    bool hasCell(Cell *cell);
 
     // Helper function
 

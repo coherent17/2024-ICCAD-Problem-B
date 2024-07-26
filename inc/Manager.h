@@ -19,6 +19,7 @@
 #include "Cluster.h"
 #include "Banking.h"
 #include "Legalizer.h"
+#include "FastLegalizer.h"
 #include "Util.h"
 #include "PrettyTable.h"
 #include "PostBankingOptimizer.h"
@@ -88,6 +89,7 @@ public:
     void banking();
     void postBankingOptimize();
     void legalize();
+    void fastLegalize();
     void checker();
 
     void dump(const std::string &filename);
@@ -122,7 +124,8 @@ public:
     friend class MeanShift;
     friend class Preprocess;
     friend class Banking;
-    friend class Legalize;
+    friend class Legalizer;
+    friend class FastLegalizer;
     friend class Checker;
 
 private:

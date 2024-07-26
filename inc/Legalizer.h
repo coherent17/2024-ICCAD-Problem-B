@@ -7,17 +7,13 @@
 #include "Manager.h"
 #include "Timer.h"
 #include "Util.h"
+#include "XTour.h"
 #include <vector>
 #include <string>
 #include <algorithm>
 #include <cfloat>
 
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
-
-struct XTour{
-    double startX;
-    double endX;
-};
 
 class Legalizer{
 private:

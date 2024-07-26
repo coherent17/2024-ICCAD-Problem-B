@@ -80,6 +80,11 @@ void Manager::legalize(){
     legalizer.run();
 }
 
+void Manager::fastLegalize(){
+    Fast_Legalizer fastLegalizer(*this);
+    fastLegalizer.run();
+}
+
 void Manager::checker(){
     Checker checker(*this);
     checker.run();

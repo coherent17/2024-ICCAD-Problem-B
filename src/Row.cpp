@@ -39,6 +39,10 @@ void Row::addSubrows(Subrow *subrow){
     subrows.push_back(subrow);
 }
 
+void Row::addRejectCell(Cell *cell){
+    reject_cells.insert(cell);
+}
+
 // Getters
 const Coor &Row::getStartCoor()const{
     return startCoor;
@@ -62,6 +66,13 @@ double Row::getEndX()const{
 
 std::vector<Subrow *> &Row::getSubrows(){
     return subrows;
+}
+
+bool Row::hasCell(Cell *cell){
+    if(reject_cells.count(cell)){
+        return true;
+    }
+    return false;
 }
 
 void Row::slicing(Node *gate) {

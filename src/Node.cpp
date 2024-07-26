@@ -43,6 +43,10 @@ void Node::setTNS(double TNS){
     this->TNS = TNS;
 }
 
+void Node::setClosestRowIdx(size_t closest_rowidx){
+    this->closest_rowidx = closest_rowidx;
+}
+
 // Getters
 const std::string &Node::getName()const{
     return name;
@@ -56,7 +60,7 @@ const Coor &Node::getLGCoor()const{
     return lgCoor;
 }
 
-const Cell *Node::getCell()const{
+Cell *Node::getCell()const{
     return cell;
 }
 
@@ -82,6 +86,10 @@ double Node::getDisplacement(const Coor &otherCoor)const{
 
 double Node::getTNS()const{
     return TNS;
+}
+
+size_t Node::getClosestRowIdx()const{
+    return closest_rowidx;
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node){

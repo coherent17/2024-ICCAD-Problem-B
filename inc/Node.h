@@ -19,6 +19,7 @@ private:
     double h;
     bool isPlace;
     double TNS;
+    size_t closest_rowidx;
 
 public:
     Node();
@@ -33,16 +34,18 @@ public:
     void setH(double h);
     void setIsPlace(bool isPlace);
     void setTNS(double TNS);
+    void setClosestRowIdx(size_t closest_rowidx);
 
     // Getters
     const std::string &getName()const;
     const Coor &getGPCoor()const;
     const Coor &getLGCoor()const;
-    const Cell *getCell()const;
+    Cell *getCell()const;
     double getW()const;
     double getH()const;
     bool getIsPlace()const;
     double getTNS()const;
+    size_t getClosestRowIdx()const;
 
     // Helper method
     double getDisplacement()const;                      // displacement from lgCoor to gpCoor
