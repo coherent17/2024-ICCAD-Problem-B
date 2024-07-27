@@ -12,6 +12,13 @@ preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FF_list.size());
+    for(size_t i=0;i<FFs.size();i++){
+        size_t size = FFs[i]->getNextStage().size() + 1;
+        x_pos[i] = vector<double>(size);
+        x_neg[i] = vector<double>(size);
+        y_pos[i] = vector<double>(size);
+        y_neg[i] = vector<double>(size);
+    }
 }
 
 preprocessObjFunction::~preprocessObjFunction(){
@@ -20,15 +27,13 @@ preprocessObjFunction::~preprocessObjFunction(){
 
 double preprocessObjFunction::forward(){
     loss = 0;
-    int i=0;
-    for(auto& FF_m : FF_list){
-        FF* cur_ff = FF_m.second;
+    //for(auto& FF_m : FF_list){
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* cur_ff = FFs[i];
+        size_t net=0;
         Coor curCoor = cur_ff->getOriginalD();
         // input net
-        x_pos[i] = 0;
-        x_neg[i] = 0;
-        y_pos[i] = 0;
-        y_neg[i] = 0;
         if(cur_ff->getInputInstances().size() >= 1){
             assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
             std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
@@ -43,12 +48,12 @@ double preprocessObjFunction::forward(){
             else{
                 inputCoor = FF_list[inputInstanceName]->getOriginalQ();
             }
-            x_pos[i] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
-            x_neg[i] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
-            y_pos[i] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
-            y_neg[i] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
-            loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-            i++;
+            x_pos[i][net] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
+            x_neg[i][net] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
+            y_pos[i][net] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
+            y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
+            loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
+            net++;
         }
         // output net
         const vector<NextStage>& nextStage = cur_ff->getNextStage();
@@ -71,12 +76,12 @@ double preprocessObjFunction::forward(){
                 else{
                     outputCoor = FF_list[outputInstanceName]->getOriginalD();
                 }
-                x_pos[i] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
-                x_neg[i] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
-                y_pos[i] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
-                y_neg[i] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
-                loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-                i++;
+                x_pos[i][net] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
+                x_neg[i][net] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
+                y_pos[i][net] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
+                y_neg[i][net] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
+                loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
+                net++;
             }
         }
     }
@@ -88,10 +93,10 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
         grad_[i].x = 0;
         grad_[i].y = 0;
     }
-    int i=0;
-    int idx=0;
-    for(auto& FF_m : FF_list){
-        FF* cur_ff = FF_m.second;
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* cur_ff = FFs[i];
+        size_t net=0;
         // weigt by slack
         const vector<NextStage>& nextStage = cur_ff->getNextStage();
         vector<double> weight(1 + nextStage.size());
@@ -99,17 +104,16 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
 
         // net of D pin
         Coor curCoor = cur_ff->getOriginalD();
-        grad_[idx].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-        grad_[idx].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
-        i++;
+        grad_[i].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+        grad_[i].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+        net++;
         // net of Q pin
         curCoor = cur_ff->getOriginalQ();
         for(size_t j=1;j<weight.size();j++){
-            grad_[idx].x += weight[j] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-            grad_[idx].y += weight[j] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
-            i++;
+            grad_[i].x += weight[j] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+            grad_[i].y += weight[j] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net])); 
+            net++;
         }
-        idx++;
     }
     return grad_;
 }
@@ -154,6 +158,16 @@ postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<s
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(mgr.FF_Map.size());
+    for(size_t i=0;i<FFs.size();i++){
+        size_t size = 0;
+        for(const auto& ff : FFs[i]->getClusterFF()){
+            size += 1 + ff->getNextStage().size();
+        }
+        x_pos[i] = vector<double>(size);
+        x_neg[i] = vector<double>(size);
+        y_pos[i] = vector<double>(size);
+        y_neg[i] = vector<double>(size);
+    }
 }
 
 postBankingObjFunction::~postBankingObjFunction(){
@@ -162,17 +176,16 @@ postBankingObjFunction::~postBankingObjFunction(){
 
 double postBankingObjFunction::forward(){
     loss = 0;
-    int i=0;
-    for(auto& FF_m : FF_list){
-        FF* MBFF = FF_m.second;
+    // int i=0;
+    // for(auto& FF_m : FF_list){
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* MBFF = FFs[i];
+        size_t net = 0;
         size_t bit = MBFF->getCell()->getBits();
         for(size_t j=0;j<bit;j++){
             FF* cur_ff = MBFF->getClusterFF()[j];
             // input net
-            x_pos[i] = 0;
-            x_neg[i] = 0;
-            y_pos[i] = 0;
-            y_neg[i] = 0;
             assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
             std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
             std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
@@ -188,12 +201,12 @@ double postBankingObjFunction::forward(){
                 inputCoor = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
             }
             Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());
-            x_pos[i] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
-            x_neg[i] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
-            y_pos[i] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
-            y_neg[i] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
-            loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-            i++;
+            x_pos[i][net] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
+            x_neg[i][net] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
+            y_pos[i][net] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
+            y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
+            loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
+            net++;
             // output net (only for the ff output to IO, to avoid double calculation)
             const vector<NextStage>& nextStage = cur_ff->getNextStage();
             if(nextStage.size()){
@@ -216,12 +229,12 @@ double postBankingObjFunction::forward(){
                         FF* outputFF = mgr.preprocessor->getFFList()[outputInstanceName];
                         outputCoor = outputFF->physicalFF->getNewCoor() + outputFF->physicalFF->getPinCoor("D" + outputFF->getPhysicalPinName());
                     }
-                    x_pos[i] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
-                    x_neg[i] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
-                    y_pos[i] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
-                    y_neg[i] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
-                    loss += log(x_pos[i]) + log(x_neg[i]) + log(y_pos[i]) + log(y_neg[i]);
-                    i++;
+                    x_pos[i][net] = exp( outputCoor.x / gamma) + exp( curCoor.x / gamma);
+                    x_neg[i][net] = exp(-outputCoor.x / gamma) + exp(-curCoor.x / gamma);
+                    y_pos[i][net] = exp( outputCoor.y / gamma) + exp( curCoor.y / gamma);
+                    y_neg[i][net] = exp(-outputCoor.y / gamma) + exp(-curCoor.y / gamma);
+                    loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
+                    net++;
                 }
             }
         }
@@ -234,10 +247,10 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
         grad_[i].x = 0;
         grad_[i].y = 0;
     }
-    int i=0;
-    int idx=0;
-    for(auto& FF_m : FF_list){
-        FF* MBFF = FF_m.second;
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* MBFF = FFs[i];
+        size_t net = 0;
         size_t bit = MBFF->getCell()->getBits();
 
         // weight of net
@@ -251,20 +264,19 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
             FF* cur_ff = MBFF->getClusterFF()[j];
             // net of D pin
             Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());;
-            grad_[idx].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-            grad_[idx].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i]));   
-            i++;
+            grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+            grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+            net++;
             curWeight++;
             // net of Q pin
             curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("Q" + cur_ff->getPhysicalPinName());
             for(size_t k=0;k<cur_ff->getNextStage().size();k++){
-                grad_[idx].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i]) - (exp(-curCoor.x / gamma) / x_neg[i]));
-                grad_[idx].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i]) - (exp(-curCoor.y / gamma) / y_neg[i])); 
-                i++;
+                grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+                grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net])); 
+                net++;
                 curWeight++;
             }
         }
-        idx++;
     }
     return grad_;
 }
@@ -354,6 +366,7 @@ void Gradient::Step(bool onlyNegative) {
         // conjugate directions normally
         double t1 = 0.;  // Store the numerator of beta
         double t2 = 0.;  // Store the denominator of beta
+        #pragma omp parallel for reduction(+:t1, t2)
         for (size_t i = 0; i < kNumModule; ++i) {
             Coor g = obj_.grad().at(i);
             Coor t3;
@@ -363,13 +376,14 @@ void Gradient::Step(bool onlyNegative) {
             t2 += std::abs(g.x) + std::abs(g.y);
         }
         beta = t1 / (t2 * t2 + 0.00001);
+        #pragma omp parallel for num_threads(MAX_THREADS)
         for (size_t i = 0; i < kNumModule; ++i) {
             dir[i].x = -obj_.grad().at(i).x + beta * dir_prev_.at(i).x;
             dir[i].y = -obj_.grad().at(i).y + beta * dir_prev_.at(i).y;
         }
     }
     // Update the solution
-    // #pragma omp parallel for num_threads(MAX_THREADS)
+    #pragma omp parallel for num_threads(MAX_THREADS)
     for(size_t idx=0;idx<kNumModule;idx++){
         // FF* ff = ff_m.second;
         FF* ff = FFs[idx];

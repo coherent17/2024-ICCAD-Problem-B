@@ -111,8 +111,9 @@ void Preprocess::optimal_FF_location(){
     for(i=0;i<=1000;i++){
         optimizer.Step(true);
         // CAL new slack
-        updateSlack();
+        double TNS = updateSlack(FFs);
         // update original data
+
         for(auto& ff_m : FF_list){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
@@ -120,9 +121,9 @@ void Preprocess::optimal_FF_location(){
         }
         if(i % 25 == 0){
             std::cout << "phase 1 step : " << i << std::endl;
-            std::cout << "Slack statistic after Optimize" << std::endl;
+            std::cout << "TNS : " << TNS << std::endl;
         }
-        double newTNS = getSlackStatistic(i%25 == 0);
+        double newTNS = TNS;
         if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS){
             std::cout << "Gradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
@@ -356,9 +357,12 @@ double Preprocess::getSlackStatistic(bool show){
     return TNS;
 }
 
-void Preprocess::updateSlack(){
-    for(auto& ff_m : FF_list){
-        FF* cur_ff = ff_m.second;
+double Preprocess::updateSlack(std::vector<FF*>& FFs){\
+    double TNS = 0;
+    #pragma omp parallel for reduction(+:TNS)
+    for(size_t i=0;i<FFs.size();i++){
+    // for(auto& ff_m : FF_list){
+        FF* cur_ff = FFs[i];
         // update slack for new location
         double delta_hpwl = 0;
         double delta_q = 0; // delta q pin delay
@@ -403,5 +407,8 @@ void Preprocess::updateSlack(){
         // get new slack
         double newSlack = cur_ff->getTimingSlack("D") + (delta_q) + mgr.DisplacementDelay * delta_hpwl;
         cur_ff->setTimingSlack("D", newSlack);
+        if(newSlack < 0)
+            TNS += std::abs(newSlack);
     } 
+    return TNS;
 }

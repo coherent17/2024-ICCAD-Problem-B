@@ -41,7 +41,7 @@ class Preprocess{
 
         // function for optimal ff location
         double getSlackStatistic(bool show); // return TNS
-        void updateSlack();
+        double updateSlack(std::vector<FF*>& FFs);
 };
 
 #endif

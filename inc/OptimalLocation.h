@@ -17,7 +17,7 @@ class objFunction{
         vector<Coor> grad_;
         double loss;
         double gamma;
-        vector<double> x_pos, x_neg, y_pos, y_neg;
+        vector<vector<double>> x_pos, x_neg, y_pos, y_neg;
         std::vector<FF*>& FFs;
     public:
         objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
