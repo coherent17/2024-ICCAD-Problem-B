@@ -29,9 +29,9 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Banking.out");
 
-    // mgr.postBankingOptimize();
-    // mgr.getOverallCost(cost_verbose);
-    // mgr.dumpVisual("PostCG.out");
+    mgr.postBankingOptimize();
+    mgr.getOverallCost(cost_verbose);
+    mgr.dumpVisual("PostCG.out");
 
     mgr.fastLegalize();
     // mgr.legalize();
