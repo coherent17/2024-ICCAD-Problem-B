@@ -20,6 +20,10 @@ private:
     bool isPlace;
     double TNS;
     size_t closest_rowidx;
+    size_t place_rowidx;
+    
+    // Used in detail placement
+    std::vector<Node *> NeighborCells;
 
 public:
     Node();
@@ -35,6 +39,7 @@ public:
     void setIsPlace(bool isPlace);
     void setTNS(double TNS);
     void setClosestRowIdx(size_t closest_rowidx);
+    void setPlaceRowIdx(size_t place_rowidx);
 
     // Getters
     const std::string &getName()const;
@@ -46,6 +51,7 @@ public:
     bool getIsPlace()const;
     double getTNS()const;
     size_t getClosestRowIdx()const;
+    size_t getPlaceRowIdx()const;
 
     // Helper method
     double getDisplacement()const;                      // displacement from lgCoor to gpCoor

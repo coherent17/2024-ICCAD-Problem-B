@@ -20,7 +20,6 @@
 #include "Banking.h"
 #include "Legalizer.h"
 #include "FastLegalizer.h"
-#include "DetailPlacement.h"
 #include "Util.h"
 #include "PrettyTable.h"
 #include "PostBankingOptimizer.h"
@@ -34,7 +33,6 @@ class Cluster;
 class Banking;
 class Param;
 class FastLegalizer;
-class DetailPlacement;
 class Manager{
 public:
     // cost function weight
@@ -93,7 +91,6 @@ public:
     void postBankingOptimize();
     void legalize();
     void fastLegalize();
-    void detailPlacement();
     void checker();
 
     void dump(const std::string &filename);

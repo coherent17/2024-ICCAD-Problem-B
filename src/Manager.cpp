@@ -84,11 +84,6 @@ void Manager::fastLegalize(){
     fastLegalizer.run();
 }
 
-void Manager::detailPlacement(){
-    DetailPlacement detailPlacement(*this);
-    detailPlacement.run();
-}
-
 void Manager::checker(){
     Checker checker(*this);
     checker.run();

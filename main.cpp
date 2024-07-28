@@ -38,10 +38,6 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.checker();
 
-    mgr.detailPlacement();
-    mgr.getOverallCost(cost_verbose);
-    mgr.checker();
-
     mgr.dumpVisual("Legalize.out");
     mgr.dump(argv[2]);
     return 0;

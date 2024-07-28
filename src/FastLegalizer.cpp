@@ -150,7 +150,20 @@ void FastLegalizer::Tetris(){
     for(const auto &ff : ffs){
         Coor coor;
         size_t closest_row_idx = ff->getClosestRowIdx();
-        PlaceFF(ff, closest_row_idx, coor);
+
+        // change cell type
+        int numbits = ff->getCell()->getBits();
+        for(size_t i = 0; i < mgr.Bit_FF_Map[numbits].size(); i++){
+            mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numbits][i]);
+            ff->setCell(mgr.Bit_FF_Map[numbits][i]);
+            ff->setW(mgr.Bit_FF_Map[numbits][i]->getW());
+            ff->setH(mgr.Bit_FF_Map[numbits][i]->getH());
+            PlaceFF(ff, closest_row_idx, coor);
+
+            if(ff->getIsPlace()){
+                break;
+            }
+        }
 
         if(ff->getIsPlace()){
             place++;
@@ -159,9 +172,17 @@ void FastLegalizer::Tetris(){
                 row->slicing(ff);
             }
         }
+
         else{
-            rows[closest_row_idx]->addRejectCell(ff->getCell());
+            for(size_t i = 0; i < mgr.Bit_FF_Map[numbits].size(); i++){
+                rows[closest_row_idx]->addRejectCell(mgr.Bit_FF_Map[numbits][i]);
+            }
             fail_ffs.push_back(ff);
+            // change back to better libcell
+            mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numbits][0]);
+            ff->setCell(mgr.Bit_FF_Map[numbits][0]);
+            ff->setW(mgr.Bit_FF_Map[numbits][0]->getW());
+            ff->setH(mgr.Bit_FF_Map[numbits][0]->getH());
             not_place++;
         }
     }
@@ -174,36 +195,63 @@ void FastLegalizer::Tetris(){
         int not_place = 0;
         for(auto it = fail_ffs.begin(); it != fail_ffs.end();){
             Node *ff = (*it);
+            int numbits = ff->getCell()->getBits();
+            Coor bestCoor;
             int up_row_idx = ff->getClosestRowIdx() + stride;
             int down_row_idx = ff->getClosestRowIdx() - stride;
             double upDisplacement = DBL_MAX;
             double downDisplacement = DBL_MAX;
             Coor upBestCoor;
             Coor downBestCoor;
-            if(up_row_idx < (int)rows.size()){
-                if(!rows[up_row_idx]->hasCell(ff->getCell()))
-                    upDisplacement = PlaceFF(ff, up_row_idx, upBestCoor);
-            }
-            if(down_row_idx >= 0){
-                if(!rows[down_row_idx]->hasCell(ff->getCell()))
-                    downDisplacement = PlaceFF(ff, down_row_idx, downBestCoor);
+
+            for(size_t i = 0; i < mgr.Bit_FF_Map[numbits].size(); i++){
+                mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numbits][i]);
+                ff->setCell(mgr.Bit_FF_Map[numbits][i]);
+                ff->setW(mgr.Bit_FF_Map[numbits][i]->getW());
+                ff->setH(mgr.Bit_FF_Map[numbits][i]->getH());
+
+                // search up
+                if(up_row_idx < (int)rows.size()){
+                    if(!rows[up_row_idx]->hasCell(ff->getCell()))
+                        upDisplacement = PlaceFF(ff, up_row_idx, upBestCoor);
+                }
+
+                // search down
+                if(down_row_idx >= 0){
+                    if(!rows[down_row_idx]->hasCell(ff->getCell()))
+                        downDisplacement = PlaceFF(ff, down_row_idx, downBestCoor);
+                }
+                
+                if(ff->getIsPlace()){
+                    break;
+                }
             }
 
-            Coor bestCoor = upDisplacement > downDisplacement ? downBestCoor : upBestCoor;
-            ff->setLGCoor(bestCoor);
 
             if(ff->getIsPlace()){
                 place++;
+                bestCoor = upDisplacement > downDisplacement ? downBestCoor : upBestCoor;
+                ff->setLGCoor(bestCoor);
+                int placeIdx = upDisplacement > downDisplacement ? down_row_idx : up_row_idx;
+                ff->setPlaceRowIdx(placeIdx);
                 for(auto &row : rows){
                     if(row->getStartCoor().y > ff->getLGCoor().y + ff->getH()) break;
                     row->slicing(ff);
                 }
                 it = fail_ffs.erase(it);
             }
+
             else{
                 not_place++;
-                rows[up_row_idx]->addRejectCell(ff->getCell());
-                rows[down_row_idx]->addRejectCell(ff->getCell());
+                for(size_t i = 0; i < mgr.Bit_FF_Map[numbits].size(); i++){
+                    rows[up_row_idx]->addRejectCell(mgr.Bit_FF_Map[numbits][i]);
+                    rows[down_row_idx]->addRejectCell(mgr.Bit_FF_Map[numbits][i]);
+                }
+                // change back to better libcell
+                mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numbits][0]);
+                ff->setCell(mgr.Bit_FF_Map[numbits][0]);
+                ff->setW(mgr.Bit_FF_Map[numbits][0]->getW());
+                ff->setH(mgr.Bit_FF_Map[numbits][0]->getH());
                 ++it;
             }
         }
@@ -217,7 +265,6 @@ void FastLegalizer::LegalizeWriteBack(){
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
-            //std::cout << *ff << std::endl;
         }
         else{
             mgr.FF_Map[ff->getName()]->setNewCoor(Coor(0, 0));

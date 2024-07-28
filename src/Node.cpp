@@ -6,6 +6,7 @@ Node::Node() :name(""), gpCoor(0, 0), lgCoor(DBL_MAX, DBL_MAX){
     w = 0;
     h = 0;
     isPlace = false;
+    TNS = 0;
 }
 
 Node::~Node(){}
@@ -45,6 +46,10 @@ void Node::setTNS(double TNS){
 
 void Node::setClosestRowIdx(size_t closest_rowidx){
     this->closest_rowidx = closest_rowidx;
+}
+
+void Node::setPlaceRowIdx(size_t place_rowidx){
+    this->place_rowidx = place_rowidx;
 }
 
 // Getters
@@ -90,6 +95,10 @@ double Node::getTNS()const{
 
 size_t Node::getClosestRowIdx()const{
     return closest_rowidx;
+}
+
+size_t Node::getPlaceRowIdx()const{
+    return place_rowidx;
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node){
