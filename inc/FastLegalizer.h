@@ -16,7 +16,7 @@
 
 #define DEBUG_FASTLGZ(message) std::cout << "[FAST_LEGALIZER] " << message << std::endl
 
-class Fast_Legalizer{
+class FastLegalizer{
 private:
     Manager& mgr;
     std::vector<Node *> ffs;
@@ -26,8 +26,8 @@ private:
     Timer timer;
 
 public:
-    explicit Fast_Legalizer(Manager& mgr);
-    ~Fast_Legalizer();
+    explicit FastLegalizer(Manager& mgr);
+    ~FastLegalizer();
     void run();
 
 private:
@@ -47,6 +47,7 @@ private:
     double PlaceFF(Node *ff, size_t row_idx, Coor &bestCoor);
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
     
+    friend class DetailPlacement;
 };
 
 #endif

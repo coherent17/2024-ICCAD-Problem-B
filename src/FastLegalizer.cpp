@@ -1,10 +1,10 @@
 #include "FastLegalizer.h"
 
-Fast_Legalizer::Fast_Legalizer(Manager& mgr) : mgr(mgr){
+FastLegalizer::FastLegalizer(Manager& mgr) : mgr(mgr){
     timer.start();
 }
 
-Fast_Legalizer::~Fast_Legalizer(){
+FastLegalizer::~FastLegalizer(){
     for(auto &ff : ffs){
         delete ff;
     }
@@ -16,7 +16,7 @@ Fast_Legalizer::~Fast_Legalizer(){
     }
 }
 
-void Fast_Legalizer::run(){
+void FastLegalizer::run(){
     LoadFF();
     LoadGate();
     LoadPlacementRow();
@@ -27,7 +27,7 @@ void Fast_Legalizer::run(){
     timer.stop();
 }
 
-void Fast_Legalizer::LoadFF(){
+void FastLegalizer::LoadFF(){
     DEBUG_FASTLGZ("Load FF to Databse");
     for(const auto &pair : mgr.FF_Map){
         Node *ff = new Node();
@@ -43,7 +43,7 @@ void Fast_Legalizer::LoadFF(){
     }
 }
 
-void Fast_Legalizer::LoadGate(){
+void FastLegalizer::LoadGate(){
     DEBUG_FASTLGZ("Load Gate to Databse");
     for(const auto &pair: mgr.Gate_Map){
         Node *gate = new Node();
@@ -58,7 +58,7 @@ void Fast_Legalizer::LoadGate(){
     }
 }
 
-void Fast_Legalizer::LoadPlacementRow(){
+void FastLegalizer::LoadPlacementRow(){
     DEBUG_FASTLGZ("Load Placement Row to Databse");
     std::vector<PlacementRow> PlacementRows = mgr.die.getPlacementRows();
     for(size_t i = 0; i < PlacementRows.size(); i++){
@@ -86,7 +86,7 @@ void Fast_Legalizer::LoadPlacementRow(){
 }
 
 
-void Fast_Legalizer::SliceRowsByRows(){
+void FastLegalizer::SliceRowsByRows(){
     for(size_t i = 0; i < rows.size() - 1; i++){
         double startX = rows[i]->getStartCoor().x;
         double endX = rows[i]->getEndX();
@@ -111,7 +111,7 @@ void Fast_Legalizer::SliceRowsByRows(){
     }
 }
 
-void Fast_Legalizer::SliceRowsByGate(){
+void FastLegalizer::SliceRowsByGate(){
     DEBUG_FASTLGZ("Seperate PlacementRows by Gate Cell");
     for(const auto &gate : gates){
         for(auto &row : rows){
@@ -123,7 +123,7 @@ void Fast_Legalizer::SliceRowsByGate(){
 }
  
 
-void Fast_Legalizer::Tetris(){
+void FastLegalizer::Tetris(){
     DEBUG_FASTLGZ("Start Legalize FF");
 
     // Stage 1: place cells into their nearest rows (legalize y coordinate)
@@ -150,7 +150,7 @@ void Fast_Legalizer::Tetris(){
     for(const auto &ff : ffs){
         Coor coor;
         size_t closest_row_idx = ff->getClosestRowIdx();
-        double minDisplacement = PlaceFF(ff, closest_row_idx, coor);
+        PlaceFF(ff, closest_row_idx, coor);
 
         if(ff->getIsPlace()){
             place++;
@@ -165,7 +165,7 @@ void Fast_Legalizer::Tetris(){
             not_place++;
         }
     }
-    std::cout << "place: " << place << ", " << not_place << std::endl;
+    std::cout << "place: " << place << ", not place: " << not_place << std::endl;
 
     // Stage 4: assgin not place ff x coordinate
     int stride = 1;
@@ -207,13 +207,12 @@ void Fast_Legalizer::Tetris(){
                 ++it;
             }
         }
-        std::cout << "stride: " << stride << " " << "place: " << place << ", " << not_place << std::endl;
+        std::cout << "stride: " << stride << " " << "place: " << place << ", not place: " << not_place << std::endl;
         stride++;
     }
-
 }
 
-void Fast_Legalizer::LegalizeWriteBack(){
+void FastLegalizer::LegalizeWriteBack(){
     DEBUG_FASTLGZ("Write Back Legalize Coordinate");
     for(const auto &ff : ffs){
         if(ff->getIsPlace()){
@@ -227,7 +226,7 @@ void Fast_Legalizer::LegalizeWriteBack(){
 }
 
 // Helper Function
-void Fast_Legalizer::UpdateXList(double start, double end, std::list<XTour> & xList){
+void FastLegalizer::UpdateXList(double start, double end, std::list<XTour> & xList){
     if(xList.empty()){
         XTour insertRow;
         insertRow.startX = start;
@@ -280,7 +279,7 @@ void Fast_Legalizer::UpdateXList(double start, double end, std::list<XTour> & xL
     }
 }
 
-size_t Fast_Legalizer::FindClosestRow(Node *ff) {
+size_t FastLegalizer::FindClosestRow(Node *ff) {
     double targetY = ff->getGPCoor().y;
     size_t left = 0;
     size_t right = rows.size() - 1;
@@ -307,7 +306,7 @@ size_t Fast_Legalizer::FindClosestRow(Node *ff) {
 }
 
 
-int Fast_Legalizer::FindClosestSubrow(Node *ff, Row *row){
+int FastLegalizer::FindClosestSubrow(Node *ff, Row *row){
     const auto &subrows = row->getSubrows();
     assert(subrows.size() > 0);
 
@@ -321,7 +320,7 @@ int Fast_Legalizer::FindClosestSubrow(Node *ff, Row *row){
     return subrows.size() - 1;
 }
 
-double Fast_Legalizer::PlaceFF(Node *ff, size_t row_idx, Coor &bestCoor){
+double FastLegalizer::PlaceFF(Node *ff, size_t row_idx, Coor &bestCoor){
     double minDisplacement = ff->getDisplacement(Coor(DBL_MAX, DBL_MAX));
     const auto &subrows = rows[row_idx]->getSubrows();
     for(size_t i = 0; i < subrows.size(); i++){
@@ -350,7 +349,7 @@ double Fast_Legalizer::PlaceFF(Node *ff, size_t row_idx, Coor &bestCoor){
 
     
 
-bool Fast_Legalizer::ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx){
+bool FastLegalizer::ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx){
     double endY = startY + h;
     double currentY = startY;
 

@@ -9,8 +9,7 @@ Manager::Manager():
     NumOutput(0),
     MaxBit(0),
     NumInstances(0),
-    NumNets(0),
-    preprocessor(nullptr)
+    NumNets(0)
     {}
 
 Manager::~Manager(){
@@ -81,8 +80,13 @@ void Manager::legalize(){
 }
 
 void Manager::fastLegalize(){
-    Fast_Legalizer fastLegalizer(*this);
+    FastLegalizer fastLegalizer(*this);
     fastLegalizer.run();
+}
+
+void Manager::detailPlacement(){
+    DetailPlacement detailPlacement(*this);
+    detailPlacement.run();
 }
 
 void Manager::checker(){
