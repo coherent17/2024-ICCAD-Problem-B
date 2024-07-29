@@ -228,7 +228,6 @@ void Legalizer::UpdateXList(double start, double end, std::list<XTour> & xList){
         iter2++;
     }
     if(!startIsFound && !endIsFound){
-        std::cout << "All Not Found!" << std::endl;
         XTour insertRow = {start, end};
         if(iter1 != iter2){
             auto iter = xList.erase(iter1, iter2);
