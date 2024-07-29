@@ -30,7 +30,6 @@ void FF::setTimingSlack(const std::string &pinName, double slack){
 }
 
 void FF::addClusterFF(FF* inputFF, int slot){
-    assert(clusterFF[slot] == nullptr && "slot already has FF");
     clusterFF[slot] = inputFF;
 }
 
