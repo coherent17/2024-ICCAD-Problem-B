@@ -26,6 +26,11 @@ void Subrow::setHeight(double height){
     this->height = height;
 }
 
+void Subrow::addRejectCell(Cell *cell){
+    reject_cells.insert(cell);
+}
+
+
 // Getters
 double Subrow::getStartX()const{
     return startX;
@@ -41,6 +46,13 @@ double Subrow::getFreeWidth()const{
 
 double Subrow::getHeight()const{
     return height;
+}
+
+bool Subrow::hasCell(Cell *cell){
+    if(reject_cells.count(cell)){
+        return true;
+    }
+    return false;
 }
 
 std::ostream &operator<<(std::ostream &os, const Subrow &subrow){
