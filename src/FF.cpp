@@ -350,13 +350,17 @@ std::vector<std::pair<Coor, double>> FF::getCriticalCoor(){
         // D pin
         Coor inputCoor;
         PrevInstance prev = curFF->getPrevInstance();
-        if(prev.cellType == CellType::IO)
-            inputCoor = prev.instance->getCoor();
-        else if(prev.cellType == CellType::GATE)
-            inputCoor = prev.instance->getCoor() + prev.instance->getPinCoor(prev.pinName);
-        else{
-            FF* inputFF = dynamic_cast<FF*>(prevInstance.instance);
-            inputCoor = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+        if(prev.instance){
+            if(prev.cellType == CellType::IO){
+                inputCoor = prev.instance->getCoor();
+            }
+            else if(prev.cellType == CellType::GATE){
+                inputCoor = prev.instance->getCoor() + prev.instance->getPinCoor(prev.pinName);
+            }
+            else{
+                FF* inputFF = dynamic_cast<FF*>(prev.instance);
+                inputCoor = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+            }
         }
         coorList.push_back({inputCoor, curFF->getSlack()});
 
