@@ -33,8 +33,11 @@ int main(int argc, char *argv[]){
     // mgr.getOverallCost(cost_verbose);
     // mgr.dumpVisual("PostCG.out");
 
-    // mgr.fastLegalize();
     mgr.legalize();
+    mgr.getOverallCost(cost_verbose);
+    mgr.checker();
+
+    mgr.detailplacement();
     mgr.getOverallCost(cost_verbose);
     mgr.checker();
 

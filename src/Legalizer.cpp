@@ -452,6 +452,7 @@ double Legalizer::PlaceFF(Node *ff, size_t row_idx, bool &placeable){
                     minDisplacement = displacement;
                     ff->setLGCoor(currCoor);
                     ff->setIsPlace(true);
+                    ff->setPlaceRowIdx(row_idx);
                 }
             }
         }

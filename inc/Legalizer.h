@@ -45,6 +45,7 @@ private:
     double PlaceFF(Node *ff, size_t row_idx, bool& placeable);
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
     
+    friend class DetailPlacement;
 };
 
 #endif

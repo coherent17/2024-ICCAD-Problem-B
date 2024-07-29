@@ -22,6 +22,8 @@ Manager::~Manager(){
         delete pair.second;
     }
     Gate_Map.clear();
+
+    delete legalizer;
 }
 
 void Manager::parse(const std::string &filename){
@@ -75,13 +77,13 @@ void Manager::postBankingOptimize(){
 }
 
 void Manager::legalize(){
-    Legalizer legalizer(*this);
-    legalizer.run();
+    legalizer = new Legalizer(*this);
+    legalizer->run();
 }
 
-void Manager::fastLegalize(){
-    FastLegalizer fastLegalizer(*this);
-    fastLegalizer.run();
+void Manager::detailplacement(){
+    DetailPlacement detailplacer(*this);
+    detailplacer.run();
 }
 
 void Manager::checker(){

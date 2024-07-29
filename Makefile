@@ -2,7 +2,7 @@
 CXX = g++
 CXXFLAGS = -I ./inc -std=c++14 -fopenmp
 OPTFLAGS = -march=native -funroll-loops -finline-functions -ffast-math -O3 #-DNDEBUG
-WARNINGS = -g -Wall
+WARNINGS = -g -Wall -static
 
 # Valgrind for memory issue
 CHECKCC = valgrind
