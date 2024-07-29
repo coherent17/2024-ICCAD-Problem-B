@@ -8,6 +8,7 @@
 #include <boost/foreach.hpp>
 #include "Legalizer.h"
 #include "Manager.h"
+#include "Random.h"
 #include <iostream>
 #include <vector>
 #include <set>
@@ -34,6 +35,7 @@ private:
     Legalizer *legalizer;
     std::unordered_map<Cell *, RTree> RtreeMaps;
     std::set<Cell *> cellSet;
+    Random randomNumberGenerator;
 
 public:
     explicit DetailPlacement(Manager &mgr);

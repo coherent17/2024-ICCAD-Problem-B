@@ -19,6 +19,7 @@ void DetailPlacement::BuildRtreeMaps(){
     for(const auto &ff : legalizer->ffs){
         assert(ff->getLGCoor().y == legalizer->rows[ff->getPlaceRowIdx()]->getStartCoor().y);
         cellSet.insert(ff->getCell());
+        legalizer->rows[ff->getPlaceRowIdx()]->addFFs(ff);
     }
 
     // init rtree
@@ -44,5 +45,5 @@ void DetailPlacement::VerticalSwap(){
 }
 
 void DetailPlacement::LoaclReordering(){
-
+    
 }

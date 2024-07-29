@@ -21,6 +21,7 @@ private:
     double endX;
     std::vector<Subrow *> subrows;
     std::set<Cell *> reject_cells;
+    std::vector<Node *> FFOnThisRow;    // for detail placement
 
 public:
     Row();
@@ -34,6 +35,7 @@ public:
     void setEndX(double endX);
     void addSubrows(Subrow *subrow);
     void addRejectCell(Cell *cell);
+    void addFFs(Node *ff);  // for detail placement
 
     // Getters
     const Coor &getStartCoor()const;
@@ -43,6 +45,7 @@ public:
     double getEndX()const;
     std::vector<Subrow *> &getSubrows();
     bool hasCell(Cell *cell);
+    std::vector<Node *> &getFFs();  // for detail placement 
 
     // Helper function
 

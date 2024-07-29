@@ -43,6 +43,10 @@ void Row::addRejectCell(Cell *cell){
     reject_cells.insert(cell);
 }
 
+void Row::addFFs(Node *ff){
+    FFOnThisRow.push_back(ff);
+}
+
 // Getters
 const Coor &Row::getStartCoor()const{
     return startCoor;
@@ -73,6 +77,10 @@ bool Row::hasCell(Cell *cell){
         return true;
     }
     return false;
+}
+
+std::vector<Node *> &Row::getFFs(){
+    return FFOnThisRow;
 }
 
 void Row::slicing(Node *gate) {
