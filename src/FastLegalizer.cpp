@@ -134,7 +134,7 @@ void FastLegalizer::Tetris(){
         ffs[i]->setClosestRowIdx(row_idx);
     }
 
-    // Stage 2: sort all cells acording to the sizes from the largest to smallest
+    // Stage 2: sort all cells according to the sizes from the largest to smallest
     std::sort(ffs.begin(), ffs.end(), [](const Node *a, const Node *b){
         double costA = a->getH() * a->getW();
         double costB = b->getH() * b->getW();

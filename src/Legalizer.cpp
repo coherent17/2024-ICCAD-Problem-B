@@ -141,21 +141,34 @@ void Legalizer::Tetris(){
         update_bar((int) (i  * 100) / ffs.size() + 1);
         Node *ff = ffs[i];
         size_t closest_row_idx = FindClosestRow(ff);
-        double minDisplacement = PlaceFF(ff, closest_row_idx);
+        bool placeable = true;
+        double minDisplacement = PlaceFF(ff, closest_row_idx, placeable);
         int down_row_idx = closest_row_idx - 1;
         int up_row_idx = closest_row_idx + 1;
 
         // local search down
         while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            double downDisplacement = PlaceFF(ff, down_row_idx);
-            minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+            if(!rows[down_row_idx]->hasCell(ff->getCell())){
+                placeable = true;
+                double downDisplacement = PlaceFF(ff, down_row_idx, placeable);
+                if(placeable)
+                    minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+                else
+                    rows[down_row_idx]->addRejectCell(ff->getCell());
+            }
             down_row_idx--;
         }
 
         // local search up
         while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
-            double upDisplacement = PlaceFF(ff, up_row_idx);
-            minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+            if(!rows[up_row_idx]->hasCell(ff->getCell())){
+                placeable = true;
+                double upDisplacement = PlaceFF(ff, up_row_idx, placeable);
+                if(placeable)
+                    minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+                else
+                    rows[up_row_idx]->addRejectCell(ff->getCell());
+            }
             up_row_idx++;
         }
 
@@ -408,44 +421,48 @@ int Legalizer::FindClosestSubrow(Node *ff, Row *row){
 //     return minDisplacement;
 // }
 
-double Legalizer::PlaceFF(Node *ff, size_t row_idx) {
+double Legalizer::PlaceFF(Node *ff, size_t row_idx, bool &placeable){
     double minDisplacement = ff->getDisplacement();
     const auto &subrows = rows[row_idx]->getSubrows();
+    bool skip = false;
+    bool rowCanPlace = false;
 
-    #pragma omp parallel
-    {
-        double localMinDisplacement = minDisplacement;
-        Node* localFF = ff; // Each thread has its own copy to avoid data races
-
-        #pragma omp for nowait
-        for(size_t i = 0; i < subrows.size(); i++) {
-            const auto &subrow = subrows[i];
-            double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth();
-
-            for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()) {
-                Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
-                double displacement = localFF->getDisplacement(currCoor);
-
-                if(displacement > localMinDisplacement) {
-                    Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
-                    if(localFF->getDisplacement(subrowEndCoor) > localMinDisplacement) break;
-                    continue;
-                } 
-
-                if(ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, localFF->getW(), localFF->getH(), row_idx)) {
-                    #pragma omp critical
-                    {
-                        if(displacement < minDisplacement) {
-                            minDisplacement = displacement;
-                            localFF->setLGCoor(currCoor);
-                            localFF->setIsPlace(true);
-                        }
-                    }
+    for(size_t i = 0; i < subrows.size(); i++){
+        const auto &subrow = subrows[i];
+        if(subrow->hasCell(ff->getCell())) continue;
+        double alignedStartX = rows[row_idx]->getStartCoor().x + std::ceil((int)(subrow->getStartX() - rows[row_idx]->getStartCoor().x) / rows[row_idx]->getSiteWidth()) * rows[row_idx]->getSiteWidth(); 
+        bool subrowSkip = false;
+        bool subrowCanPlace = false;
+        for(int x = alignedStartX; x <= subrow->getEndX(); x += rows[row_idx]->getSiteWidth()){
+            Coor currCoor = Coor(x, rows[row_idx]->getStartCoor().y);
+            if(ff->getDisplacement(currCoor) > minDisplacement){
+                subrowSkip = true;
+                skip = true;
+                Coor subrowEndCoor = Coor(subrow->getEndX(), rows[row_idx]->getStartCoor().y);
+                // If current subrow can't find better solution
+                if(ff->getDisplacement(subrowEndCoor) > minDisplacement) break;
+                continue;
+            }
+            bool canPlace = ContinousAndEmpty(x, rows[row_idx]->getStartCoor().y, ff->getW(), ff->getH(), row_idx);
+            double displacement = ff->getDisplacement(currCoor);
+                
+            if(canPlace){
+                rowCanPlace = true;
+                subrowCanPlace = true;
+                if(displacement < minDisplacement){
+                    minDisplacement = displacement;
+                    ff->setLGCoor(currCoor);
+                    ff->setIsPlace(true);
                 }
             }
         }
-    }
+        if(!subrowCanPlace && !subrowSkip)
+            subrow->addRejectCell(ff->getCell());
 
+    }
+    if(!skip && !rowCanPlace){
+        placeable = false;
+    }
     return minDisplacement;
 }
     
