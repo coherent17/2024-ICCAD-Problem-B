@@ -259,33 +259,50 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     newFF->setClkIdx(clkIdx);
     FF_Map[newName] = newFF;
 
-
-    // Greedy from smallest slack
-    std::priority_queue<std::pair<double, FF*>, std::vector<std::pair<double, FF*>>, ComparePairs> pq;
-    for(auto& ff : FFs){
-        pq.push({ff->getTimingSlack("D"), ff});
+    if(bit == 1){ // bank single bit FF
+        newFF->addClusterFF(FFs[0], 0);
+        FFs[0]->setPhysicalFF(newFF, 0);
+        return newFF;
     }
-    // assign to smallest HPWL D slot
-    std::vector<bool> slotEmpty(bit, true);
-    while(!pq.empty()){
-        FF* curFF = pq.top().second;
-        pq.pop();
-        int slot = -1;
-        double bestHPWL = DBL_MAX;
-        for(int i=0;i<bit;i++){
-            if(slotEmpty[i]){
-                double curHPWL = HPWL(curFF->getOriginalD(), newbankCoor + bankCellType->getPinCoor("D" + std::to_string(i)));
-                if(curHPWL < bestHPWL){
-                    bestHPWL = curHPWL;
-                    slot = i;
-                }
+    
+    // Stable Marriage Problem (Gale-Shapley Algorithm)
+    std::vector<std::vector<double>> cost(bit, std::vector<double>(bit, 0)); // i FF cost for j slot
+    std::queue<int> waitSlot; // slot wait to be assigned FF
+    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> pq[bit];
+    for(int i=0;i<bit;i++){
+        FF* curFF = FFs[i];
+        for(int j=0;j<bit;j++){
+            cost[i][j] = DisplacementDelay * (
+                            (HPWL(curFF->getOriginalD(),  newFF->getNewCoor() + newFF->getPinCoor("D" + std::to_string(j)))) +
+                            (curFF->getNextStage().size() * HPWL(curFF->getOriginalQ(), newFF->getNewCoor() + newFF->getPinCoor("Q" + std::to_string(j))))
+                        );
+            cost[i][j] -= curFF->getTimingSlack("D");
+            for(auto& nextFF : curFF->getNextStage()){
+                cost[i][j] -= nextFF.ff->getTimingSlack("D");
             }
+            pq[j].push({cost[i][j], i});
         }
+        curFF->setPhysicalFF(nullptr, -1);
+        waitSlot.push(i);
+    }
 
-        assert(slot != -1 && "why you can't findout your best location, you are looser");
-        slotEmpty[slot] = false;
-        newFF->addClusterFF(curFF, slot);
-        curFF->setPhysicalFF(newFF, slot);
+    while(!waitSlot.empty()){
+        int slot = waitSlot.front();
+        int preferFF = pq[slot].top().second;
+        pq[slot].pop();
+        FF* curFF = FFs[preferFF];
+        if(curFF->getPhysicalFF() != newFF){ // is a single FF
+            curFF->setPhysicalFF(newFF, slot);
+            newFF->addClusterFF(curFF, slot);
+            waitSlot.pop();
+        }
+        else if(cost[preferFF][slot] < cost[preferFF][curFF->getSlot()]){ // is married, you want to be small three !!!!
+            // the one who is not loved is small three ~~~~~
+            waitSlot.push(curFF->getSlot()); // get find your new FF
+            curFF->setPhysicalFF(newFF, slot);
+            newFF->addClusterFF(curFF, slot);
+            waitSlot.pop();
+        }
     }
 
     return newFF;
