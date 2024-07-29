@@ -53,7 +53,7 @@ private:
     PrevStage prevStage; // {prev stage FF/INPUT, {prevFF's output cell on critical path, output cell pin}}
                                                                     // if prev stage FF is nullptr, cur(this) FF is directly connect with prev stage or is IO
                                                                     // use prevInstance
-    PrevInstance prevInstance; // prev instance on critical path and its putput pin
+    PrevInstance prevInstance; // prev instance on critical path and its output pin
     std::vector<NextStage> nextStage;
     Coor originalD, originalQ; // initial location for FF list, only can be set in mgr.Debank
     double originalQpinDelay;
@@ -103,6 +103,7 @@ public:
     FF* getPhysicalFF()const;
     int getSlot()const;
     std::string getPhysicalPinName();
+    std::vector<std::pair<Coor, double>> getCriticalCoor(); // return the relative coor on critical path
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
     double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
