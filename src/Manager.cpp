@@ -266,27 +266,85 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
         FFs[0]->setPhysicalFF(newFF, 0);
         return newFF;
     }
-    
+
+    for(size_t i=0;i<FFs.size();i++){
+        FFs[i]->setPhysicalFF(newFF, i);
+        newFF->addClusterFF(FFs[i], i);
+    }
+    assignSlot(newFF);
+    return newFF;
+}
+
+void Manager::assignSlot(FF* newFF){
+    int bit = newFF->getCell()->getBits();
+    if(bit == 1)
+        return ;
+
+    vector<FF*> FFs = newFF->getClusterFF();
     // Stable Marriage Problem (Gale-Shapley Algorithm)
     std::vector<std::vector<double>> cost(bit, std::vector<double>(bit, 0)); // i FF cost for j slot
     std::queue<int> waitSlot; // slot wait to be assigned FF
-    std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<std::pair<double, int>>> pq[bit];
+    std::priority_queue<std::pair<double, int>> pq[bit];
     for(int i=0;i<bit;i++){
         FF* curFF = FFs[i];
         for(int j=0;j<bit;j++){
-            cost[i][j] = DisplacementDelay * (
-                            (HPWL(curFF->getOriginalD(),  newFF->getNewCoor() + newFF->getPinCoor("D" + std::to_string(j)))) +
-                            (curFF->getNextStage().size() * HPWL(curFF->getOriginalQ(), newFF->getNewCoor() + newFF->getPinCoor("Q" + std::to_string(j))))
-                        );
-            cost[i][j] -= curFF->getTimingSlack("D");
+            PrevInstance prevInstance = curFF->getPrevInstance();
+            Coor newCoorD = newFF->getNewCoor() + newFF->getPinCoor("D" + std::to_string(j));
+            double delta_hpwl = 0;
+            Coor inputCoor;
+            // D pin cost
+            if(prevInstance.instance){
+                if(prevInstance.cellType == CellType::IO){
+                    inputCoor = prevInstance.instance->getCoor();
+                    double old_hpwl = HPWL(inputCoor, curFF->getOriginalD());
+                    double new_hpwl = HPWL(inputCoor, newCoorD);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+                else if(prevInstance.cellType == CellType::GATE){
+                    inputCoor = prevInstance.instance->getCoor() + prevInstance.instance->getPinCoor(prevInstance.pinName);
+                    double old_hpwl = HPWL(inputCoor, curFF->getOriginalD());
+                    double new_hpwl = HPWL(inputCoor, newCoorD);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+                else{
+                    FF* inputFF = dynamic_cast<FF*>(prevInstance.instance);
+                    inputCoor = inputFF->getOriginalQ();
+                    Coor newCoorQ = inputFF->getPhysicalFF()->getNewCoor() + inputFF->getPhysicalFF()->getPinCoor("Q" + inputFF->getPhysicalPinName());
+                    double old_hpwl = HPWL(inputCoor, curFF->getOriginalD());
+                    double new_hpwl = HPWL(newCoorQ, newCoorD);
+                    delta_hpwl += old_hpwl - new_hpwl;
+                }
+            }
+            double newSlack = curFF->getTimingSlack("D") + DisplacementDelay * delta_hpwl;
+            cost[i][j] = newSlack < 0 ? newSlack : 0;
+
+            // Q pin cost
             for(auto& nextFF : curFF->getNextStage()){
-                cost[i][j] -= nextFF.ff->getTimingSlack("D");
+                Coor originalInput = curFF->getOriginalQ();
+                Coor newInput = newFF->getNewCoor() + newFF->getPinCoor("Q" + std::to_string(j));
+                if(nextFF.outputGate){
+                    inputCoor = nextFF.outputGate->getCoor() + nextFF.outputGate->getPinCoor(nextFF.pinName);
+                    double old_hpwl = HPWL(inputCoor, originalInput);
+                    double new_hpwl = HPWL(inputCoor, newInput);
+                    delta_hpwl = old_hpwl - new_hpwl;
+                }
+                else{
+                    Coor newCoorD;
+                    newCoorD = nextFF.ff->getPhysicalFF()->getNewCoor() + nextFF.ff->getPhysicalFF()->getPinCoor("D" + nextFF.ff->getPhysicalPinName());
+                    double old_hpwl = HPWL(nextFF.ff->getOriginalD(), originalInput);
+                    double new_hpwl = HPWL(newCoorD, newInput);
+                    delta_hpwl = old_hpwl - new_hpwl;
+                }
+                newSlack = nextFF.ff->getTimingSlack("D") + DisplacementDelay * delta_hpwl;
+                cost[i][j] += newSlack < 0 ? newSlack : 0;
             }
             pq[j].push({cost[i][j], i});
         }
-        curFF->setPhysicalFF(nullptr, -1);
         waitSlot.push(i);
     }
+
+    for(int i=0;i<bit;i++)
+        FFs[i]->setPhysicalFF(nullptr, -1);
 
     while(!waitSlot.empty()){
         int slot = waitSlot.front();
@@ -306,8 +364,6 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
             waitSlot.pop();
         }
     }
-
-    return newFF;
 }
 
 std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
