@@ -7,6 +7,7 @@ Node::Node() :name(""), gpCoor(0, 0), lgCoor(DBL_MAX, DBL_MAX){
     h = 0;
     isPlace = false;
     TNS = 0;
+    ffptr = nullptr;
 }
 
 Node::~Node(){}
@@ -50,6 +51,10 @@ void Node::setClosestRowIdx(size_t closest_rowidx){
 
 void Node::setPlaceRowIdx(size_t place_rowidx){
     this->place_rowidx = place_rowidx;
+}
+
+void Node::setFFPtr(FF *ffptr){
+    this->ffptr = ffptr;
 }
 
 // Getters
@@ -99,6 +104,10 @@ size_t Node::getClosestRowIdx()const{
 
 size_t Node::getPlaceRowIdx()const{
     return place_rowidx;
+}
+
+FF *Node::getFFPtr()const{
+    return ffptr;
 }
 
 std::ostream &operator<<(std::ostream &os, const Node &node){

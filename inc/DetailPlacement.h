@@ -28,6 +28,7 @@ typedef std::pair<Point, int> PointWithID;
 // The R-tree stores PointWithID elements and uses a quadratic split algorithm for node splitting
 typedef bgi::rtree<PointWithID, bgi::quadratic<P_PER_NODE>> RTree;
 
+class Node;
 class Legalizer;
 class DetailPlacement{
 private:
@@ -46,7 +47,7 @@ private:
     void BuildRtreeMaps();
 
     // 3 main methods for detail placement
-    void GlobalSwap();
+    void GlobalSwap(Node *ff, int id);
     void VerticalSwap();
     void LoaclReordering();
 };

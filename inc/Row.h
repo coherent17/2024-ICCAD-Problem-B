@@ -12,6 +12,7 @@
 // Row class used in legalizer code
 // Will update the result of the struct::PlacementRow
 
+class Node;
 class Row{
 private:
     Coor startCoor;

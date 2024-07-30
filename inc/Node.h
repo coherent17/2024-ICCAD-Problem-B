@@ -3,6 +3,7 @@
 
 #include "Coor.h"
 #include "Cell.h"
+#include "FF.h"
 #include <string.h>
 #include <cmath>
 
@@ -24,6 +25,7 @@ private:
     
     // Used in detail placement
     std::vector<Node *> NeighborCells;
+    FF *ffptr;
 
 public:
     Node();
@@ -40,6 +42,7 @@ public:
     void setTNS(double TNS);
     void setClosestRowIdx(size_t closest_rowidx);
     void setPlaceRowIdx(size_t place_rowidx);
+    void setFFPtr(FF *ffptr);
 
     // Getters
     const std::string &getName()const;
@@ -52,6 +55,7 @@ public:
     double getTNS()const;
     size_t getClosestRowIdx()const;
     size_t getPlaceRowIdx()const;
+    FF *getFFPtr()const;
 
     // Helper method
     double getDisplacement()const;                      // displacement from lgCoor to gpCoor

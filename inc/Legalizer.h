@@ -15,6 +15,8 @@
 
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
 
+class Node;
+class Row;
 class Legalizer{
 private:
     Manager& mgr;

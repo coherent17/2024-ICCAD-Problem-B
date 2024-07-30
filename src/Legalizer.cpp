@@ -41,6 +41,7 @@ void Legalizer::LoadFF(){
         ff->setH(pair.second->getH());
         ff->setIsPlace(false);
         ff->setTNS(pair.second->getTNS());
+        ff->setFFPtr(pair.second);
         ffs.emplace_back(ff);
     }
 }
