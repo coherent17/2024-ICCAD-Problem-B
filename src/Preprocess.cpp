@@ -102,7 +102,7 @@ void Preprocess::optimal_FF_location(){
     }
 
     preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size(), FFs);
-    const double kAlpha = 100;
+    const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / 10.0;
     Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size(), FFs);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
@@ -124,7 +124,7 @@ void Preprocess::optimal_FF_location(){
             std::cout << "TNS : " << TNS << std::endl;
         }
         double newTNS = TNS;
-        if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS){
+        if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS ){
             std::cout << "Gradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
             getSlackStatistic(true);
