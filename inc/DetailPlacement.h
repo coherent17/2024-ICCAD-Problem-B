@@ -47,7 +47,7 @@ private:
     void BuildRtreeMaps();
 
     // 3 main methods for detail placement
-    void GlobalSwap(Node *ff, int id);
+    void GlobalSwap();
     void VerticalSwap();
     void LoaclReordering();
 };
