@@ -24,7 +24,7 @@ void postBankingOptimizer::run(){
 
 
     postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, totalFF, FFs);
-    const double kAlpha = 100;
+    const double kAlpha = mgr.Bit_FF_Map[1][0]->getW();
     Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, mgr.FF_Map.size(), FFs);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
@@ -41,7 +41,7 @@ void postBankingOptimizer::run(){
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
         }
         double newTNS = mgr.getTNS();
-        if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS){
+        if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS >= prevTNS){
             std::cout << "\n\nGradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;

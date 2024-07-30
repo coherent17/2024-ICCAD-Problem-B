@@ -283,17 +283,22 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
 
 void postBankingObjFunction::getWeight(FF* MBFF, vector<double>& weight){
     double sum = 0.0000001;
+    bool hasNegative = false;
     // weigt by slack
     for(auto cur_ff : MBFF->getClusterFF()){
         double D_slack = cur_ff->physicalFF->getTimingSlack("D" + cur_ff->getPhysicalPinName());
         const vector<NextStage>& nextStage = cur_ff->getNextStage();
         // get total
-        if(D_slack < 0)
+        if(D_slack < 0){
             sum += D_slack;
+            hasNegative = true;
+        }
         for(size_t j=0;j<nextStage.size();j++){
             double slack = nextStage[j].ff->physicalFF->getTimingSlack("D" + nextStage[j].ff->getPhysicalPinName());
-            if(slack < 0)
+            if(slack < 0){
                 sum += slack;
+                hasNegative = true;
+            }
         }
     }
     // get weight
@@ -315,6 +320,10 @@ void postBankingObjFunction::getWeight(FF* MBFF, vector<double>& weight){
                 weight[curWeight] = 0;
             curWeight++;
         }
+    }
+    if(!hasNegative){
+        for(size_t i=0;i<weight.size();i++)
+            weight[i] = 0.1/weight.size();
     }
 }
 
