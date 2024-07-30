@@ -11,9 +11,7 @@ DetailPlacement::~DetailPlacement(){
 void DetailPlacement::run(){
     DEBUG_DP("Running detail placement!");
     BuildRtreeMaps();
-    for(size_t i = 0; i < legalizer->ffs.size(); i++){
-        GlobalSwap(legalizer->ffs[i], i);
-    }
+
 }
 
 void DetailPlacement::BuildRtreeMaps(){
@@ -26,20 +24,26 @@ void DetailPlacement::BuildRtreeMaps(){
     }
 
     // init rtree
-    for(const auto &cell : cellSet){
-        RtreeMaps[cell] = RTree();
-    }
+    for(size_t i=0;i<100;i++){
+        for(const auto &cell : cellSet){
+            RtreeMaps[cell] = RTree();
+        }
 
-    // insert ff into rtree
-    std::sort(legalizer->ffs.begin(), legalizer->ffs.end(), [](const Node *a, const Node *b){
-        return a->getTNS() > b->getTNS();
-    });
+        // insert ff into rtree
+        std::sort(legalizer->ffs.begin(), legalizer->ffs.end(), [](const Node *a, const Node *b){
+            return a->getTNS() > b->getTNS();
+        });
 
-    for(size_t i = 0; i < legalizer->ffs.size(); i++){
-        Node *ff = legalizer->ffs[i];
-        PointWithID pointwithid;
-        pointwithid = std::make_pair(Point(ff->getLGCoor().x, ff->getLGCoor().y), i);
-        RtreeMaps[ff->getCell()].insert(pointwithid);
+        for(size_t i = 0; i < legalizer->ffs.size(); i++){
+            Node *ff = legalizer->ffs[i];
+            PointWithID pointwithid;
+            pointwithid = std::make_pair(Point(ff->getLGCoor().x, ff->getLGCoor().y), i);
+            RtreeMaps[ff->getCell()].insert(pointwithid);
+        }
+
+        for(size_t i = 0; i < legalizer->ffs.size(); i++){
+            GlobalSwap(legalizer->ffs[i], i);
+        }
     }
 }
 
@@ -55,7 +59,15 @@ void DetailPlacement::GlobalSwap(Node *ff, int id){
         return;
     }
 
-    if(ff->getDisplacement() < legalizer->ffs[nearestPoint.second]->getDisplacement(ff->getLGCoor())){
+    size_t ff_critical = 0;
+    size_t target_critical = 0;
+    for(auto& curFF : ff->getFFPtr()->getClusterFF()){
+        ff_critical += 1 + curFF->getNextStage().size();
+    }
+    for(auto& curFF : legalizer->ffs[nearestPoint.second]->getFFPtr()->getClusterFF()){
+        target_critical += 1 + curFF->getNextStage().size();
+    }
+    if(ff->getDisplacement() * ff_critical < legalizer->ffs[nearestPoint.second]->getDisplacement(ff->getLGCoor()) * target_critical){
         return;
     }
 

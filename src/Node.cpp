@@ -95,7 +95,7 @@ double Node::getDisplacement(const Coor &otherCoor)const{
 }
 
 double Node::getTNS()const{
-    return TNS;
+    return ffptr->getTNS();
 }
 
 size_t Node::getClosestRowIdx()const{
