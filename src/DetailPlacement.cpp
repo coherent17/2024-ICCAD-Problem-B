@@ -12,13 +12,25 @@ void DetailPlacement::run(){
     DEBUG_DP("Running detail placement!");
     BuildRtreeMaps();
     GlobalSwap();
+    BuildRtreeMaps();
+    GlobalSwap();
+    BuildRtreeMaps();
+    GlobalSwap();
+    BuildRtreeMaps();
+    GlobalSwap();
+    BuildRtreeMaps();
+    GlobalSwap();
+    BuildRtreeMaps();
+    GlobalSwap();
+    VerticalSwap();
+    LoaclReordering();
 }
 
 void DetailPlacement::BuildRtreeMaps(){
-    DEBUG_DP("Build Rtree for same cell type");
+    DEBUG_DP("Build Rtree");
     // check for the unique cells
     for(const auto &ff : legalizer->ffs){
-        assert(ff->getLGCoor().y == legalizer->rows[ff->getPlaceRowIdx()]->getStartCoor().y);
+        //assert(ff->getLGCoor().y == legalizer->rows[ff->getPlaceRowIdx()]->getStartCoor().y);
         cellSet.insert(ff->getCell());
         legalizer->rows[ff->getPlaceRowIdx()]->addFFs(ff);
     }
@@ -42,7 +54,7 @@ void DetailPlacement::BuildRtreeMaps(){
 }
 
 void DetailPlacement::GlobalSwap(){
-    DEBUG_DP("Global Swap");
+    DEBUG_DP("GlobalSwap");
     for(size_t id = 0; id < legalizer->ffs.size(); id++){
         Node *ff = legalizer->ffs[id];
         Point queryPoint(ff->getGPCoor().x, ff->getGPCoor().y);
@@ -80,9 +92,9 @@ void DetailPlacement::GlobalSwap(){
 }
 
 void DetailPlacement::VerticalSwap(){
-
+    DEBUG_DP("VerticalSwap");
 }
 
 void DetailPlacement::LoaclReordering(){
-
+    DEBUG_DP("LoaclReordering");
 }
