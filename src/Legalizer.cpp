@@ -141,14 +141,14 @@ void Legalizer::Tetris(){
     for(size_t i = 0; i < ffs.size(); i++){
         update_bar((int) (i  * 100) / ffs.size() + 1);
         Node *ff = ffs[i];
-        size_t closest_row_idx = FindClosestRow(ff);
-        bool placeable = true;
-        double minDisplacement = PlaceFF(ff, closest_row_idx, placeable);
-        int down_row_idx = closest_row_idx - 1;
-        int up_row_idx = closest_row_idx + 1;
         int numBits = ff->getCell()->getBits();
-        int cell_idx = 0;
+        int cell_idx = 0;        
+        size_t closest_row_idx = FindClosestRow(ff);
         while(1){
+            bool placeable = true;
+            double minDisplacement = PlaceFF(ff, closest_row_idx, placeable);
+            int down_row_idx = closest_row_idx - 1;
+            int up_row_idx = closest_row_idx + 1;
             // local search down
             while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
                 if(!rows[down_row_idx]->hasCell(ff->getCell())){
