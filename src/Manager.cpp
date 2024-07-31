@@ -53,6 +53,7 @@ void Manager::preprocess(){
         newFF->setCell(cell);
         newFF->setClusterSize(1);
         newFF->addClusterFF(curFF, 0);
+        newFF->setFixed(curFF->getFixed());
         curFF->setPhysicalFF(newFF, 0);
 
         FF_Map[instanceName] = newFF;
@@ -259,6 +260,7 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     newFF->setCell(bankCellType);
     newFF->setClusterSize(bit);
     newFF->setClkIdx(clkIdx);
+    newFF->setFixed(false);
     FF_Map[newName] = newFF;
 
     if(bit == 1){ // bank single bit FF
@@ -383,6 +385,7 @@ std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
         newFF->setClusterSize(1);
         newFF->addClusterFF(ff, 0);
         newFF->setClkIdx(clkIdx);
+        newFF->setFixed(false);
         ff->setPhysicalFF(newFF, 0);
 
         FF_Map[instanceName] = newFF;

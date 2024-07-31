@@ -12,21 +12,27 @@ postBankingOptimizer::~postBankingOptimizer(){
 void postBankingOptimizer::run(){
     std::cout << "[Post banking optimize]" << std::endl;
     // create FF logic
-    int totalFF = mgr.preprocessor->getFFList().size();
     std::unordered_map<std::string, int> idx_map;
+    std::vector<FF*> FFsFixed;
     std::vector<FF*> FFs(mgr.FF_Map.size());
+    FFsFixed.reserve(mgr.FF_Map.size());
     size_t i=0;
+
     for(auto& FF_m : mgr.FF_Map){
-        FFs[i] = FF_m.second;
+        FF* curFF = FF_m.second;
+        if(1 || !curFF->getFixed()){ // ignore fixed idea, it does improve :( 
+            FFsFixed.push_back(curFF);
+        }
+        FFs[i] = curFF;
         i++;
     }
 
-    vector<Coor> oldCoor(FFs.size());
-    for(size_t j=0;j<FFs.size();j++)
-        oldCoor[j] = FFs[j]->getNewCoor();
-    postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, totalFF, FFs);
+    vector<Coor> oldCoor(FFsFixed.size());
+    for(size_t j=0;j<FFsFixed.size();j++)
+        oldCoor[j] = FFsFixed[j]->getNewCoor();
+    postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, FFsFixed.size(), FFsFixed);
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW();
-    Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, mgr.FF_Map.size(), FFs);
+    Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, FFsFixed.size(), FFsFixed);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
@@ -47,9 +53,9 @@ void postBankingOptimizer::run(){
             std::cout << "Final statistic" << std::endl;
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
             if(newTNS > prevTNS && i==0)
-                for(size_t j=0;j<FFs.size();j++){
-                    FFs[j]->setNewCoor(oldCoor[j]);
-                    FFs[j]->setCoor(oldCoor[j]);
+                for(size_t j=0;j<FFsFixed.size();j++){
+                    FFsFixed[j]->setNewCoor(oldCoor[j]);
+                    FFsFixed[j]->setCoor(oldCoor[j]);
                 }
             break;
         }

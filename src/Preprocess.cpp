@@ -41,6 +41,7 @@ void Preprocess::Debank(){
                     ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
                     ff_cell = targetCell;
                     changed = true;
+                    temp->setFixed(false);
                 }
                 else{
                     ff_coor = cur_ff.getCoor();
@@ -102,28 +103,32 @@ void Preprocess::Build_Circuit_Gragh(){
 }
 
 void Preprocess::optimal_FF_location(){
+    double prevTNS = getSlackStatistic(true);
     // create FF logic
     std::unordered_map<std::string, int> idx_map;
+    std::vector<FF*> FFsFixed;
     std::vector<FF*> FFs(FF_list.size());
+    FFsFixed.reserve(FF_list.size());
     size_t i=0;
     for(auto& FF_m : FF_list){
-        FFs[i] = FF_m.second;
+        FF* curFF = FF_m.second;
+        if(1 || !curFF->getFixed()){ // ignore fixed idea, it does improve :( 
+            FFsFixed.push_back(curFF);
+        }
+        FFs[i] = curFF;
         i++;
     }
-
-    preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size(), FFs);
+    preprocessObjFunction obj(mgr, FF_list, idx_map, FFsFixed.size(), FFsFixed);
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / std::max(mgr.alpha, 10.0);
-    Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size(), FFs);
+    Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FFsFixed.size(), FFsFixed);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
-    double prevTNS = getSlackStatistic(true);
     const double terminateThreshold = 0.01;
     for(i=0;i<=1000;i++){
         optimizer.Step(true);
         // CAL new slack
         double TNS = updateSlack(FFs);
         // update original data
-
         for(auto& ff_m : FF_list){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
@@ -164,6 +169,7 @@ void Preprocess::ChangeCell(){
         if(totalCost < 0){
             changed = true;
             curFF->setCell(targetCell);
+            curFF->setFixed(false);
         }
     }
 }
