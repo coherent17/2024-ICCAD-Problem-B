@@ -76,6 +76,16 @@ run5:
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/cornerNotAligned.txt testcase/cornerNotAligned.txt.out
 
+run6:
+	./$(BIN) testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
+
+run7:
+	./$(BIN) testcase/testcase2.txt testcase/testcase2.txt.out
+	chmod +x sanity_checker/sanity
+	./sanity_checker/sanity testcase/testcase2.txt testcase/testcase2.txt.out
+
 runArea:
 	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out 
 	chmod +x sanity_checker/sanity

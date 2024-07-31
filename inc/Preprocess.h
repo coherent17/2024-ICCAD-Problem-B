@@ -29,7 +29,7 @@ class Preprocess{
         void Debank();
         void Build_Circuit_Gragh();
         void optimal_FF_location();
-
+        void ChangeCell();
         // function for build circuit gragh
         static void findDrivingCell(const Net& n, std::string& driving_cell, std::string& driving_pin, 
                              bool& is_CLK, bool& has_driving_cell);

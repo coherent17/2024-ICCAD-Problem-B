@@ -21,9 +21,9 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Preprocessor.out");
 
-    mgr.meanshift();
-    mgr.getOverallCost(cost_verbose);
-    mgr.dumpVisual("Meanshift.out");
+    // mgr.meanshift();
+    // mgr.getOverallCost(cost_verbose);
+    // mgr.dumpVisual("Meanshift.out");
 
     mgr.banking();
     mgr.getOverallCost(cost_verbose);
