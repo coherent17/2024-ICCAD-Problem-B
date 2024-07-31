@@ -6,6 +6,7 @@
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/index/rtree.hpp>
 #include <boost/foreach.hpp>
+#include <mutex>
 #include "Legalizer.h"
 #include "Manager.h"
 #include "Random.h"
@@ -44,7 +45,22 @@ public:
     void run();
 
 private:
-    void BuildRtreeMaps();
+    /**
+    @brief Build rtree for same cell type for all ff
+    */
+    void BuildGlobalRtreeMaps();
+
+    /**
+    @brief Build rtree for same cell type for Node *ff's upper/lower row
+    */
+    void BuildVerticalRtreeMaps(Node *ff);
+
+    /**
+    @brief 
+        1. Make sure the Node::LGCoor and Node::placeIdx are consistent
+        2. Make sure the Node::cell is in cellSet
+    */
+    void CheckSwapSanity();
 
     // 3 main methods for detail placement
     void GlobalSwap();
