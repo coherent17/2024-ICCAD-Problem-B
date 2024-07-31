@@ -1,7 +1,8 @@
 # Compiler & Linker settings
 CXX = g++
 CXXFLAGS = -I ./inc -std=c++14 -fopenmp
-OPTFLAGS = -march=native -funroll-loops -finline-functions -ffast-math -O3 #-DNDEBUG
+OPTFLAGS = -march=native -funroll-loops -finline-functions -ffast-math -O3
+DEBUGFLAGS = -DENABLE_DEBUG_DP -DENABLE_DEBUG_LGZ -DENABLE_DEBUG_CHECKER -DENABLE_DEBUG_TIMER  #-DNDEBUG(for assert) 
 WARNINGS = -g -Wall -static
 
 # Valgrind for memory issue
@@ -41,7 +42,7 @@ $(OBJDIR):
 
 $(BIN): main.cpp $(OBJS)
 	$(VECHO) "	LD\t$@\n"
-	$(Q)$(CXX) $(WARNINGS) $(CXXFLAGS) $(OPTFLAGS) $^ -o $@ $(LINKER)
+	$(Q)$(CXX) $(WARNINGS) $(DEBUGFLAGS) $(CXXFLAGS) $(OPTFLAGS) $^ -o $@ $(LINKER)
 
 # Include generated dependency files
 -include $(DEPS)
@@ -49,7 +50,7 @@ $(BIN): main.cpp $(OBJS)
 # Compilation rule for object files with automatic dependency generation
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 	$(VECHO) "	CC\t$@\n"
-	$(Q)$(CXX) $(WARNINGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
+	$(Q)$(CXX) $(WARNINGS) $(DEBUGFLAGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
 
 run1:
 	./$(BIN) testcase/sampleCase testcase/sampleCase.out

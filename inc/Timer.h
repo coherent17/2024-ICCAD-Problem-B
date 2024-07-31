@@ -4,6 +4,12 @@
 #include <chrono>
 #include <iostream>
 
+#ifdef ENABLE_DEBUG_TIMER
+#define DEBUG_TIMER(message) std::cout << "[TIMER] " << message << std::endl
+#else
+#define DEBUG_TIMER(message)
+#endif
+
 class Timer{
 private:
     std::chrono::high_resolution_clock::time_point start_time;

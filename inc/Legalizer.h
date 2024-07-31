@@ -13,7 +13,11 @@
 #include <algorithm>
 #include <cfloat>
 
+#ifdef ENABLE_DEBUG_LGZ
 #define DEBUG_LGZ(message) std::cout << "[LEGALIZER] " << message << std::endl
+#else
+#define DEBUG_LGZ(message)
+#endif
 
 class Node;
 class Row;

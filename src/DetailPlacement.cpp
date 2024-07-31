@@ -17,7 +17,11 @@ void DetailPlacement::run(){
     GlobalSwap();
     LocalSwap();
     GlobalSwap();
-    // LocalSwap();
+    LocalSwap();
+    GlobalSwap();
+    LocalSwap();
+    GlobalSwap();
+    LocalSwap();
 }
 
 void DetailPlacement::BuildGlobalRtreeMaps(){

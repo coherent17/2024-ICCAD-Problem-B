@@ -14,7 +14,11 @@
 #include <vector>
 #include <set>
 
+#ifdef ENABLE_DEBUG_DP
 #define DEBUG_DP(message) std::cout << "[DetailPlacement] " << message << std::endl
+#else
+#define DEBUG_DP(message)
+#endif
 
 namespace bg = boost::geometry;
 namespace bgi = boost::geometry::index;

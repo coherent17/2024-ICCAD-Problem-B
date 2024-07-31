@@ -10,7 +10,7 @@ void Timer::start(){
 
 void Timer::stop(){
     end_time = std::chrono::high_resolution_clock::now();
-    std::cout << "[Timer] Elapsed time: " << std::chrono::duration<double>(end_time - start_time).count() << std::endl;
+    DEBUG_TIMER("Elapsed time: " + std::to_string(std::chrono::duration<double>(end_time - start_time).count()));
 }
 
 double Timer::elapsed()const{
