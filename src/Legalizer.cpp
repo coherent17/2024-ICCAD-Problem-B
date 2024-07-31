@@ -146,43 +146,57 @@ void Legalizer::Tetris(){
         double minDisplacement = PlaceFF(ff, closest_row_idx, placeable);
         int down_row_idx = closest_row_idx - 1;
         int up_row_idx = closest_row_idx + 1;
-
-        // local search down
-        while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
-            if(!rows[down_row_idx]->hasCell(ff->getCell())){
-                placeable = true;
-                double downDisplacement = PlaceFF(ff, down_row_idx, placeable);
-                if(placeable)
-                    minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
-                else
-                    rows[down_row_idx]->addRejectCell(ff->getCell());
+        int numBits = ff->getCell()->getBits();
+        int cell_idx = 0;
+        while(1){
+            // local search down
+            while(down_row_idx >= 0 && std::abs(ff->getGPCoor().y - rows[down_row_idx]->getStartCoor().y) < minDisplacement){
+                if(!rows[down_row_idx]->hasCell(ff->getCell())){
+                    placeable = true;
+                    double downDisplacement = PlaceFF(ff, down_row_idx, placeable);
+                    if(placeable)
+                        minDisplacement = minDisplacement < downDisplacement ? minDisplacement : downDisplacement;
+                    else
+                        rows[down_row_idx]->addRejectCell(ff->getCell());
+                }
+                down_row_idx--;
             }
-            down_row_idx--;
-        }
 
-        // local search up
-        while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
-            if(!rows[up_row_idx]->hasCell(ff->getCell())){
-                placeable = true;
-                double upDisplacement = PlaceFF(ff, up_row_idx, placeable);
-                if(placeable)
-                    minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
-                else
-                    rows[up_row_idx]->addRejectCell(ff->getCell());
+            // local search up
+            while(up_row_idx < (int)rows.size() && std::abs(ff->getGPCoor().y - rows[up_row_idx]->getStartCoor().y) < minDisplacement){
+                if(!rows[up_row_idx]->hasCell(ff->getCell())){
+                    placeable = true;
+                    double upDisplacement = PlaceFF(ff, up_row_idx, placeable);
+                    if(placeable)
+                        minDisplacement = minDisplacement < upDisplacement ? minDisplacement : upDisplacement;
+                    else
+                        rows[up_row_idx]->addRejectCell(ff->getCell());
+                }
+                up_row_idx++;
             }
-            up_row_idx++;
-        }
 
-        if(ff->getIsPlace()){
-            for(auto &row : rows){
-                if(row->getStartCoor().y > ff->getLGCoor().y + ff->getH()) break;
-                row->slicing(ff);
+            if(ff->getIsPlace()){
+                for(auto &row : rows){
+                    if(row->getStartCoor().y > ff->getLGCoor().y + ff->getH()) break;
+                    row->slicing(ff);
+                }
+                break;
             }
-            continue;
-        }
+            else{
+                cell_idx++;
+                // change cell type (in top 3) and local search
+                if(cell_idx >= (int)mgr.Bit_FF_Map[numBits].size()){
+                    DEBUG_LGZ("Legalized Fail");
+                    break;
+                }
+                DEBUG_LGZ("Change Cell Type");
+                mgr.FF_Map[ff->getName()]->setCell(mgr.Bit_FF_Map[numBits][cell_idx]);
+                ff->setCell(mgr.Bit_FF_Map[numBits][cell_idx]);
+                ff->setW(mgr.Bit_FF_Map[numBits][cell_idx]->getW());
+                ff->setH(mgr.Bit_FF_Map[numBits][cell_idx]->getH());
+            }
 
-        // change cell type (in top 3) and local search
-        DEBUG_LGZ("Legalize Failed");
+        }
     }
     std::cout << std::endl;
 }
