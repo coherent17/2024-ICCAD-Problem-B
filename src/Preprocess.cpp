@@ -11,9 +11,11 @@ Preprocess::~Preprocess(){
 
 void Preprocess::run(){
     FF::DisplacementDelay = mgr.DisplacementDelay;
+    changed = false;
     Debank();
     Build_Circuit_Gragh();
     ChangeCell();
+    // if(changed)
     optimal_FF_location();
 }
 
@@ -35,9 +37,10 @@ void Preprocess::Debank(){
                 FF* temp = new FF;
                 Coor ff_coor;
                 Cell* ff_cell;
-                if(mgr.alpha < 100 || cur_cell->getBits() != 1){
+                if(cur_cell->getBits() != 1){
                     ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
                     ff_cell = targetCell;
+                    changed = true;
                 }
                 else{
                     ff_coor = cur_ff.getCoor();
@@ -109,7 +112,7 @@ void Preprocess::optimal_FF_location(){
     }
 
     preprocessObjFunction obj(mgr, FF_list, idx_map, FF_list.size(), FFs);
-    const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / 10.0;
+    const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / std::max(mgr.alpha, 10.0);
     Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FF_list.size(), FFs);
 
     std::cout << "Slack statistic before Optimize" << std::endl;
@@ -150,8 +153,6 @@ void Preprocess::ChangeCell(){
         double TimingCost = 0;
         FF* curFF = ff_m.second;
         Cell* curCell = curFF->getCell();
-        if(curCell == targetCell)
-            continue;
         TimingCost += (targetCell->getQpinDelay() - curCell->getQpinDelay()) * curFF->getNextStage().size();
         TimingCost += mgr.DisplacementDelay * (
                 HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
@@ -160,8 +161,10 @@ void Preprocess::ChangeCell(){
         double AreaCost = targetCell->getArea() - curCell->getArea();
         double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
         double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
-        if(totalCost < 0)
-            curFF->setCell(curCell);
+        if(totalCost < 0){
+            changed = true;
+            curFF->setCell(targetCell);
+        }
     }
 }
 
