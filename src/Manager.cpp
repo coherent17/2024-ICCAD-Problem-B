@@ -451,7 +451,6 @@ void Manager::deleteFF(FF* in){
 
 // the cost function without evaluate the bin density
 double Manager::getOverallCost(bool verbose){
-    std::cout << "[Cost Evaluation]" << std::endl;
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -498,10 +497,6 @@ double Manager::getOverallCost(bool verbose){
         }
         Bin_cost = lambda * numViolationBins;
     }
-    else{
-        std::cout << "[Warning] Skip bin density calculation!" << std::endl;
-    }
-
 
     double cost = TNS_cost + Power_cost + Area_cost + Bin_cost;
     double TNS_percentage = TNS_cost / cost * 100;
@@ -509,6 +504,7 @@ double Manager::getOverallCost(bool verbose){
     double Area_percentage = Area_cost / cost * 100;
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
+        if(SKIP_BIN_CALC) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
         size_t numAfterDot = 4;
         std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
         std::vector<std::vector<std::string>> rows = {

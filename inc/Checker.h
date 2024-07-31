@@ -1,7 +1,11 @@
 #ifndef _CHECKER_H_
 #define _CHECKER_H_
 
+#ifdef ENABLE_DEBUG_CHECKER
 #define DEBUG_CHECKER(message) std::cout << "[CHECKER] " << message << std::endl
+#else
+#define DEBUG_CHECKER(message)
+#endif
 
 #include "Manager.h"
 

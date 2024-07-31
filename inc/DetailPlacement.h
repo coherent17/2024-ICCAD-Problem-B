@@ -14,7 +14,11 @@
 #include <vector>
 #include <set>
 
+#ifdef ENABLE_DEBUG_DP
 #define DEBUG_DP(message) std::cout << "[DetailPlacement] " << message << std::endl
+#else
+#define DEBUG_DP(message)
+#endif
 
 namespace bg = boost::geometry;
 namespace bgi = boost::geometry::index;
@@ -53,7 +57,7 @@ private:
     /**
     @brief Build rtree for same cell type for Node *ff's upper/lower row
     */
-    void BuildVerticalRtreeMaps(Node *ff);
+    void BuildLocalRtreeMaps(Node *ff);
 
     /**
     @brief 
@@ -64,8 +68,7 @@ private:
 
     // 3 main methods for detail placement
     void GlobalSwap();
-    void VerticalSwap();
-    void LoaclReordering();
+    void LocalSwap();
 };
 
 

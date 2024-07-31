@@ -21,9 +21,9 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Preprocessor.out");
 
-    // mgr.meanshift();
-    // mgr.getOverallCost(cost_verbose);
-    // mgr.dumpVisual("Meanshift.out");
+    mgr.meanshift();
+    mgr.getOverallCost(cost_verbose);
+    mgr.dumpVisual("Meanshift.out");
 
     mgr.banking();
     mgr.getOverallCost(cost_verbose);
@@ -35,13 +35,14 @@ int main(int argc, char *argv[]){
 
     mgr.legalize();
     mgr.getOverallCost(cost_verbose);
+    mgr.dumpVisual("Legalize.out");
     mgr.checker();
 
     mgr.detailplacement();
     mgr.getOverallCost(cost_verbose);
+    mgr.dumpVisual("DetailPlacement.out");
     mgr.checker();
 
-    mgr.dumpVisual("Legalize.out");
     mgr.dump(argv[2]);
     return 0;
 }

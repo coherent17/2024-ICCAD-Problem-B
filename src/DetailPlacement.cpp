@@ -15,10 +15,13 @@ DetailPlacement::~DetailPlacement(){
 void DetailPlacement::run(){
     DEBUG_DP("Running detail placement!");
     GlobalSwap();
-    VerticalSwap();
+    LocalSwap();
     GlobalSwap();
-    VerticalSwap();
-    LoaclReordering();
+    LocalSwap();
+    GlobalSwap();
+    LocalSwap();
+    GlobalSwap();
+    LocalSwap();
 }
 
 void DetailPlacement::BuildGlobalRtreeMaps(){
@@ -42,8 +45,8 @@ void DetailPlacement::BuildGlobalRtreeMaps(){
     }
 }
 
-void DetailPlacement::BuildVerticalRtreeMaps(Node *ff){
-    DEBUG_DP("Build Vertical Rtree");
+void DetailPlacement::BuildLocalRtreeMaps(Node *ff){
+    DEBUG_DP("Build Local Rtree");
     int ff_current_rowIdx = ff->getPlaceRowIdx();
 
     // init/reset rtree
@@ -62,7 +65,7 @@ void DetailPlacement::BuildVerticalRtreeMaps(Node *ff){
     for(size_t i = 0; i < legalizer->ffs.size(); i++){
         Node *ffi = legalizer->ffs[i];
         // Only put the upper/lower ff into rtree
-        if((int)ffi->getPlaceRowIdx() == ff_current_rowIdx + 1 || (int)ffi->getPlaceRowIdx() == ff_current_rowIdx - 1){
+        if((int)ffi->getPlaceRowIdx() == ff_current_rowIdx + 1 || (int)ffi->getPlaceRowIdx() == ff_current_rowIdx - 1 || (int)ffi->getPlaceRowIdx() == ff_current_rowIdx){
             PointWithID pointwithid;
             pointwithid = std::make_pair(Point(ffi->getLGCoor().x, ffi->getLGCoor().y), i);
             std::lock_guard<std::mutex> guard(rtreeMutex);
@@ -111,6 +114,7 @@ void DetailPlacement::GlobalSwap(){
             continue;
         }
 
+        // [TODO]: Maintain the Row::FFOnThisRow vector for local swap to build the rtree faster
         // Swap the ff pairs by LGCoor and placeIdx
         Node *ff_current = ff;
         Node *ff_choose_to_swap = legalizer->ffs[nearestPoint.second];
@@ -135,14 +139,14 @@ void DetailPlacement::GlobalSwap(){
     CheckSwapSanity();
 }
 
-void DetailPlacement::VerticalSwap(){
-    DEBUG_DP("Vertical Swap");
+void DetailPlacement::LocalSwap(){
+    DEBUG_DP("Local Swap");
     for(size_t id = 0; (int)id < std::min((int)legalizer->ffs.size(), 10); id++){
         Node *ff = legalizer->ffs[id];
-        if(ff->getTNS() < 0){
+        if(ff->getTNS() == 0){
             continue;
         }
-        BuildVerticalRtreeMaps(ff);
+        BuildLocalRtreeMaps(ff);
         // Query from rtree to find the best ff that near ff's global placement coordinate
         Point queryPoint(ff->getGPCoor().x, ff->getGPCoor().y);
         std::vector<PointWithID> nearestResults;
@@ -169,6 +173,7 @@ void DetailPlacement::VerticalSwap(){
             continue;
         }
 
+        // [TODO]: Maintain the Row::FFOnThisRow vector for local swap to build the rtree faster
         // Swap the ff pairs by LGCoor and placeIdx
         Node *ff_current = ff;
         Node *ff_choose_to_swap = legalizer->ffs[nearestPoint.second];
@@ -191,11 +196,5 @@ void DetailPlacement::VerticalSwap(){
         RtreeMaps[ff->getCell()].remove(nearestPoint);
 
     }
-    CheckSwapSanity();
-}
-
-void DetailPlacement::LoaclReordering(){
-    DEBUG_DP("Loacl Reordering");
-
     CheckSwapSanity();
 }
