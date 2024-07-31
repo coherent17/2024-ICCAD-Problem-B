@@ -21,8 +21,9 @@ void postBankingOptimizer::run(){
         i++;
     }
 
-
-
+    vector<Coor> oldCoor(FFs.size());
+    for(size_t j=0;j<FFs.size();j++)
+        oldCoor[j] = FFs[j]->getNewCoor();
     postBankingObjFunction obj(mgr, mgr.FF_Map, idx_map, totalFF, FFs);
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW();
     Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, mgr.FF_Map.size(), FFs);
@@ -45,6 +46,11 @@ void postBankingOptimizer::run(){
             std::cout << "\n\nGradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
+            if(newTNS > prevTNS && i==0)
+                for(size_t j=0;j<FFs.size();j++){
+                    FFs[j]->setNewCoor(oldCoor[j]);
+                    FFs[j]->setCoor(oldCoor[j]);
+                }
             break;
         }
         prevTNS = newTNS;
