@@ -13,6 +13,7 @@ void Preprocess::run(){
     FF::DisplacementDelay = mgr.DisplacementDelay;
     Debank();
     Build_Circuit_Gragh();
+    ChangeCell();
     optimal_FF_location();
 }
 
@@ -27,21 +28,27 @@ void Preprocess::Debank(){
     for(auto& mbff_m : mgr.FF_Map){
         FF& cur_ff = *mbff_m.second;
         const std::string& cur_name = mbff_m.first;
-        const Cell& cur_cell = *cur_ff.getCell();
+        Cell* cur_cell = cur_ff.getCell();
         for(int i=0;i<cur_ff.getPinCount();i++){
-            std::string pinName = cur_cell.getPinName(i);
+            std::string pinName = cur_cell->getPinName(i);
             if(pinName[0] == 'D'){ // Assume all ff D pin start with D
                 FF* temp = new FF;
                 Coor ff_coor;
                 Cell* ff_cell;
-                ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
-                ff_cell = targetCell;
+                if(mgr.alpha < 100 || cur_cell->getBits() != 1){
+                    ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
+                    ff_cell = targetCell;
+                }
+                else{
+                    ff_coor = cur_ff.getCoor();
+                    ff_cell = cur_cell;
+                }
                 double slack = cur_ff.getTimingSlack(pinName);
                 // set original coor for D port and Q port
-                Coor d_coor = cur_ff.getCoor() + cur_cell.getPinCoor(pinName);
+                Coor d_coor = cur_ff.getCoor() + cur_cell->getPinCoor(pinName);
                 std::string QpinName = pinName;
                 QpinName[0] = 'Q';
-                Coor q_coor = cur_ff.getCoor() + cur_cell.getPinCoor(QpinName); 
+                Coor q_coor = cur_ff.getCoor() + cur_cell->getPinCoor(QpinName); 
 
                 int ff_clk = cur_ff.getClkIdx();
                 
@@ -50,7 +57,7 @@ void Preprocess::Debank(){
                 temp->setNewCoor(ff_coor);
                 temp->setTimingSlack("D", slack);
                 temp->setOriginalCoor(d_coor, q_coor);
-                temp->setOriginalQpinDelay(cur_cell.getQpinDelay());
+                temp->setOriginalQpinDelay(cur_cell->getQpinDelay());
                 temp->setClkIdx(ff_clk);
                 temp->setCell(ff_cell);
                 FF_list[temp->getInstanceName()] = temp;
@@ -107,7 +114,7 @@ void Preprocess::optimal_FF_location(){
 
     std::cout << "Slack statistic before Optimize" << std::endl;
     double prevTNS = getSlackStatistic(true);
-    const double terminateThreshold = 0.001;
+    const double terminateThreshold = 0.01;
     for(i=0;i<=1000;i++){
         optimizer.Step(true);
         // CAL new slack
@@ -131,6 +138,30 @@ void Preprocess::optimal_FF_location(){
             break;
         }
         prevTNS = newTNS;
+    }
+}
+
+void Preprocess::ChangeCell(){
+    Cell* targetCell = mgr.Bit_FF_Map[1][0];
+
+    // debank and save all the FF in logic_FF;
+    // which is all one bit ff without technology mapping(no cell library)
+    for(auto& ff_m : FF_list){
+        double TimingCost = 0;
+        FF* curFF = ff_m.second;
+        Cell* curCell = curFF->getCell();
+        if(curCell == targetCell)
+            continue;
+        TimingCost += (targetCell->getQpinDelay() - curCell->getQpinDelay()) * curFF->getNextStage().size();
+        TimingCost += mgr.DisplacementDelay * (
+                HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
+              + HPWL(curFF->getCoor() + curFF->getPinCoor("Q"), curFF->getCoor() + targetCell->getPinCoor("Q"))  * curFF->getNextStage().size()           
+                            );
+        double AreaCost = targetCell->getArea() - curCell->getArea();
+        double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
+        double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
+        if(totalCost < 0)
+            curFF->setCell(curCell);
     }
 }
 
