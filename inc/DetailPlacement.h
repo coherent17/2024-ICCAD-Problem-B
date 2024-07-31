@@ -53,7 +53,7 @@ private:
     /**
     @brief Build rtree for same cell type for Node *ff's upper/lower row
     */
-    void BuildVerticalRtreeMaps(Node *ff);
+    void BuildLocalRtreeMaps(Node *ff);
 
     /**
     @brief 
@@ -64,8 +64,7 @@ private:
 
     // 3 main methods for detail placement
     void GlobalSwap();
-    void VerticalSwap();
-    void LoaclReordering();
+    void LocalSwap();
 };
 
 
