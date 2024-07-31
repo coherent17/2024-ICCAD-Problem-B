@@ -110,6 +110,7 @@ void DetailPlacement::GlobalSwap(){
             continue;
         }
 
+        // [TODO]: Maintain the Row::FFOnThisRow vector for local swap to build the rtree faster
         // Swap the ff pairs by LGCoor and placeIdx
         Node *ff_current = ff;
         Node *ff_choose_to_swap = legalizer->ffs[nearestPoint.second];
@@ -168,6 +169,7 @@ void DetailPlacement::LocalSwap(){
             continue;
         }
 
+        // [TODO]: Maintain the Row::FFOnThisRow vector for local swap to build the rtree faster
         // Swap the ff pairs by LGCoor and placeIdx
         Node *ff_current = ff;
         Node *ff_choose_to_swap = legalizer->ffs[nearestPoint.second];
