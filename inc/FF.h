@@ -59,6 +59,9 @@ private:
     double originalQpinDelay;
     FF* physicalFF;
     int slot;
+
+    // ######################################### Fixed flag ########################################################
+    bool fixed;
 public:
     FF();
     explicit FF(int size);
@@ -81,7 +84,7 @@ public:
     void setOriginalQpinDelay(double);
     void setPhysicalFF(FF* targetFF, int slot);
     void setClusterSize(int);
-    
+    void setFixed(bool fixed);
     // Getter
     double getTimingSlack(const std::string &pinName)const;
     std::vector<FF*>& getClusterFF();
@@ -102,6 +105,7 @@ public:
     double getOriginalQpinDelay()const;
     FF* getPhysicalFF()const;
     int getSlot()const;
+    bool getFixed()const;
     std::string getPhysicalPinName();
     std::vector<std::pair<Coor, double>> getCriticalCoor(); // return the relative coor on critical path
     // ######################################### used in cluster ########################################################

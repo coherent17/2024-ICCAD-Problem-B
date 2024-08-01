@@ -139,7 +139,9 @@ void Legalizer::Tetris(){
 
     // [TODO]: enlarge the window and try to find 
     for(size_t i = 0; i < ffs.size(); i++){
+        #ifdef ENABLE_DEBUG_LGZ
         update_bar((int) (i  * 100) / ffs.size() + 1);
+        #endif
         Node *ff = ffs[i];
         int numBits = ff->getCell()->getBits();
         int cell_idx = 0;        
@@ -198,7 +200,9 @@ void Legalizer::Tetris(){
 
         }
     }
-    std::cout << std::endl;
+    #ifdef ENABLE_DEBUG_LGZ
+        std::cout << std::endl;
+    #endif
 }
 
 void Legalizer::LegalizeWriteBack(){
