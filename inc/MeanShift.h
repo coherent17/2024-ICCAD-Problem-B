@@ -9,11 +9,6 @@
 
 #define BOOST_ALLOW_DEPRECATED_HEADERS
 
-#ifdef ENABLE_DEBUG_CHECKER
-#define DEBUG_MS(message) std::cout << "[MEANSHIFT: " << message << "]" << std::endl;
-#else
-#define DEBUG_MS(message)
-#endif
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point.hpp>

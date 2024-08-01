@@ -1,10 +1,5 @@
 #ifndef _BANKING_H_
 #define _BANKING_H_
-#ifdef ENABLE_DEBUG_CHECKER
-#define DEBUG_CLUSTER(message) std::cout << "[CLUSTER: " << message << "]" << std::endl;
-#else
-#define DEBUG_CLUSTER(message)
-#endif
 
 #ifdef ENABLE_DEBUG_BAN
 #define DEBUG_BAN(message) std::cout << "[BANKING] " << message << std::endl
