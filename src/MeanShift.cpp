@@ -6,11 +6,11 @@ MeanShift::~MeanShift(){}
 
 void MeanShift::run(Manager &mgr){
     DEBUG_MS("do graceful meanshift clustering...");
-    DEBUG_MS("RUN RTREE")
+    DEBUG_MS("RUN RTREE");
     buildRtree(mgr);
-    DEBUG_MS("RUN KNN")
+    DEBUG_MS("RUN KNN");
     initKNN(mgr);
-    DEBUG_MS("SHIFT FF")
+    DEBUG_MS("SHIFT FF");
     shiftFFs();
 }
 
