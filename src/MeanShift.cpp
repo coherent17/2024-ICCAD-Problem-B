@@ -5,11 +5,12 @@ MeanShift::MeanShift(){}
 MeanShift::~MeanShift(){}
 
 void MeanShift::run(Manager &mgr){
-    DEBUG_MSG("RUN RTREE")
+    DEBUG_MS("do graceful meanshift clustering...");
+    DEBUG_MS("RUN RTREE")
     buildRtree(mgr);
-    DEBUG_MSG("RUN KNN")
+    DEBUG_MS("RUN KNN")
     initKNN(mgr);
-    DEBUG_MSG("SHIFT FF")
+    DEBUG_MS("SHIFT FF")
     shiftFFs();
 }
 
@@ -78,8 +79,8 @@ void MeanShift::shiftFFs(){
         totalShift += shift_distance;
         if(shift_distance > maxShift){maxShift = shift_distance;}
     }
-    std::cout << "Max shift distance: " << maxShift << std::endl;
-    std::cout << "Total shift distance: " << totalShift << std::endl;
+    DEBUG_MS("Max shift distance: " + std::to_string(maxShift));
+    DEBUG_MS("Total shift distance: " + std::to_string(totalShift));
 }
 
 void MeanShift::FFrunKNN(const Manager &mgr, int ffidx){

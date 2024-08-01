@@ -61,7 +61,6 @@ void Manager::preprocess(){
 
 void Manager::meanshift(){
     // do graceful meanshift clustering
-    std::cout << "do graceful meanshift clustering..." << std::endl;
     MeanShift meanshift;
     meanshift.run(*this);
 }

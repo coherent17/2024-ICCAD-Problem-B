@@ -1,5 +1,10 @@
 #ifndef _BANKING_H_
 #define _BANKING_H_
+#ifdef ENABLE_DEBUG_CHECKER
+#define DEBUG_CLUSTER(message) std::cout << "[CLUSTER: " << message << "]" << std::endl;
+#else
+#define DEBUG_CLUSTER(message)
+#endif
 
 #include <vector>
 #include "Cluster.h"
@@ -23,7 +28,6 @@ class Banking{
 private:
     Manager& mgr;
     std::vector<FF *> FFs;
-    std::vector<Cluster> clusters;
     std::unordered_map<int, int> clusterNum;
     std::vector<int> bitOrder;
 
@@ -34,7 +38,7 @@ public:
     void run();
 
     void bitOrdering();
-    Cell* chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
+    Cell* chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
     Cell* chooseCellLib(int bitNum);
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
     void sortFFs(std::vector<std::pair<int, double>> &nearFFs);

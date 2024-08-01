@@ -9,7 +9,7 @@ Banking::Banking(Manager& mgr) : mgr(mgr){
 Banking::~Banking(){}
 
 void Banking::run(){
-    std::cout << "Running cluster..." << std::endl;
+    DEBUG_CLUSTER("Running cluster...");
     bitOrdering();
     if(bitOrder[0] != 1){
         doClustering();
@@ -26,16 +26,16 @@ void Banking::bitOrdering(){
     }
     
     std::sort(bitScoreVector.begin(), bitScoreVector.end());
-    std::cout << "[LIB MBFF SCORE]" << std::endl;
+    DEBUG_CLUSTER("LIB MBFF SCORE");
 
     for(auto const& bit_pair: bitScoreVector){
         bitOrder.push_back(bit_pair.second);
         // DEBUG
-        std::cout <<"         " <<  mgr.Bit_FF_Map[bit_pair.second][0]->getCellName() << "(" << bit_pair.second  <<  "): " << bit_pair.first << std::endl;
+        DEBUG_CLUSTER(mgr.Bit_FF_Map[bit_pair.second][0]->getCellName() + "(" + std::to_string(bit_pair.second)  +  "): " + std::to_string(bit_pair.first));
     }
 }
 
-Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank){
+Cell* Banking::chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank){
     std::vector<std::pair<int, double>> nearFFs;
     PointWithID curFF;
     for(int i = 0; i < (int)resultFFs.size(); i++){
@@ -58,13 +58,10 @@ Cell* Banking::chooseCandidateFF(FF* nowFF, Cluster& c, std::vector<PointWithID>
 
         toRemoveFFs.push_back(curFF);
         FFToBank.push_back(FFs[curFF.second]);
-        c.addFF (FFs[curFF.second]->getInstanceName());
         for(int i = 0; i < bitNum-1; i++){
             toRemoveFFs.push_back (resultFFs[nearFFs[i].first]);
             FFToBank.push_back(FFs[resultFFs[nearFFs[i].first].second]);
-            c.addFF (FFs[resultFFs[nearFFs[i].first].second]->getInstanceName());
         }
-        c.setCell(chooseCell);
         return chooseCell;
     }
     return nullptr;
@@ -136,12 +133,11 @@ void Banking::doClustering(){
         for (size_t index = 0; index < FFs.size(); index++){
             FF* nowFF = FFs[index];
             if (isClustered[index]) {continue;}
-            Cluster c;  // DEBUG
             std::vector<PointWithID> resultFFs, toRemoveFFs;
             resultFFs.reserve(mgr.MaxBit);
             rtree.query(bgi::nearest(Point(nowFF->getNewCoor().x, nowFF->getNewCoor().y), mgr.MaxBit), std::back_inserter(resultFFs));
             std::vector<FF*> FFToBank;
-            Cell* chooseCell = chooseCandidateFF(nowFF, c, resultFFs, toRemoveFFs, FFToBank);
+            Cell* chooseCell = chooseCandidateFF(nowFF, resultFFs, toRemoveFFs, FFToBank);
             
             
             if(!toRemoveFFs.empty()){
@@ -149,7 +145,6 @@ void Banking::doClustering(){
                 if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
                     continue;
                 mgr.bankFF(clusterCoor, chooseCell, FFToBank);
-                c.setCoor(clusterCoor);
                 for (size_t j = 0; j < toRemoveFFs.size(); j++)
                 {
                     isClustered[toRemoveFFs[j].second] = true;
@@ -158,7 +153,6 @@ void Banking::doClustering(){
                     toRemoveFF->setNewCoor(clusterCoor);
                 }
                 rtree.remove (toRemoveFFs.begin(), toRemoveFFs.end());
-                clusters.push_back (c);
                 clusterTotalNum++;
             }
         }
@@ -181,29 +175,8 @@ void Banking::ClusterResult(){
         clusterNum[clusterFFs.size()]++;
     }
     std::map<int, int> clusterMap(clusterNum.begin(), clusterNum.end()); 
-    std::cout << "[CLUSTER RESULT]" << std::endl;
+    DEBUG_CLUSTER("CLUSTER RESULT");
     for(const auto &cluster : clusterMap){
-        std::cout << "        FF" << cluster.first << " : " << cluster.second << std::endl;
+        DEBUG_CLUSTER("FF" + std::to_string(cluster.first) + " : " + std::to_string(cluster.second));
     }
-    // DEBUG
-    // for(size_t i = 0; i < clusters.size(); i++){
-    //     std::cout << clusters[i].getCell()->getCellName() << ":";
-    //     std::vector<std::string> FFsName = clusters[i].getFFsName();
-    //     for(size_t j = 0; j < FFsName.size(); j++){
-    //         std::cout << " " << FFsName[j];
-    //     }
-    //     std::cout << std::endl;
-    // }
-    // for(const auto &MBFF : mgr.FF_Map){
-    //     std::vector<FF*> clusterFFs = MBFF.second->getClusterFF();
-    //     std::cout << MBFF.second->getInstanceName() << ":";
-    //     if(clusterFFs.size() != 0){
-    //         for(size_t i = 0; i < clusterFFs.size(); i++){
-    //             std::cout << " " << clusterFFs[i]->getInstanceName();
-    //         }
-    //     }else{
-    //         std::cout << " No Cluster"; 
-    //     }
-    //     std::cout << std::endl;
-    // }
 }
