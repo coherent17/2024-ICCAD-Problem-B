@@ -63,14 +63,19 @@ releaseCheck:
 	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015_release
 	rm -rf $(OBJDIR)
 	$(MAKE) DEBUGFLAGS="$(DEBUGFLAGS)" BIN=cadb0015
+	@echo "\nCompare with normal version";
 	@for testcase in $(TESTCASES); do \
 		./cadb0015 "$$testcase" "$$testcase.out" > /dev/null; \
+		start_time=$$(date +%s.%N); \
 		./cadb0015_release "$$testcase" "$$testcase.release.out"; \
+		end_time=$$(date +%s.%N); \
+		duration=$$(echo "$$end_time - $$start_time" | bc); \
 		if diff "$$testcase.out" "$$testcase.release.out" > /dev/null; then \
 			echo "Correct: $$testcase"; \
 		else \
 			echo "Fail: $$testcase"; \
 		fi; \
+		echo "Runtime for $$testcase: $$duration seconds\n"; \
 	done
 
 
