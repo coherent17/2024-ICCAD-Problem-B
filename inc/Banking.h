@@ -1,6 +1,12 @@
 #ifndef _BANKING_H_
 #define _BANKING_H_
 
+#ifdef ENABLE_DEBUG_BAN
+#define DEBUG_BAN(message) std::cout << "[BANKING] " << message << std::endl
+#else
+#define DEBUG_BAN(message)
+#endif
+
 #include <vector>
 #include "Cluster.h"
 #include "Manager.h"

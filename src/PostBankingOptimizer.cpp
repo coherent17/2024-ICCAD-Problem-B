@@ -10,7 +10,9 @@ postBankingOptimizer::~postBankingOptimizer(){
 }
 
 void postBankingOptimizer::run(){
+    #ifndef NDEBUG
     std::cout << "[Post banking optimize]" << std::endl;
+    #endif
     // create FF logic
     std::unordered_map<std::string, int> idx_map;
     std::vector<FF*> FFsFixed;
@@ -34,8 +36,10 @@ void postBankingOptimizer::run(){
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW();
     Gradient optimizer(mgr, mgr.FF_Map, obj, kAlpha, idx_map, FFsFixed.size(), FFsFixed);
 
+    #ifndef NDEBUG
     std::cout << "Slack statistic before Optimize" << std::endl;
     std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
+    #endif
     double prevTNS = mgr.getTNS();
     const double terminateThreshold = 0.001;
     for(i=0;i<=1000;i++){
@@ -43,15 +47,19 @@ void postBankingOptimizer::run(){
         
         // update original data
         if(i % 25 == 0){
+            #ifndef NDEBUG
             std::cout << "\nphase 1 step : " << i << std::endl;
             std::cout << "Slack statistic after Optimize" << std::endl;
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
+            #endif
         }
         double newTNS = mgr.getTNS();
         if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS >= prevTNS){
+            #ifndef NDEBUG
             std::cout << "\n\nGradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
             std::cout << "\tTNS : " << mgr.getTNS() << std::endl;
+            #endif
             if(newTNS > prevTNS && i==0)
                 for(size_t j=0;j<FFsFixed.size();j++){
                     FFsFixed[j]->setNewCoor(oldCoor[j]);

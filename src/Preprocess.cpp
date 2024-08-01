@@ -69,8 +69,9 @@ void Preprocess::Debank(){
             }
         }
     }
-
+    #ifndef NDEBUG
     std::cout << "Total number of FF : " << FF_list.size() << std::endl;
+    #endif
 }
 
 void Preprocess::Build_Circuit_Gragh(){
@@ -103,7 +104,11 @@ void Preprocess::Build_Circuit_Gragh(){
 }
 
 void Preprocess::optimal_FF_location(){
-    double prevTNS = getSlackStatistic(true);
+    double prevTNS = getSlackStatistic(false);
+    #ifndef NDEBUG
+    std::cout << "Slack statistic before Optimize" << std::endl;
+    prevTNS = getSlackStatistic(true);
+    #endif
     // create FF logic
     std::unordered_map<std::string, int> idx_map;
     std::vector<FF*> FFsFixed;
@@ -122,7 +127,6 @@ void Preprocess::optimal_FF_location(){
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / std::max(mgr.alpha, 10.0);
     Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FFsFixed.size(), FFsFixed);
 
-    std::cout << "Slack statistic before Optimize" << std::endl;
     const double terminateThreshold = 0.01;
     for(i=0;i<=1000;i++){
         optimizer.Step(true);
@@ -135,13 +139,17 @@ void Preprocess::optimal_FF_location(){
             cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
         }
         if(i % 25 == 0){
+            #ifndef NDEBUG
             std::cout << "phase 1 step : " << i << std::endl;
             std::cout << "TNS : " << TNS << std::endl;
+            #endif
         }
         double newTNS = TNS;
         if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS ){
+            #ifndef NDEBUG
             std::cout << "Gradient Convergen at " << i << " iteration." << std::endl;
             std::cout << "Final statistic" << std::endl;
+            #endif
             getSlackStatistic(true);
             break;
         }
@@ -261,7 +269,6 @@ void Preprocess::DelayPropagation(){
     // delay propagation
     // start with IO
     std::queue<Instance*> q;
-    cout << "num of Input : " << mgr.Input_Map.size() << endl;
     for(auto& io_m : mgr.Input_Map){
         Instance* input = &mgr.IO_Map[io_m.first];
         for(auto& outputPairs : input->getOutputInstances()){
@@ -387,13 +394,14 @@ double Preprocess::getSlackStatistic(bool show){
         if(slack > MAS)
             MAS = slack;
     }
-
+    #ifndef NDEBUG
     if(show){
         std::cout << "\tWorst negative slack : " << std::abs(WNS) << std::endl;
         std::cout << "\tTotal negative slack : " << std::abs(TNS) << std::endl;
         std::cout << "\tAverage slack : " << AVS / FF_list.size() << std::endl;
         std::cout << "\tMaximum slack : " << MAS << std::endl;
     }
+    #endif
     return TNS;
 }
 

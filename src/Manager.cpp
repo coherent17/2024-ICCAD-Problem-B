@@ -62,7 +62,6 @@ void Manager::preprocess(){
 
 void Manager::meanshift(){
     // do graceful meanshift clustering
-    std::cout << "do graceful meanshift clustering..." << std::endl;
     MeanShift meanshift;
     meanshift.run(*this);
 }
@@ -98,6 +97,9 @@ void Manager::dump(const std::string &filename){
 }
 
 void Manager::dumpVisual(const std::string &filename){
+    #ifdef NDEBUG
+        return ;
+    #endif
     std::ofstream fout;
     fout.open(filename.c_str());
     assert(fout.good());
@@ -454,6 +456,9 @@ void Manager::deleteFF(FF* in){
 
 // the cost function without evaluate the bin density
 double Manager::getOverallCost(bool verbose){
+    #ifdef NDEBUG
+        return 0;
+    #endif
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;

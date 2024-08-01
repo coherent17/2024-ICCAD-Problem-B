@@ -2,7 +2,8 @@
 CXX = g++
 CXXFLAGS = -I ./inc -std=c++14 -fopenmp
 OPTFLAGS = -march=native -funroll-loops -finline-functions -ffast-math -O3
-DEBUGFLAGS = -DENABLE_DEBUG_DP -DENABLE_DEBUG_LGZ -DENABLE_DEBUG_CHECKER -DENABLE_DEBUG_TIMER  #-DNDEBUG(for assert) 
+DEBUGFLAGS = -DENABLE_DEBUG_DP -DENABLE_DEBUG_LGZ -DENABLE_DEBUG_CHECKER -DENABLE_DEBUG_TIMER -DENABLE_DEBUG_MS -DENABLE_DEBUG_BAN  #-DNDEBUG(for assert) 
+RELEASEFLAGS = -DNDEBUG
 WARNINGS = -g -Wall -static
 
 # Valgrind for memory issue
@@ -51,6 +52,27 @@ $(BIN): main.cpp $(OBJS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 	$(VECHO) "	CC\t$@\n"
 	$(Q)$(CXX) $(WARNINGS) $(DEBUGFLAGS) $(CXXFLAGS) $(OPTFLAGS) -MMD -c $< -o $@
+
+release: 
+	rm -rf $(OBJDIR)
+	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015
+
+TESTCASES := ./testcase/sampleCase ./testcase/testcase1_0614.txt ./testcase/testcase1_balanced.txt ./testcase/testcase2.txt
+releaseCheck:
+	rm -rf $(OBJDIR)
+	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015_release
+	rm -rf $(OBJDIR)
+	$(MAKE) DEBUGFLAGS="$(DEBUGFLAGS)" BIN=cadb0015
+	@for testcase in $(TESTCASES); do \
+		./cadb0015 "$$testcase" "$$testcase.out" > /dev/null; \
+		./cadb0015_release "$$testcase" "$$testcase.release.out"; \
+		if diff "$$testcase.out" "$$testcase.release.out" > /dev/null; then \
+			echo "Correct: $$testcase"; \
+		else \
+			echo "Fail: $$testcase"; \
+		fi; \
+	done
+
 
 run1:
 	./$(BIN) testcase/sampleCase testcase/sampleCase.out
