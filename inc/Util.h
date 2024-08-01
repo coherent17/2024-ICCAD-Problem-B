@@ -1,7 +1,11 @@
 #ifndef _UTIL_H_
 #define _UTIL_H_
 
+#ifdef ENABLE_DEBUG_CHECKER
 #define DEBUG_MSG(message) std::cout << "[DEBUG: " << message << "]" << std::endl;
+#else
+#define DEBUG_MSG(message)
+#endif
 
 // Parameter for cost function, used in Parser::readWeight
 # define MIN_WEIGHT 0.0000000001

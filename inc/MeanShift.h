@@ -8,6 +8,8 @@
 #endif
 
 #define BOOST_ALLOW_DEPRECATED_HEADERS
+
+
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/index/rtree.hpp>
