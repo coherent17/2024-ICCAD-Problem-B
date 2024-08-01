@@ -9,6 +9,7 @@ FF::FF() : Instance(){
     clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, CellType::IO, ""};
+    fixed = true;
 }
 
 FF::FF(int size) : Instance(), clusterFF(size, nullptr){
@@ -20,6 +21,7 @@ FF::FF(int size) : Instance(), clusterFF(size, nullptr){
     clkIdx = UNSET_IDX;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, CellType::IO, ""};
+    fixed = true;
 }
 
 FF::~FF(){}
@@ -93,6 +95,10 @@ void FF::setPhysicalFF(FF* targetFF, int slot){
 void FF::setClusterSize(int n){
     assert(n == cell->getBits() && "clusterFF size should be equal to cell bit");
     clusterFF = vector<FF*>(n, nullptr);
+}
+
+void FF::setFixed(bool fixed){
+    this->fixed = fixed;
 }
 
 void FF::setOriginalCoor(const Coor& coorD, const Coor& coorQ){
@@ -183,6 +189,10 @@ FF* FF::getPhysicalFF()const{
 
 int FF::getSlot()const{
     return slot;
+}
+
+bool FF::getFixed()const{
+    return fixed;
 }
 
 void FF::sortNeighbors(){

@@ -1,6 +1,12 @@
 #ifndef _MEAN_SHIFT_H_
 #define _MEAN_SHIFT_H_
 
+#ifdef ENABLE_DEBUG_MS
+#define DEBUG_MS(message) std::cout << "[MEANSHIFT] " << message << std::endl
+#else
+#define DEBUG_MS(message)
+#endif
+
 #define BOOST_ALLOW_DEPRECATED_HEADERS
 
 #ifdef ENABLE_DEBUG_CHECKER

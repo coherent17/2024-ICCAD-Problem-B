@@ -2,8 +2,8 @@
 
 objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : mgr(mgr), FF_list(FF_list), idx_map(idx_map),
-    x_pos(totalFF*2), x_neg(totalFF*2), 
-    y_pos(totalFF*2), y_neg(totalFF*2),
+    x_pos(totalFF), x_neg(totalFF), 
+    y_pos(totalFF), y_neg(totalFF),
     FFs(FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
 }
@@ -11,7 +11,7 @@ objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_l
 preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
-    grad_ = vector<Coor>(FF_list.size());
+    grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = FFs[i]->getNextStage().size() + 1;
         x_pos[i] = vector<double>(size);
@@ -157,7 +157,7 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
 postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
     gamma = mgr.die.getDieBorder().y * 0.01;
-    grad_ = vector<Coor>(mgr.FF_Map.size());
+    grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = 0;
         for(const auto& ff : FFs[i]->getClusterFF()){

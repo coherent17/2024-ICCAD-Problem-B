@@ -6,6 +6,12 @@
 #define DEBUG_CLUSTER(message)
 #endif
 
+#ifdef ENABLE_DEBUG_BAN
+#define DEBUG_BAN(message) std::cout << "[BANKING] " << message << std::endl
+#else
+#define DEBUG_BAN(message)
+#endif
+
 #include <vector>
 #include "Cluster.h"
 #include "Manager.h"

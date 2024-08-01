@@ -9,7 +9,7 @@ Banking::Banking(Manager& mgr) : mgr(mgr){
 Banking::~Banking(){}
 
 void Banking::run(){
-    DEBUG_CLUSTER("Running cluster...");
+    DEBUG_BAN("Running cluster...");
     bitOrdering();
     if(bitOrder[0] != 1){
         doClustering();
@@ -26,12 +26,12 @@ void Banking::bitOrdering(){
     }
     
     std::sort(bitScoreVector.begin(), bitScoreVector.end());
-    DEBUG_CLUSTER("LIB MBFF SCORE");
+    DEBUG_BAN("[LIB MBFF SCORE]");
 
     for(auto const& bit_pair: bitScoreVector){
         bitOrder.push_back(bit_pair.second);
         // DEBUG
-        DEBUG_CLUSTER(mgr.Bit_FF_Map[bit_pair.second][0]->getCellName() + "(" + std::to_string(bit_pair.second)  +  "): " + std::to_string(bit_pair.first));
+        DEBUG_BAN("\t\t" + mgr.Bit_FF_Map[bit_pair.second][0]->getCellName() + "(" + std::to_string(bit_pair.second)  +  "): " + std::to_string(bit_pair.first));
     }
 }
 
@@ -175,8 +175,8 @@ void Banking::ClusterResult(){
         clusterNum[clusterFFs.size()]++;
     }
     std::map<int, int> clusterMap(clusterNum.begin(), clusterNum.end()); 
-    DEBUG_CLUSTER("CLUSTER RESULT");
+    DEBUG_BAN("[CLUSTER RESULT]");
     for(const auto &cluster : clusterMap){
-        DEBUG_CLUSTER("FF" + std::to_string(cluster.first) + " : " + std::to_string(cluster.second));
+        DEBUG_BAN("\t\tFF" +  std::to_string(cluster.first) + " : " + std::to_string(cluster.second));
     }
 }
