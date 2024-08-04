@@ -110,7 +110,7 @@ run6:
 	./sanity_checker/sanity testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
 
 run7:
-	./$(BIN) testcase/testcase2_0801.txt testcase/testcastestcase2_0801e2.txt.out
+	./$(BIN) testcase/testcase2_0801.txt testcase/testcase2_0801.txt.out
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/testcase2_0801.txt testcase/testcase2_0801.txt.out
 
