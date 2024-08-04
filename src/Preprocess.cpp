@@ -158,25 +158,41 @@ void Preprocess::optimal_FF_location(){
 }
 
 void Preprocess::ChangeCell(){
-    Cell* targetCell = mgr.Bit_FF_Map[1][0];
-
+    size_t bitMapSize = mgr.Bit_FF_Map[1].size();
+    vector<FF*> FFs(FF_list.size());
+    size_t i = 0;
+    for(auto& ff_m : FF_list){
+        FFs[i] = ff_m.second;
+        i++;
+    }
     // debank and save all the FF in logic_FF;
     // which is all one bit ff without technology mapping(no cell library)
-    for(auto& ff_m : FF_list){
-        double TimingCost = 0;
-        FF* curFF = ff_m.second;
-        Cell* curCell = curFF->getCell();
-        TimingCost += (targetCell->getQpinDelay() - curCell->getQpinDelay()) * curFF->getNextStage().size();
-        TimingCost += mgr.DisplacementDelay * (
-                HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
-              + HPWL(curFF->getCoor() + curFF->getPinCoor("Q"), curFF->getCoor() + targetCell->getPinCoor("Q"))  * curFF->getNextStage().size()           
-                            );
-        double AreaCost = targetCell->getArea() - curCell->getArea();
-        double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
-        double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
-        if(totalCost < 0){
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* curFF = FFs[i];
+        double bestCost = 0;
+        Cell* bestCell = curFF->getCell();
+        for(size_t j=0;j<bitMapSize;j++){
+            Cell* targetCell = mgr.Bit_FF_Map[1][j];
+            double TimingCost = 0;
+            Cell* curCell = curFF->getCell();
+            TimingCost += (targetCell->getQpinDelay() - curCell->getQpinDelay()) * curFF->getNextStage().size();
+            TimingCost += mgr.DisplacementDelay * (
+                    HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
+                +   HPWL(curFF->getCoor() + curFF->getPinCoor("Q"), curFF->getCoor() + targetCell->getPinCoor("Q"))  * curFF->getNextStage().size()           
+                                );
+            double AreaCost = targetCell->getArea() - curCell->getArea();
+            double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
+            double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
+            // hard constraint for using smaller cell, for easier legalize, need reconsider
+            if(totalCost < bestCost && targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()){
+                bestCost = totalCost;
+                bestCell = targetCell;
+            }
+        }
+        if(bestCost != 0){
             changed = true;
-            curFF->setCell(targetCell);
+            curFF->setCell(bestCell);
             curFF->setFixed(false);
         }
     }
