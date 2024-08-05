@@ -11,6 +11,9 @@ Preprocess::~Preprocess(){
 
 void Preprocess::run(){
     FF::DisplacementDelay = mgr.DisplacementDelay;
+    FF::alpha = mgr.alpha;
+    FF::beta = mgr.beta;
+    FF::gamma = mgr.gamma;
     changed = false;
     Debank();
     Build_Circuit_Gragh();

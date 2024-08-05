@@ -108,6 +108,9 @@ public:
     bool getFixed()const;
     std::string getPhysicalPinName();
     std::vector<std::pair<Coor, double>> getCriticalCoor(); // return the relative coor on critical path
+    size_t getCriticalSize(); // return the size of all critical path both Q and D pin
+    double getAllSlack(); // return the slack of all critical path both Q and D pin (can be positive)
+    double getCost(); // return overall cost of MBFF(can be 1 bit), include TNS of Q pin (next stage FFs)
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
     double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
@@ -123,6 +126,9 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const FF &ff);
     friend class postBankingObjFunction;
     static double DisplacementDelay;
+    static double alpha;
+    static double beta;
+    static double gamma;
 
     double getSlack(); // don't touch is only for FF in FF_list
 };
