@@ -1,5 +1,8 @@
 #include "FF.h"
 double FF::DisplacementDelay = 0;
+double FF::alpha = 0;
+double FF::beta = 0;
+double FF::gamma = 0;
 FF::FF() : Instance(){
     ffIdx = UNSET_IDX;
     clusterIdx = UNSET_IDX;
@@ -387,4 +390,42 @@ std::vector<std::pair<Coor, double>> FF::getCriticalCoor(){
         }
     }
     return coorList;
+}
+
+size_t FF::getCriticalSize(){
+    size_t num = 0;
+    for(auto& curFF : clusterFF)
+        num += 1 + curFF->getNextStage().size();
+    return num;
+}
+
+double FF::getAllSlack(){
+    double slack = 0;
+    for(auto& curFF : clusterFF){
+        slack += curFF->getSlack();
+        for(auto& next : curFF->getNextStage())
+            slack += next.ff->getSlack();
+    }
+    return slack;
+}
+
+double FF::getCost(){
+    double timingCost = 0;
+    double areaCost = cell->getArea();
+    double powerCost = cell->getGatePower();
+
+    // Q pin delay cost
+    size_t nextSize = 0;
+    for(auto& curFF : clusterFF){
+        nextSize += curFF->getNextStage().size();
+        double slack = curFF->getSlack();
+        timingCost += slack < 0 ? slack : 0;
+        // slack of next stage
+        for(auto& next : curFF->getNextStage()){
+            slack = next.ff->getSlack();
+            timingCost += slack < 0 ? slack : 0;
+        }
+    }
+    timingCost += cell->getQpinDelay() * nextSize;
+    return FF::alpha * timingCost + FF::beta * powerCost + FF::gamma * areaCost;
 }
