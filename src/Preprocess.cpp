@@ -130,7 +130,7 @@ void Preprocess::optimal_FF_location(){
     const double kAlpha = mgr.Bit_FF_Map[1][0]->getW() / std::max(mgr.alpha, 10.0);
     Gradient optimizer(mgr, FF_list, obj, kAlpha, idx_map, FFsFixed.size(), FFsFixed);
 
-    const double terminateThreshold = 0.01;
+    double terminateThreshold = 0.001;
     for(i=0;i<=1000;i++){
         optimizer.Step(true);
         // CAL new slack
@@ -148,6 +148,8 @@ void Preprocess::optimal_FF_location(){
             #endif
         }
         double newTNS = TNS;
+        if(newTNS > prevTNS)
+            terminateThreshold *= 1.1;
         if(abs(newTNS - prevTNS) / abs(prevTNS) < terminateThreshold || newTNS == prevTNS ){
             #ifndef NDEBUG
             std::cout << "Gradient Convergen at " << i << " iteration." << std::endl;
@@ -168,6 +170,7 @@ void Preprocess::ChangeCell(){
         FFs[i] = ff_m.second;
         i++;
     }
+    bool forceSmaller = mgr.alpha / (mgr.alpha + mgr.beta + mgr.gamma) > 0.1;
     // debank and save all the FF in logic_FF;
     // which is all one bit ff without technology mapping(no cell library)
     #pragma omp parallel for num_threads(MAX_THREADS)
@@ -188,7 +191,7 @@ void Preprocess::ChangeCell(){
             double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
             double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
             // hard constraint for using smaller cell, for easier legalize, need reconsider
-            if(totalCost < bestCost && targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()){
+            if(totalCost < bestCost && ((targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()) || !forceSmaller)){
                 bestCost = totalCost;
                 bestCell = targetCell;
             }
