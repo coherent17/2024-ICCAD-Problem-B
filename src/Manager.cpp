@@ -568,17 +568,20 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
     double costArea = 0;
     double costQ = 0;
     for(auto& MBFF : FFToBank){
-        for(auto& ff : MBFF->getClusterFF()) // old slack cost
-            costHPWL -= std::abs(ff->getSlack());
-        costHPWL -= MBFF->getTNS();
+        for(auto& ff : MBFF->getClusterFF()){ // old slack
+            costHPWL -= -(ff->getSlack()); // D pin slack
+            for(auto& next : ff->getNextStage())
+                costHPWL -= -(next.ff->getSlack()); // Q pin relate slack
+        }
 
         Coor oldCoor = MBFF->getNewCoor();
         MBFF->setNewCoor(newbankCoor);
-        costHPWL += MBFF->getTNS()  + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());; // new slack cost
         double QDiff = bankCellType->getQpinDelay() - MBFF->getCell()->getQpinDelay();
-        // costQ += (bankCellType->getQpinDelay() - MBFF->getCell()->getQpinDelay()) * MBFF->getClusterFF().size();
+
         for(auto& ff : MBFF->getClusterFF()){
-            costHPWL += std::abs(ff->getSlack()) + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());
+            costHPWL += -(ff->getSlack()) + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());
+            for(auto& next : ff->getNextStage())
+                costHPWL += -(next.ff->getSlack()) + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());
             costQ += QDiff * ff->getNextStage().size();
         }
         costPower -= MBFF->getCell()->getGatePower();
