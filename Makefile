@@ -110,9 +110,9 @@ run6:
 	./sanity_checker/sanity testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
 
 run7:
-	./$(BIN) testcase/testcase2_0801.txt testcase/testcase2_0801.txt.out
+	./$(BIN) testcase/testcase2_0802_v2.txt testcase/testcase2_0802_v2.txt.out
 	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase2_0801.txt testcase/testcase2_0801.txt.out
+	./sanity_checker/sanity testcase/testcase2_0802_v2.txt testcase/testcase2_0802_v2.txt.out
 
 runArea:
 	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out 
