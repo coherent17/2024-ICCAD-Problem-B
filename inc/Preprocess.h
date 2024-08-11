@@ -9,6 +9,10 @@ class Preprocess{
 
 
         // For debanking
+        /**
+         * @FF_list: map all of the debanking single bit ff name to its pointer
+         * @FF_list_Map: map original mbff pin name to debank single bit ff instance name
+         */
         std::unordered_map<std::string, FF*> FF_list; // list of all FF, in one bit without physical info.
         std::unordered_map<std::string, std::string> FF_list_Map; // map input MBFF to FF_list, MBFF_NAME/PIN_NAME -> FF_list key
 

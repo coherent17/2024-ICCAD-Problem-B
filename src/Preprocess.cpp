@@ -9,6 +9,11 @@ Preprocess::~Preprocess(){
 
 }
 
+/**
+ * @brief 
+ * @cheng119, integrate alpha, beta, gamma, lambda into paramMgr
+ * what is changed stand for??
+ */
 void Preprocess::run(){
     FF::DisplacementDelay = mgr.DisplacementDelay;
     FF::alpha = mgr.alpha;
@@ -22,6 +27,10 @@ void Preprocess::run(){
     optimal_FF_location();
 }
 
+/**
+ * @brief Debank all of the MBFF is exists in input, and assign the suitible celltype
+ * 
+ */
 // Preprocess function
 void Preprocess::Debank(){
     // select cell use after debank
@@ -41,6 +50,7 @@ void Preprocess::Debank(){
                 Coor ff_coor;
                 Cell* ff_cell;
                 if(cur_cell->getBits() != 1){
+                    // find the debanking single bit cell bottom-left coordinate
                     ff_coor = cur_ff.getPinCoor(pinName) + cur_ff.getCoor() - targetCell->getPinCoor("D");  
                     ff_cell = targetCell;
                     changed = true;
@@ -67,6 +77,8 @@ void Preprocess::Debank(){
                 temp->setOriginalQpinDelay(cur_cell->getQpinDelay());
                 temp->setClkIdx(ff_clk);
                 temp->setCell(ff_cell);
+
+                // map all of the single bit name to its pointer
                 FF_list[temp->getInstanceName()] = temp;
                 FF_list_Map[cur_name+'/'+pinName] = temp->getInstanceName();
             }
@@ -77,6 +89,10 @@ void Preprocess::Debank(){
     #endif
 }
 
+/**
+ * @brief Main core function to build the graph data structure to traverse
+ * 
+ */
 void Preprocess::Build_Circuit_Gragh(){
     for(auto& n_m : mgr.Net_Map){
         const Net& n = n_m.second;
@@ -88,11 +104,13 @@ void Preprocess::Build_Circuit_Gragh(){
         
         if(is_CLK || !has_driving_cell)
             continue;
-        // Given the net and its dring cell
+        // Given the net and its drivng cell
         // connect driving cell's output vector
         // and its output's input vector
         connectNet(n, driving_cell, driving_pin);
     }
+
+    // deal with the open circuit??
     vector<std::string> deleteFF;
     for(auto& ff : FF_list_Map){
         if(FF_list[ff.second]->getInputInstances().size() == 0)
@@ -106,6 +124,10 @@ void Preprocess::Build_Circuit_Gragh(){
     DelayPropagation();
 }
 
+/**
+ * @brief Main function to use CG to shift the ff to the optimal location
+ * 
+ */
 void Preprocess::optimal_FF_location(){
     double prevTNS = getSlackStatistic(false);
     #ifndef NDEBUG
@@ -139,7 +161,7 @@ void Preprocess::optimal_FF_location(){
         for(auto& ff_m : FF_list){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
-            cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());
+            cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());    // Should I update this every time?
         }
         if(i % 25 == 0){
             #ifndef NDEBUG
@@ -162,6 +184,11 @@ void Preprocess::optimal_FF_location(){
     }
 }
 
+/**
+ * @brief Do technology mapping for all debankded single bit ff
+ * @attention  Does forcesmaller to help to choose more-legalizable celltype, since you use 
+ * "targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()" as constraint
+ */
 void Preprocess::ChangeCell(){
     size_t bitMapSize = mgr.Bit_FF_Map[1].size();
     vector<FF*> FFs(FF_list.size());
@@ -178,20 +205,25 @@ void Preprocess::ChangeCell(){
         FF* curFF = FFs[i];
         double bestCost = 0;
         Cell* bestCell = curFF->getCell();
+
+        // iterate through all single bit cell type
         for(size_t j=0;j<bitMapSize;j++){
             Cell* targetCell = mgr.Bit_FF_Map[1][j];
             double TimingCost = 0;
             Cell* curCell = curFF->getCell();
+            // delta q pin delay will propagate to all fanout endpoints
             TimingCost += (targetCell->getQpinDelay() - curCell->getQpinDelay()) * curFF->getNextStage().size();
             TimingCost += mgr.DisplacementDelay * (
                     HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
                 +   HPWL(curFF->getCoor() + curFF->getPinCoor("Q"), curFF->getCoor() + targetCell->getPinCoor("Q"))  * curFF->getNextStage().size()           
                                 );
+            std::cout << "TIMING " << TimingCost << std::endl;
             double AreaCost = targetCell->getArea() - curCell->getArea();
             double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
             double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
             // hard constraint for using smaller cell, for easier legalize, need reconsider
             if(totalCost < bestCost && ((targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()) || !forceSmaller)){
+                std::cout << totalCost << std::endl;
                 bestCost = totalCost;
                 bestCell = targetCell;
             }
@@ -209,6 +241,18 @@ void Preprocess::ChangeCell(){
 // utils
 //---------------------------------------------
 //---------------------------------------------
+
+/**
+ * @brief find the driving cell of the net
+ * 
+ * @param n (net): the net to find the driving cell
+ * @param driving_cell 
+ * @param driving_pin 
+ * @param is_CLK 
+ * @param has_driving_cell 
+ * @attention 1. Is there any situation that not a clk net has multiple output from the previous stage?
+ * @attention 2. Is there any situation that not a clk net has no driving cell?
+ */
 void Preprocess::findDrivingCell(const Net& n, std::string& driving_cell, std::string& driving_pin, 
                                  bool& is_CLK, bool& has_driving_cell){
     // Given the net, find its driving cell or state it is clk net
@@ -220,7 +264,8 @@ void Preprocess::findDrivingCell(const Net& n, std::string& driving_cell, std::s
             is_CLK = true;
             break;
         }
-        if(pinName[0] == 'Q' || (!p.getIsIOPin() && pinName.substr(0,3) == "OUT") || pinName.substr(0,5) == "INPUT"){
+        
+        if(pinName[0] == 'Q' || (!p.getIsIOPin() && pinName.substr(0,3) == "OUT")/*for gate output*/ || pinName.substr(0,5) == "INPUT"){
             driving_cell = p.getInstanceName();
             driving_pin = p.getPinName();
             has_driving_cell = true;
@@ -229,7 +274,13 @@ void Preprocess::findDrivingCell(const Net& n, std::string& driving_cell, std::s
     }
 }
         
-
+/**
+ * @brief connect the cell or IO pin to the previous stage and the next stage
+ * 
+ * @param n (Net)
+ * @param driving_cell 
+ * @param driving_pin 
+ */
 void Preprocess::connectNet(const Net& n, std::string& driving_cell, std::string& driving_pin){
     // Given the net and its dring cell
     // connect driving cell's output vector
@@ -275,7 +326,7 @@ void Preprocess::connectNet(const Net& n, std::string& driving_cell, std::string
                     else
                         mgr.Gate_Map[driving_cell]->addOutput(driving_pin, instanceName, pinName);
                 }
-                else{ // output pin
+                else{ // to output pin
                     mgr.IO_Map[instanceName].addInput(pinName, driving_cell, driving_pin);
                     if(mgr.IO_Map.count(driving_cell))
                         mgr.IO_Map[driving_cell].addOutput(driving_pin, instanceName, pinName);
@@ -287,12 +338,21 @@ void Preprocess::connectNet(const Net& n, std::string& driving_cell, std::string
     }
 }
 
+
+/**
+ * @brief find out cost between reg2reg in topological order (implemented by queue), include
+ *        1. qpin delay
+ *        2. hpwl * displacement delay
+ */
 void Preprocess::DelayPropagation(){
     // delay propagation
     // start with IO
     std::queue<Instance*> q;
+    // Iterate all of the input
     for(auto& io_m : mgr.Input_Map){
         Instance* input = &mgr.IO_Map[io_m.first];
+
+        // Iterate all of the instance that input port connect with
         for(auto& outputPairs : input->getOutputInstances()){
             const std::string& drivingPin = outputPairs.first;
             for(auto& outputVector : outputPairs.second){
@@ -335,6 +395,12 @@ void Preprocess::DelayPropagation(){
     }
 }
 
+/**
+ * @brief set cost of FF to next stage(FF or standard cell) 
+ * 
+ * @param q (queue), used in topological sort, the order of the gate to traverse
+ * @param ff start from ff, find the next stage cost
+ */
 void Preprocess::propagaFF(std::queue<Instance*>& q, FF* ff){
     // given the ff, setMaxInput for all its output std cell
     // and prevInstance for all its output FF
@@ -363,6 +429,12 @@ void Preprocess::propagaFF(std::queue<Instance*>& q, FF* ff){
     }
 }
 
+/**
+ * @brief set cost of gate to next stage(FF or standard cell) 
+ * 
+ * @param q (queue), used in topological sort, the order of the gate to traverse
+ * @param gate start from gate, find the next stage cost
+ */
 void Preprocess::propagaGate(std::queue<Instance*>& q, Gate* gate){
     MaxInput maxInput = gate->getMaxInput();
     FF* prevFF = nullptr;
@@ -427,6 +499,13 @@ double Preprocess::getSlackStatistic(bool show){
     return TNS;
 }
 
+/**
+ * @brief Calculating the hpwl diff from prev instance & prev stage, update the dslack
+ * 
+ * @param FFs a vector of ff to update slack
+ * @return double the TNS (+: has negative slack, 0: no negative slack)
+ * @formula SFFN’ = SFFN + (δ0 – δ0’) + DisplacementDelay * (WLQ0 - WLQ'0) + DisplacementDelay * (WLD_N - WLD'N)
+ */
 double Preprocess::updateSlack(std::vector<FF*>& FFs){\
     double TNS = 0;
     #pragma omp parallel for reduction(+:TNS)
