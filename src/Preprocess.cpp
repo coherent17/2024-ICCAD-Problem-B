@@ -217,13 +217,11 @@ void Preprocess::ChangeCell(){
                     HPWL(curFF->getCoor() + curFF->getPinCoor("D"), curFF->getCoor() + targetCell->getPinCoor("D"))
                 +   HPWL(curFF->getCoor() + curFF->getPinCoor("Q"), curFF->getCoor() + targetCell->getPinCoor("Q"))  * curFF->getNextStage().size()           
                                 );
-            std::cout << "TIMING " << TimingCost << std::endl;
             double AreaCost = targetCell->getArea() - curCell->getArea();
             double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
             double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
             // hard constraint for using smaller cell, for easier legalize, need reconsider
             if(totalCost < bestCost && ((targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()) || !forceSmaller)){
-                std::cout << totalCost << std::endl;
                 bestCost = totalCost;
                 bestCell = targetCell;
             }

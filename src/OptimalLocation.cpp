@@ -5,12 +5,11 @@ objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_l
     x_pos(totalFF), x_neg(totalFF), 
     y_pos(totalFF), y_neg(totalFF),
     FFs(FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
+    gamma = (mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01;
 }
 
 preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = FFs[i]->getNextStage().size() + 1;
@@ -175,7 +174,6 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
 
 postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = 0;

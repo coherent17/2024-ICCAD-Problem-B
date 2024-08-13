@@ -200,14 +200,13 @@ void Legalizer::Tetris(){
 
         }
     }
-    #ifdef ENABLE_DEBUG_LGZ
-        std::cout << std::endl;
-    #endif
+    DEBUG_LGZ("\n");
 }
 
 void Legalizer::LegalizeWriteBack(){
     DEBUG_LGZ("Write Back Legalize Coordinate");
     for(const auto &ff : ffs){
+        assert(((int)ff->getLGCoor().x - 15300) % 510 == 0);
         if(ff->getIsPlace()){
             mgr.FF_Map[ff->getName()]->setNewCoor(ff->getLGCoor());
             //std::cout << *ff << std::endl;
