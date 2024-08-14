@@ -21,8 +21,8 @@ void Dumper::dump(Manager &mgr){
         fout << "Inst " 
              << newInstanceName << " " 
              << pair.second->getCell()->getCellName() << " " 
-             << pair.second->getCoor().x << " " 
-             << pair.second->getCoor().y << std::endl;
+             << pair.second->getNewCoor().x << " " 
+             << pair.second->getNewCoor().y << std::endl;
     }
 
     for(const auto &pair: mgr.originalFF_Map){

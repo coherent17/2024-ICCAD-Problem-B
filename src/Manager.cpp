@@ -232,11 +232,22 @@ struct ComparePairs {
   }
 };
 
+/**
+ * @brief Bank MBFF/single bit ff into MBFF
+ * 
+ * @param newbankCoor Merge MBFF coordinate
+ * @param bankCellType Merge MBFF celltype
+ * @param FFToBank All ffs needs to bank
+ * @return FF* The pointer point to the merged MBFF
+ * @todo add incremental banking??
+ */
 FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToBank){
     // get all FF to be bank
     std::vector<FF*> FFs(bankCellType->getBits());
     int bit = 0;
     int clkIdx = FFToBank[0]->getClkIdx();
+    
+    // if the FFToBank exist MBFF
     for(auto& MBFF : FFToBank){
         assert(clkIdx == MBFF->getClkIdx() && "different clk cannot be banked together");
         std::vector<FF*>& clusterFF = MBFF->getClusterFF();
@@ -279,6 +290,11 @@ FF* Manager::bankFF(Coor newbankCoor, Cell* bankCellType, std::vector<FF*> FFToB
     return newFF;
 }
 
+/**
+ * @brief For merged MBFF, try to assign slot based on the slack, do stable matching
+ * 
+ * @param newFF The merged MBFF
+ */
 void Manager::assignSlot(FF* newFF){
     int bit = newFF->getCell()->getBits();
     if(bit == 1)
@@ -286,7 +302,7 @@ void Manager::assignSlot(FF* newFF){
 
     vector<FF*> FFs = newFF->getClusterFF();
     // Stable Marriage Problem (Gale-Shapley Algorithm)
-    std::vector<std::vector<double>> cost(bit, std::vector<double>(bit, 0)); // i FF cost for j slot
+    std::vector<std::vector<double>> cost(bit, std::vector<double>(bit, 0)); // ith FF cost for putting it in j slot
     std::queue<int> waitSlot; // slot wait to be assigned FF
     std::priority_queue<std::pair<double, int>> pq[bit];
     for(int i=0;i<bit;i++){
@@ -352,7 +368,7 @@ void Manager::assignSlot(FF* newFF){
 
     while(!waitSlot.empty()){
         int slot = waitSlot.front();
-        int preferFF = pq[slot].top().second;
+        int preferFF = pq[slot].top().second;   // this is idx = =
         pq[slot].pop();
         FF* curFF = FFs[preferFF];
         if(curFF->getPhysicalFF() != newFF){ // is a single FF
@@ -370,6 +386,14 @@ void Manager::assignSlot(FF* newFF){
     }
 }
 
+/**
+ * @brief Debank the MBFF into single bit ff 
+ * 
+ * @param MBFF The merged MBFF
+ * @param debankCellType The single bit FF celltype to debank
+ * @return std::vector<FF*> The vector contains all signle bit FF
+ * @todo the incremental debanking
+ */
 std::vector<FF*> Manager::debankFF(FF* MBFF, Cell* debankCellType){
     std::vector<FF*> outputFF;
     std::vector<FF*>& clusterFF = MBFF->getClusterFF();
@@ -416,6 +440,11 @@ void Manager::getNS(double& TNS, double& WNS, bool show){
     }
 }
 
+/**
+ * @brief get TNS
+ * 
+ * @return double return the total negative slack value (+: has negative slack, 0: no negative slack)
+ */
 double Manager::getTNS(){
     double TNS = 0;
     for(auto& FF_m : FF_Map){
@@ -454,7 +483,12 @@ void Manager::deleteFF(FF* in){
     FFGarbageCollector.push(in);
 }
 
-// the cost function without evaluate the bin density
+/**
+ * @brief the cost function without evaluate the bin density
+ * 
+ * @param verbose whether to print out the pretty table
+ * @return double overall cost
+ */
 double Manager::getOverallCost(bool verbose){
     #ifdef NDEBUG
         return 0;
@@ -467,7 +501,7 @@ double Manager::getOverallCost(bool verbose){
         double curTNS = ff_pair.second->getTNS();
         TNS_cost += alpha * (curTNS);
         Power_cost += beta * ff_pair.second->getCell()->getGatePower();
-        Area_cost += gamma * (ff_pair.second->getCell()->getW() * ff_pair.second->getCell()->getH());
+        Area_cost += gamma * (ff_pair.second->getCell()->getArea());
     }
 
     // check for the bin density
@@ -533,6 +567,12 @@ double Manager::getOverallCost(bool verbose){
     return cost;
 }
 
+/**
+ * @brief score each cell based on ?????
+ * @author cheng119 help confirm this score
+ * What is this?? alpha*cell_vector[i]->getQpinDelay() * (cell_vector[i]->getW() + cell_vector[i]->getH())
+ * does (cell_vector[i]->getW() + cell_vector[i]->getH()) to approximate HPWL???
+ */
 void Manager::libScoring(){
     for(auto &pair: Bit_FF_Map){
         std::vector<Cell *> &cell_vector = pair.second;
@@ -562,6 +602,15 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
 }
 
+/**
+ * @brief Predict the cost of the banked MBFF at newbankCoor
+ * 
+ * @param newbankCoor merge MBFF coordinate
+ * @param bankCellType merge MBFF type
+ * @param FFToBank All of FFs to merge
+ * @return double (new cost - original cost)
+ * 
+ */
 double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank){
     double costHPWL = 0;
     double costPower = 0;

@@ -90,6 +90,12 @@ void FF::addNextStage(NextStage input){
     this->nextStage.push_back(input);
 }
 
+/**
+ * @brief 
+ * 
+ * @param targetFF 
+ * @param slot 
+ */
 void FF::setPhysicalFF(FF* targetFF, int slot){
     this->physicalFF = targetFF;
     this->slot = slot;
@@ -298,6 +304,11 @@ std::ostream &operator<<(std::ostream &os, const FF &ff){
 }
 
 
+/**
+ * @brief 
+ * 
+ * @return double slack, the value of the slack, positive is positive, negative is negative
+ */
 double FF::getSlack(){
     FF* cur_ff = this;
     // update slack for new location

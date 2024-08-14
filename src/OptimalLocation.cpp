@@ -5,12 +5,11 @@ objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_l
     x_pos(totalFF), x_neg(totalFF), 
     y_pos(totalFF), y_neg(totalFF),
     FFs(FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
+    gamma = (mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01;
 }
 
 preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = FFs[i]->getNextStage().size() + 1;
@@ -25,6 +24,11 @@ preprocessObjFunction::~preprocessObjFunction(){
 
 }
 
+/**
+ * @brief build log sum exp hpwl approximate model
+ * 
+ * @return double the loss of the log sum exp model
+ */
 double preprocessObjFunction::forward(){
     loss = 0;
     //for(auto& FF_m : FF_list){
@@ -88,6 +92,13 @@ double preprocessObjFunction::forward(){
     return loss;
 }
 
+/**
+ * @brief Do partial derivative to get the gradient from the log sum exp model
+ * 
+ * @param step What does step actually do in this function?? @chengc119
+ * @param onlyNegative 
+ * @return vector<Coor>& 
+ */
 vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
     for(size_t i=0;i<grad_.size();i++){
         grad_[i].x = 0;
@@ -118,6 +129,12 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
     return grad_;
 }
 
+/**
+ * @brief set the weight of the input pin and the output pin of the cur_ff
+ * 
+ * @param cur_ff the ff to calculate the input/output pin
+ * @param weight the reference of the weight vectpr to set
+ */
 void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
     // weigt by slack
     double D_slack = cur_ff->getTimingSlack("D");
@@ -136,6 +153,7 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
         }
     }
     // get weight
+    // Only set the negative dslack pin weight, if there exist the negative dslack in fanin or fanout
     if(hasNegative){
         if(D_slack < 0)
             weight[0] = D_slack / sum;
@@ -156,7 +174,6 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
 
 postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    gamma = mgr.die.getDieBorder().y * 0.01;
     grad_ = vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = 0;
