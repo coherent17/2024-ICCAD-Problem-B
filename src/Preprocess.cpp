@@ -378,17 +378,23 @@ void Preprocess::DelayPropagation(){
     }
 
     // propagation
+    std::unordered_map<std::string, bool> visitedGate;
     while(!q.empty()){
         Instance* curInst = q.front();
         q.pop();
-
+        visitedGate[curInst->getInstanceName()] = true;
         if(mgr.Gate_Map.count(curInst->getInstanceName())){
             propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
         }
         else{
             assert(0 && "Something wrong!!!");
             // should never go here
-            // its OUTPUT PIN
+        }
+    }
+
+    for(auto& gate : mgr.Gate_Map){
+        if(!visitedGate.count(gate.first)){
+            std::cout << "[WARNING] Gate " + gate.first + " didn't visited!!!" << std::endl;
         }
     }
 }
