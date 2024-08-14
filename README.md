@@ -80,3 +80,6 @@ Assign c119cheng:
 # Doxygen
 $ doxygen -s -g
 $ doxygen Doxyfile
+VScode Extension:
+*   Live Server
+doxyfile/index.html ----> right click ----> open with live server
