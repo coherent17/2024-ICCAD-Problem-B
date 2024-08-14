@@ -1,0 +1,92 @@
+\hypertarget{MeanShift_8h}{}\doxysection{inc/\+Mean\+Shift.h File Reference}
+\label{MeanShift_8h}\index{inc/MeanShift.h@{inc/MeanShift.h}}
+{\ttfamily \#include $<$boost/geometry.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/geometry/geometries/point.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/geometry/index/rtree.\+hpp$>$}\newline
+{\ttfamily \#include $<$boost/foreach.\+hpp$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$omp.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}Util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}FF.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Manager.\+h\char`\"{}}\newline
+Include dependency graph for Mean\+Shift.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classMeanShift}{Mean\+Shift}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{MeanShift_8h_afca9b7b70aa4cedc1a40ba874cc0038a}{DEBUG\+\_\+\+MS}}(message)
+\item 
+\#define \mbox{\hyperlink{MeanShift_8h_a4528470fdc2fb63553f9de5aa25ee585}{BOOST\+\_\+\+ALLOW\+\_\+\+DEPRECATED\+\_\+\+HEADERS}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef bg\+::model\+::point$<$ double, 2, bg\+::cs\+::cartesian $>$ \mbox{\hyperlink{MeanShift_8h_a10d9bc271733781bc6c8e4efbb4928af}{Point}}
+\item 
+typedef std\+::pair$<$ \mbox{\hyperlink{Banking_8h_a10d9bc271733781bc6c8e4efbb4928af}{Point}}, int $>$ \mbox{\hyperlink{MeanShift_8h_ad967a5f862625faa51823d438fed9755}{Point\+With\+ID}}
+\item 
+typedef bgi\+::rtree$<$ \mbox{\hyperlink{Banking_8h_ad967a5f862625faa51823d438fed9755}{Point\+With\+ID}}, bgi\+::quadratic$<$ \mbox{\hyperlink{Util_8h_a8fe6c347e79d9cd15811aa5c4e38d5de}{P\+\_\+\+PER\+\_\+\+NODE}} $>$ $>$ \mbox{\hyperlink{MeanShift_8h_aee8947d46f0c6a915c32b75eb9149d35}{RTree}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{MeanShift_8h_a4528470fdc2fb63553f9de5aa25ee585}\label{MeanShift_8h_a4528470fdc2fb63553f9de5aa25ee585}} 
+\index{MeanShift.h@{MeanShift.h}!BOOST\_ALLOW\_DEPRECATED\_HEADERS@{BOOST\_ALLOW\_DEPRECATED\_HEADERS}}
+\index{BOOST\_ALLOW\_DEPRECATED\_HEADERS@{BOOST\_ALLOW\_DEPRECATED\_HEADERS}!MeanShift.h@{MeanShift.h}}
+\doxysubsubsection{\texorpdfstring{BOOST\_ALLOW\_DEPRECATED\_HEADERS}{BOOST\_ALLOW\_DEPRECATED\_HEADERS}}
+{\footnotesize\ttfamily \#define BOOST\+\_\+\+ALLOW\+\_\+\+DEPRECATED\+\_\+\+HEADERS}
+
+
+
+Definition at line 10 of file Mean\+Shift.\+h.
+
+\mbox{\Hypertarget{MeanShift_8h_afca9b7b70aa4cedc1a40ba874cc0038a}\label{MeanShift_8h_afca9b7b70aa4cedc1a40ba874cc0038a}} 
+\index{MeanShift.h@{MeanShift.h}!DEBUG\_MS@{DEBUG\_MS}}
+\index{DEBUG\_MS@{DEBUG\_MS}!MeanShift.h@{MeanShift.h}}
+\doxysubsubsection{\texorpdfstring{DEBUG\_MS}{DEBUG\_MS}}
+{\footnotesize\ttfamily \#define DEBUG\+\_\+\+MS(\begin{DoxyParamCaption}\item[{}]{message }\end{DoxyParamCaption})}
+
+
+
+Definition at line 7 of file Mean\+Shift.\+h.
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{MeanShift_8h_a10d9bc271733781bc6c8e4efbb4928af}\label{MeanShift_8h_a10d9bc271733781bc6c8e4efbb4928af}} 
+\index{MeanShift.h@{MeanShift.h}!Point@{Point}}
+\index{Point@{Point}!MeanShift.h@{MeanShift.h}}
+\doxysubsubsection{\texorpdfstring{Point}{Point}}
+{\footnotesize\ttfamily typedef bg\+::model\+::point$<$double, 2, bg\+::cs\+::cartesian$>$ \mbox{\hyperlink{Banking_8h_a10d9bc271733781bc6c8e4efbb4928af}{Point}}}
+
+
+
+Definition at line 28 of file Mean\+Shift.\+h.
+
+\mbox{\Hypertarget{MeanShift_8h_ad967a5f862625faa51823d438fed9755}\label{MeanShift_8h_ad967a5f862625faa51823d438fed9755}} 
+\index{MeanShift.h@{MeanShift.h}!PointWithID@{PointWithID}}
+\index{PointWithID@{PointWithID}!MeanShift.h@{MeanShift.h}}
+\doxysubsubsection{\texorpdfstring{PointWithID}{PointWithID}}
+{\footnotesize\ttfamily typedef std\+::pair$<$\mbox{\hyperlink{Banking_8h_a10d9bc271733781bc6c8e4efbb4928af}{Point}}, int$>$ \mbox{\hyperlink{Banking_8h_ad967a5f862625faa51823d438fed9755}{Point\+With\+ID}}}
+
+
+
+Definition at line 31 of file Mean\+Shift.\+h.
+
+\mbox{\Hypertarget{MeanShift_8h_aee8947d46f0c6a915c32b75eb9149d35}\label{MeanShift_8h_aee8947d46f0c6a915c32b75eb9149d35}} 
+\index{MeanShift.h@{MeanShift.h}!RTree@{RTree}}
+\index{RTree@{RTree}!MeanShift.h@{MeanShift.h}}
+\doxysubsubsection{\texorpdfstring{RTree}{RTree}}
+{\footnotesize\ttfamily typedef bgi\+::rtree$<$\mbox{\hyperlink{Banking_8h_ad967a5f862625faa51823d438fed9755}{Point\+With\+ID}}, bgi\+::quadratic$<$\mbox{\hyperlink{Util_8h_a8fe6c347e79d9cd15811aa5c4e38d5de}{P\+\_\+\+PER\+\_\+\+NODE}}$>$ $>$ \mbox{\hyperlink{DetailPlacement_8h_aee8947d46f0c6a915c32b75eb9149d35}{RTree}}}
+
+
+
+Definition at line 34 of file Mean\+Shift.\+h.
+

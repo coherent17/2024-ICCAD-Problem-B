@@ -1,0 +1,142 @@
+\hypertarget{classNet}{}\doxysection{Net Class Reference}
+\label{classNet}\index{Net@{Net}}
+
+
+{\ttfamily \#include $<$Net.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNet_aaad4df79dedd0dda74f7b9c061867338}{Net}} ()
+\item 
+\mbox{\hyperlink{classNet_a517bf56cd781eafd5c7aabeca60b62b0}{$\sim$\+Net}} ()
+\item 
+void \mbox{\hyperlink{classNet_abfe1b1edd87415ff5ed14f6cd018a0d7}{set\+Net\+Name}} (const std\+::string \&net\+Name)
+\item 
+void \mbox{\hyperlink{classNet_ad40efdfecf4e0eff63aacc0f2b01cde0}{set\+Num\+Pins}} (int num\+Pins)
+\item 
+void \mbox{\hyperlink{classNet_aa9573718576e3b1cee0d01e0e11277b5}{add\+Pins}} (const \mbox{\hyperlink{classPin}{Pin}} \&pin)
+\item 
+const std\+::string \& \mbox{\hyperlink{classNet_a42b613592f2026ba99263cdca104e4ea}{get\+Net\+Name}} () const
+\item 
+int \mbox{\hyperlink{classNet_a164fdbbd8c57456753285c7e550b720b}{get\+Num\+Pins}} () const
+\item 
+const \mbox{\hyperlink{classPin}{Pin}} \& \mbox{\hyperlink{classNet_ad653d28644f768d49e88a47e94c75ca7}{get\+Pin}} (int pin\+Idx) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classNet_aac33948aa54fd7a49452a56e018a5664}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classNet}{Net}} \&net)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 9 of file Net.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNet_aaad4df79dedd0dda74f7b9c061867338}\label{classNet_aaad4df79dedd0dda74f7b9c061867338}} 
+\index{Net@{Net}!Net@{Net}}
+\index{Net@{Net}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{Net()}{Net()}}
+{\footnotesize\ttfamily Net\+::\+Net (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 3 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_a517bf56cd781eafd5c7aabeca60b62b0}\label{classNet_a517bf56cd781eafd5c7aabeca60b62b0}} 
+\index{Net@{Net}!````~Net@{$\sim$Net}}
+\index{````~Net@{$\sim$Net}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{$\sim$Net()}{~Net()}}
+{\footnotesize\ttfamily Net\+::$\sim$\+Net (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 5 of file Net.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNet_aa9573718576e3b1cee0d01e0e11277b5}\label{classNet_aa9573718576e3b1cee0d01e0e11277b5}} 
+\index{Net@{Net}!addPins@{addPins}}
+\index{addPins@{addPins}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{addPins()}{addPins()}}
+{\footnotesize\ttfamily void Net\+::add\+Pins (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPin}{Pin}} \&}]{pin }\end{DoxyParamCaption})}
+
+
+
+Definition at line 16 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_a42b613592f2026ba99263cdca104e4ea}\label{classNet_a42b613592f2026ba99263cdca104e4ea}} 
+\index{Net@{Net}!getNetName@{getNetName}}
+\index{getNetName@{getNetName}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{getNetName()}{getNetName()}}
+{\footnotesize\ttfamily const std\+::string \& Net\+::get\+Net\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 21 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_a164fdbbd8c57456753285c7e550b720b}\label{classNet_a164fdbbd8c57456753285c7e550b720b}} 
+\index{Net@{Net}!getNumPins@{getNumPins}}
+\index{getNumPins@{getNumPins}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{getNumPins()}{getNumPins()}}
+{\footnotesize\ttfamily int Net\+::get\+Num\+Pins (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 25 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_ad653d28644f768d49e88a47e94c75ca7}\label{classNet_ad653d28644f768d49e88a47e94c75ca7}} 
+\index{Net@{Net}!getPin@{getPin}}
+\index{getPin@{getPin}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{getPin()}{getPin()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classPin}{Pin}} \& Net\+::get\+Pin (\begin{DoxyParamCaption}\item[{int}]{pin\+Idx }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 29 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_abfe1b1edd87415ff5ed14f6cd018a0d7}\label{classNet_abfe1b1edd87415ff5ed14f6cd018a0d7}} 
+\index{Net@{Net}!setNetName@{setNetName}}
+\index{setNetName@{setNetName}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{setNetName()}{setNetName()}}
+{\footnotesize\ttfamily void Net\+::set\+Net\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{net\+Name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 8 of file Net.\+cpp.
+
+\mbox{\Hypertarget{classNet_ad40efdfecf4e0eff63aacc0f2b01cde0}\label{classNet_ad40efdfecf4e0eff63aacc0f2b01cde0}} 
+\index{Net@{Net}!setNumPins@{setNumPins}}
+\index{setNumPins@{setNumPins}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{setNumPins()}{setNumPins()}}
+{\footnotesize\ttfamily void Net\+::set\+Num\+Pins (\begin{DoxyParamCaption}\item[{int}]{num\+Pins }\end{DoxyParamCaption})}
+
+
+
+Definition at line 12 of file Net.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classNet_aac33948aa54fd7a49452a56e018a5664}\label{classNet_aac33948aa54fd7a49452a56e018a5664}} 
+\index{Net@{Net}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Net@{Net}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classNet}{Net}} \&}]{net }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 33 of file Net.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{Net_8h}{Net.\+h}}\item 
+src/\mbox{\hyperlink{Net_8cpp}{Net.\+cpp}}\end{DoxyCompactItemize}

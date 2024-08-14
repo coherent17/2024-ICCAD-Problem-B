@@ -1,0 +1,767 @@
+\hypertarget{classFF}{}\doxysection{FF Class Reference}
+\label{classFF}\index{FF@{FF}}
+
+
+{\ttfamily \#include $<$FF.\+h$>$}
+
+
+
+Inheritance diagram for FF\+:
+% FIG 0
+
+
+Collaboration diagram for FF\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classFF_aaf6be82e9c02c09fca384f1b4c1f0583}{FF}} ()
+\item 
+\mbox{\hyperlink{classFF_a1844eb546112373c58b759bf329c19d4}{FF}} (int size)
+\item 
+\mbox{\hyperlink{classFF_a0d1ad6c6b101c8a0d82de82dcbc79715}{$\sim$\+FF}} ()
+\item 
+void \mbox{\hyperlink{classFF_ae44f81148445141c84690f9c7b7179f4}{set\+Timing\+Slack}} (const std\+::string \&pin\+Name, double slack)
+\item 
+void \mbox{\hyperlink{classFF_ae0613fa9886e9ea079d7994fc53d671a}{add\+Cluster\+FF}} (\mbox{\hyperlink{classFF}{FF}} $\ast$input\+FF, int slot)
+\item 
+void \mbox{\hyperlink{classFF_aa0bf2742a279fecc26d880f92528bbf0}{set\+FFIdx}} (int ff\+Idx)
+\item 
+void \mbox{\hyperlink{classFF_a923f9e5dba4e7bf0f7a2fb30e3f4b0b6}{set\+Cluster\+Idx}} (int cluster\+Idx)
+\item 
+void \mbox{\hyperlink{classFF_a924b87189709b80f75467b8dfdfdf0db}{set\+Clk\+Idx}} (int clk\+Idx)
+\item 
+void \mbox{\hyperlink{classFF_a4d90e167d6a2bc434b06363370b7fd3e}{set\+New\+Coor}} (const \mbox{\hyperlink{classCoor}{Coor}} \&\mbox{\hyperlink{classInstance_a725371da2335a65476b1803e328a7861}{coor}})
+\item 
+void \mbox{\hyperlink{classFF_a7a463beaa839c0baecca4879cce1caf2}{set\+Bandwidth}} (const \mbox{\hyperlink{classManager}{Manager}} \&mgr)
+\item 
+void \mbox{\hyperlink{classFF_a051638af9f5667cad88fd72582ebdd11}{add\+Neighbor}} (int ff\+Idx, double euclidean\+\_\+distance)
+\item 
+void \mbox{\hyperlink{classFF_a5978f58e806704311c49ae1c192f68a2}{set\+Is\+Shifting}} (bool \mbox{\hyperlink{classFF_adfbbc49524354ecf8947404afd477109}{shift}})
+\item 
+void \mbox{\hyperlink{classFF_a31be6e597424ad89e0ad1dc25039a425}{set\+Prev\+Stage}} (\mbox{\hyperlink{structPrevStage}{Prev\+Stage}})
+\item 
+void \mbox{\hyperlink{classFF_a5474ac472d92b8848da713bcf39a92cd}{set\+Prev\+Instance}} (\mbox{\hyperlink{structPrevInstance}{Prev\+Instance}})
+\item 
+void \mbox{\hyperlink{classFF_a85297f17a8e188ca7cdae34e488c754f}{add\+Next\+Stage}} (\mbox{\hyperlink{FF_8h_a7a33ec6e310428fd501b94bb78035e14}{Next\+Stage}})
+\item 
+void \mbox{\hyperlink{classFF_a55b089185117fe404605d01b98c21627}{set\+Original\+Coor}} (const \mbox{\hyperlink{classCoor}{Coor}} \&coorD, const \mbox{\hyperlink{classCoor}{Coor}} \&coorQ)
+\item 
+void \mbox{\hyperlink{classFF_a3188f04f58e4bf668ff2efeda2b612bb}{set\+Original\+Qpin\+Delay}} (double)
+\item 
+void \mbox{\hyperlink{classFF_a2dbf665f7df2d5d46e0bbc025633684d}{set\+Physical\+FF}} (\mbox{\hyperlink{classFF}{FF}} $\ast$target\+FF, int slot)
+\item 
+void \mbox{\hyperlink{classFF_a1541ea47bd527476d984827db67d8a4e}{set\+Cluster\+Size}} (int)
+\item 
+void \mbox{\hyperlink{classFF_ac54b28feb0baf0970f14c47afac311cc}{set\+Fixed}} (bool fixed)
+\item 
+double \mbox{\hyperlink{classFF_a3f9c5431ebcad6649678d202acbd3ac6}{get\+Timing\+Slack}} (const std\+::string \&pin\+Name) const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \& \mbox{\hyperlink{classFF_a10f770ea433760a468cd1666a37e847d}{get\+Cluster\+FF}} ()
+\item 
+int \mbox{\hyperlink{classFF_afb2d864c794ef5bab179fb835808b0a1}{get\+FFIdx}} () const
+\item 
+bool \mbox{\hyperlink{classFF_aaa4b4cf3ee4835e6963b3fdbdf7e85ff}{get\+Is\+Cluster}} () const
+\item 
+int \mbox{\hyperlink{classFF_a9df9e720b646161b8aed41c70b885c74}{get\+Cluster\+Idx}} () const
+\item 
+int \mbox{\hyperlink{classFF_a5dd37d39445d6fa3ce4ca53c0c49cd49}{get\+Clk\+Idx}} () const
+\item 
+\mbox{\hyperlink{classCoor}{Coor}} \mbox{\hyperlink{classFF_a3345ac24349b75a737fad23eeefc7bfd}{get\+New\+Coor}} () const
+\item 
+double \mbox{\hyperlink{classFF_ab341bc4b251d715c00a17631b61d9b65}{get\+Bandwidth}} () const
+\item 
+std\+::pair$<$ int, double $>$ \mbox{\hyperlink{classFF_ad59f7265d3f2dd188e71db369fef652a}{get\+Neighbor}} (int idx) const
+\item 
+int \mbox{\hyperlink{classFF_aeb27a2a911ed01e76ef94ec2a2c5adf5}{get\+Neighbor\+Size}} () const
+\item 
+bool \mbox{\hyperlink{classFF_a2ad9b0994964c2dc8456116bfaa214f0}{get\+Is\+Shifting}} () const
+\item 
+\mbox{\hyperlink{structPrevStage}{Prev\+Stage}} \mbox{\hyperlink{classFF_a35e6ad347fa3cb70aff04a3d40e5d87f}{get\+Prev\+Stage}} () const
+\item 
+\mbox{\hyperlink{structPrevInstance}{Prev\+Instance}} \mbox{\hyperlink{classFF_a34653602931754e6321fb2e278eac2be}{get\+Prev\+Instance}} () const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{FF_8h_a7a33ec6e310428fd501b94bb78035e14}{Next\+Stage}} $>$ \mbox{\hyperlink{classFF_abd6abbae9575340c6ced51b6b78dbb6a}{get\+Next\+Stage}} () const
+\item 
+\mbox{\hyperlink{classCoor}{Coor}} \mbox{\hyperlink{classFF_ac44b8ea87ce9e7d7787aa76f7bf637bf}{get\+OriginalD}} () const
+\item 
+\mbox{\hyperlink{classCoor}{Coor}} \mbox{\hyperlink{classFF_a8c4c73c6c98aaee08ddf0f95220fe592}{get\+OriginalQ}} () const
+\item 
+double \mbox{\hyperlink{classFF_a061b70c2940fc63018a341b5c1d7fd5e}{get\+Original\+Qpin\+Delay}} () const
+\item 
+\mbox{\hyperlink{classFF}{FF}} $\ast$ \mbox{\hyperlink{classFF_a49fdede17100e943bae84bad24eb4c6c}{get\+Physical\+FF}} () const
+\item 
+int \mbox{\hyperlink{classFF_a0d04f0f219c56f9fe74c31b8918e586a}{get\+Slot}} () const
+\item 
+bool \mbox{\hyperlink{classFF_a76d9a32c7cacb1fa8442209c93da307c}{get\+Fixed}} () const
+\item 
+std\+::string \mbox{\hyperlink{classFF_af291ec63885f98c30c4b676d284273d2}{get\+Physical\+Pin\+Name}} ()
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{classCoor}{Coor}}, double $>$ $>$ \mbox{\hyperlink{classFF_a381c87186f8143163c504087f626294e}{get\+Critical\+Coor}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{classFF_a59b283a59a7fb0005e7a22d8ae4d25c4}{get\+Critical\+Size}} ()
+\item 
+double \mbox{\hyperlink{classFF_a7bc765d4fe4b0c07f8f7a6c7eec48237}{get\+All\+Slack}} ()
+\item 
+double \mbox{\hyperlink{classFF_aabe69e8679e3b054c449bd6c1fe89231}{get\+Cost}} ()
+\item 
+void \mbox{\hyperlink{classFF_ae53cabe9affef070961682843320ff0c}{sort\+Neighbors}} ()
+\item 
+double \mbox{\hyperlink{classFF_adfbbc49524354ecf8947404afd477109}{shift}} (std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&FFs)
+\item 
+void \mbox{\hyperlink{classFF_a4288f32e3b996089ac256601d1bdaca2}{get\+NS}} (double \&TNS, double \&WNS)
+\item 
+double \mbox{\hyperlink{classFF_a0ea60ad1f82d1f822c3801cfc3814be3}{get\+TNS}} ()
+\item 
+double \mbox{\hyperlink{classFF_a71bc75eb1f2f94be8a4b72063627fe6e}{get\+WNS}} ()
+\item 
+void \mbox{\hyperlink{classFF_a23c1b815e745a44e63e0e371b621cb7f}{update\+Slack}} ()
+\item 
+void \mbox{\hyperlink{classFF_a8d74f80a44c475317e686a0f3532870e}{clear}} ()
+\item 
+double \mbox{\hyperlink{classFF_ad4c9bd7688a1b69e44f9fb5c3548d48e}{get\+Slack}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static double \mbox{\hyperlink{classFF_adf595c10da200789722ad768f6ce4738}{Displacement\+Delay}} = 0
+\item 
+static double \mbox{\hyperlink{classFF_a582abbe2ac835bb5321f37649ed78287}{alpha}} = 0
+\item 
+static double \mbox{\hyperlink{classFF_a20aa91fa457a762f9e00aa8f03a57073}{beta}} = 0
+\item 
+static double \mbox{\hyperlink{classFF_a0d56779626339acc9cc38fbe084fcd92}{gamma}} = 0
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classFF_a364629c9267442c0473844c524709227}{post\+Banking\+Obj\+Function}}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classFF_afa4f24b27e701eaca038d2f49665d0b7}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classFF}{FF}} \&ff)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 38 of file FF.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classFF_aaf6be82e9c02c09fca384f1b4c1f0583}\label{classFF_aaf6be82e9c02c09fca384f1b4c1f0583}} 
+\index{FF@{FF}!FF@{FF}}
+\index{FF@{FF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{FF()}{FF()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily FF\+::\+FF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 6 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a1844eb546112373c58b759bf329c19d4}\label{classFF_a1844eb546112373c58b759bf329c19d4}} 
+\index{FF@{FF}!FF@{FF}}
+\index{FF@{FF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{FF()}{FF()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily FF\+::\+FF (\begin{DoxyParamCaption}\item[{int}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Definition at line 18 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a0d1ad6c6b101c8a0d82de82dcbc79715}\label{classFF_a0d1ad6c6b101c8a0d82de82dcbc79715}} 
+\index{FF@{FF}!````~FF@{$\sim$FF}}
+\index{````~FF@{$\sim$FF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{$\sim$FF()}{~FF()}}
+{\footnotesize\ttfamily FF\+::$\sim$\+FF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 30 of file FF.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classFF_ae0613fa9886e9ea079d7994fc53d671a}\label{classFF_ae0613fa9886e9ea079d7994fc53d671a}} 
+\index{FF@{FF}!addClusterFF@{addClusterFF}}
+\index{addClusterFF@{addClusterFF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{addClusterFF()}{addClusterFF()}}
+{\footnotesize\ttfamily void FF\+::add\+Cluster\+FF (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFF}{FF}} $\ast$}]{input\+FF,  }\item[{int}]{slot }\end{DoxyParamCaption})}
+
+
+
+Definition at line 37 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a051638af9f5667cad88fd72582ebdd11}\label{classFF_a051638af9f5667cad88fd72582ebdd11}} 
+\index{FF@{FF}!addNeighbor@{addNeighbor}}
+\index{addNeighbor@{addNeighbor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{addNeighbor()}{addNeighbor()}}
+{\footnotesize\ttfamily void FF\+::add\+Neighbor (\begin{DoxyParamCaption}\item[{int}]{ff\+Idx,  }\item[{double}]{euclidean\+\_\+distance }\end{DoxyParamCaption})}
+
+
+
+Definition at line 73 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a85297f17a8e188ca7cdae34e488c754f}\label{classFF_a85297f17a8e188ca7cdae34e488c754f}} 
+\index{FF@{FF}!addNextStage@{addNextStage}}
+\index{addNextStage@{addNextStage}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{addNextStage()}{addNextStage()}}
+{\footnotesize\ttfamily void FF\+::add\+Next\+Stage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{FF_8h_a7a33ec6e310428fd501b94bb78035e14}{Next\+Stage}}}]{input }\end{DoxyParamCaption})}
+
+
+
+Definition at line 89 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a8d74f80a44c475317e686a0f3532870e}\label{classFF_a8d74f80a44c475317e686a0f3532870e}} 
+\index{FF@{FF}!clear@{clear}}
+\index{clear@{clear}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void FF\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 287 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a7bc765d4fe4b0c07f8f7a6c7eec48237}\label{classFF_a7bc765d4fe4b0c07f8f7a6c7eec48237}} 
+\index{FF@{FF}!getAllSlack@{getAllSlack}}
+\index{getAllSlack@{getAllSlack}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getAllSlack()}{getAllSlack()}}
+{\footnotesize\ttfamily double FF\+::get\+All\+Slack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 413 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ab341bc4b251d715c00a17631b61d9b65}\label{classFF_ab341bc4b251d715c00a17631b61d9b65}} 
+\index{FF@{FF}!getBandwidth@{getBandwidth}}
+\index{getBandwidth@{getBandwidth}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getBandwidth()}{getBandwidth()}}
+{\footnotesize\ttfamily double FF\+::get\+Bandwidth (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 155 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a5dd37d39445d6fa3ce4ca53c0c49cd49}\label{classFF_a5dd37d39445d6fa3ce4ca53c0c49cd49}} 
+\index{FF@{FF}!getClkIdx@{getClkIdx}}
+\index{getClkIdx@{getClkIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getClkIdx()}{getClkIdx()}}
+{\footnotesize\ttfamily int FF\+::get\+Clk\+Idx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 147 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a10f770ea433760a468cd1666a37e847d}\label{classFF_a10f770ea433760a468cd1666a37e847d}} 
+\index{FF@{FF}!getClusterFF@{getClusterFF}}
+\index{getClusterFF@{getClusterFF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getClusterFF()}{getClusterFF()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \& FF\+::get\+Cluster\+FF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 131 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a9df9e720b646161b8aed41c70b885c74}\label{classFF_a9df9e720b646161b8aed41c70b885c74}} 
+\index{FF@{FF}!getClusterIdx@{getClusterIdx}}
+\index{getClusterIdx@{getClusterIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getClusterIdx()}{getClusterIdx()}}
+{\footnotesize\ttfamily int FF\+::get\+Cluster\+Idx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 143 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_aabe69e8679e3b054c449bd6c1fe89231}\label{classFF_aabe69e8679e3b054c449bd6c1fe89231}} 
+\index{FF@{FF}!getCost@{getCost}}
+\index{getCost@{getCost}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getCost()}{getCost()}}
+{\footnotesize\ttfamily double FF\+::get\+Cost (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 423 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a381c87186f8143163c504087f626294e}\label{classFF_a381c87186f8143163c504087f626294e}} 
+\index{FF@{FF}!getCriticalCoor@{getCriticalCoor}}
+\index{getCriticalCoor@{getCriticalCoor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getCriticalCoor()}{getCriticalCoor()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{classCoor}{Coor}}, double $>$ $>$ FF\+::get\+Critical\+Coor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 371 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a59b283a59a7fb0005e7a22d8ae4d25c4}\label{classFF_a59b283a59a7fb0005e7a22d8ae4d25c4}} 
+\index{FF@{FF}!getCriticalSize@{getCriticalSize}}
+\index{getCriticalSize@{getCriticalSize}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getCriticalSize()}{getCriticalSize()}}
+{\footnotesize\ttfamily size\+\_\+t FF\+::get\+Critical\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 406 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_afb2d864c794ef5bab179fb835808b0a1}\label{classFF_afb2d864c794ef5bab179fb835808b0a1}} 
+\index{FF@{FF}!getFFIdx@{getFFIdx}}
+\index{getFFIdx@{getFFIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getFFIdx()}{getFFIdx()}}
+{\footnotesize\ttfamily int FF\+::get\+FFIdx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 135 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a76d9a32c7cacb1fa8442209c93da307c}\label{classFF_a76d9a32c7cacb1fa8442209c93da307c}} 
+\index{FF@{FF}!getFixed@{getFixed}}
+\index{getFixed@{getFixed}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getFixed()}{getFixed()}}
+{\footnotesize\ttfamily bool FF\+::get\+Fixed (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 203 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_aaa4b4cf3ee4835e6963b3fdbdf7e85ff}\label{classFF_aaa4b4cf3ee4835e6963b3fdbdf7e85ff}} 
+\index{FF@{FF}!getIsCluster@{getIsCluster}}
+\index{getIsCluster@{getIsCluster}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getIsCluster()}{getIsCluster()}}
+{\footnotesize\ttfamily bool FF\+::get\+Is\+Cluster (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 139 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a2ad9b0994964c2dc8456116bfaa214f0}\label{classFF_a2ad9b0994964c2dc8456116bfaa214f0}} 
+\index{FF@{FF}!getIsShifting@{getIsShifting}}
+\index{getIsShifting@{getIsShifting}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getIsShifting()}{getIsShifting()}}
+{\footnotesize\ttfamily bool FF\+::get\+Is\+Shifting (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 167 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ad59f7265d3f2dd188e71db369fef652a}\label{classFF_ad59f7265d3f2dd188e71db369fef652a}} 
+\index{FF@{FF}!getNeighbor@{getNeighbor}}
+\index{getNeighbor@{getNeighbor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getNeighbor()}{getNeighbor()}}
+{\footnotesize\ttfamily std\+::pair$<$ int, double $>$ FF\+::get\+Neighbor (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 159 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_aeb27a2a911ed01e76ef94ec2a2c5adf5}\label{classFF_aeb27a2a911ed01e76ef94ec2a2c5adf5}} 
+\index{FF@{FF}!getNeighborSize@{getNeighborSize}}
+\index{getNeighborSize@{getNeighborSize}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getNeighborSize()}{getNeighborSize()}}
+{\footnotesize\ttfamily int FF\+::get\+Neighbor\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 163 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a3345ac24349b75a737fad23eeefc7bfd}\label{classFF_a3345ac24349b75a737fad23eeefc7bfd}} 
+\index{FF@{FF}!getNewCoor@{getNewCoor}}
+\index{getNewCoor@{getNewCoor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getNewCoor()}{getNewCoor()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCoor}{Coor}} FF\+::get\+New\+Coor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 151 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_abd6abbae9575340c6ced51b6b78dbb6a}\label{classFF_abd6abbae9575340c6ced51b6b78dbb6a}} 
+\index{FF@{FF}!getNextStage@{getNextStage}}
+\index{getNextStage@{getNextStage}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getNextStage()}{getNextStage()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{FF_8h_a7a33ec6e310428fd501b94bb78035e14}{Next\+Stage}} $>$ FF\+::get\+Next\+Stage (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 179 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a4288f32e3b996089ac256601d1bdaca2}\label{classFF_a4288f32e3b996089ac256601d1bdaca2}} 
+\index{FF@{FF}!getNS@{getNS}}
+\index{getNS@{getNS}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getNS()}{getNS()}}
+{\footnotesize\ttfamily void FF\+::get\+NS (\begin{DoxyParamCaption}\item[{double \&}]{TNS,  }\item[{double \&}]{WNS }\end{DoxyParamCaption})}
+
+
+
+Definition at line 235 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ac44b8ea87ce9e7d7787aa76f7bf637bf}\label{classFF_ac44b8ea87ce9e7d7787aa76f7bf637bf}} 
+\index{FF@{FF}!getOriginalD@{getOriginalD}}
+\index{getOriginalD@{getOriginalD}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getOriginalD()}{getOriginalD()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCoor}{Coor}} FF\+::get\+OriginalD (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 183 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a8c4c73c6c98aaee08ddf0f95220fe592}\label{classFF_a8c4c73c6c98aaee08ddf0f95220fe592}} 
+\index{FF@{FF}!getOriginalQ@{getOriginalQ}}
+\index{getOriginalQ@{getOriginalQ}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getOriginalQ()}{getOriginalQ()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCoor}{Coor}} FF\+::get\+OriginalQ (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 187 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a061b70c2940fc63018a341b5c1d7fd5e}\label{classFF_a061b70c2940fc63018a341b5c1d7fd5e}} 
+\index{FF@{FF}!getOriginalQpinDelay@{getOriginalQpinDelay}}
+\index{getOriginalQpinDelay@{getOriginalQpinDelay}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getOriginalQpinDelay()}{getOriginalQpinDelay()}}
+{\footnotesize\ttfamily double FF\+::get\+Original\+Qpin\+Delay (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 191 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a49fdede17100e943bae84bad24eb4c6c}\label{classFF_a49fdede17100e943bae84bad24eb4c6c}} 
+\index{FF@{FF}!getPhysicalFF@{getPhysicalFF}}
+\index{getPhysicalFF@{getPhysicalFF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getPhysicalFF()}{getPhysicalFF()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classFF}{FF}} $\ast$ FF\+::get\+Physical\+FF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 195 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_af291ec63885f98c30c4b676d284273d2}\label{classFF_af291ec63885f98c30c4b676d284273d2}} 
+\index{FF@{FF}!getPhysicalPinName@{getPhysicalPinName}}
+\index{getPhysicalPinName@{getPhysicalPinName}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getPhysicalPinName()}{getPhysicalPinName()}}
+{\footnotesize\ttfamily std\+::string FF\+::get\+Physical\+Pin\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 364 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a34653602931754e6321fb2e278eac2be}\label{classFF_a34653602931754e6321fb2e278eac2be}} 
+\index{FF@{FF}!getPrevInstance@{getPrevInstance}}
+\index{getPrevInstance@{getPrevInstance}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getPrevInstance()}{getPrevInstance()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structPrevInstance}{Prev\+Instance}} FF\+::get\+Prev\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 175 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a35e6ad347fa3cb70aff04a3d40e5d87f}\label{classFF_a35e6ad347fa3cb70aff04a3d40e5d87f}} 
+\index{FF@{FF}!getPrevStage@{getPrevStage}}
+\index{getPrevStage@{getPrevStage}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getPrevStage()}{getPrevStage()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structPrevStage}{Prev\+Stage}} FF\+::get\+Prev\+Stage (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 171 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ad4c9bd7688a1b69e44f9fb5c3548d48e}\label{classFF_ad4c9bd7688a1b69e44f9fb5c3548d48e}} 
+\index{FF@{FF}!getSlack@{getSlack}}
+\index{getSlack@{getSlack}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getSlack()}{getSlack()}}
+{\footnotesize\ttfamily double FF\+::get\+Slack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+double slack, the value of the slack, positive is positive, negative is negative 
+\end{DoxyReturn}
+
+
+Definition at line 312 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a0d04f0f219c56f9fe74c31b8918e586a}\label{classFF_a0d04f0f219c56f9fe74c31b8918e586a}} 
+\index{FF@{FF}!getSlot@{getSlot}}
+\index{getSlot@{getSlot}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getSlot()}{getSlot()}}
+{\footnotesize\ttfamily int FF\+::get\+Slot (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 199 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a3f9c5431ebcad6649678d202acbd3ac6}\label{classFF_a3f9c5431ebcad6649678d202acbd3ac6}} 
+\index{FF@{FF}!getTimingSlack@{getTimingSlack}}
+\index{getTimingSlack@{getTimingSlack}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getTimingSlack()}{getTimingSlack()}}
+{\footnotesize\ttfamily double FF\+::get\+Timing\+Slack (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{pin\+Name }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 123 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a0ea60ad1f82d1f822c3801cfc3814be3}\label{classFF_a0ea60ad1f82d1f822c3801cfc3814be3}} 
+\index{FF@{FF}!getTNS@{getTNS}}
+\index{getTNS@{getTNS}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getTNS()}{getTNS()}}
+{\footnotesize\ttfamily double FF\+::get\+TNS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 249 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a71bc75eb1f2f94be8a4b72063627fe6e}\label{classFF_a71bc75eb1f2f94be8a4b72063627fe6e}} 
+\index{FF@{FF}!getWNS@{getWNS}}
+\index{getWNS@{getWNS}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{getWNS()}{getWNS()}}
+{\footnotesize\ttfamily double FF\+::get\+WNS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 261 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a7a463beaa839c0baecca4879cce1caf2}\label{classFF_a7a463beaa839c0baecca4879cce1caf2}} 
+\index{FF@{FF}!setBandwidth@{setBandwidth}}
+\index{setBandwidth@{setBandwidth}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setBandwidth()}{setBandwidth()}}
+{\footnotesize\ttfamily void FF\+::set\+Bandwidth (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classManager}{Manager}} \&}]{mgr }\end{DoxyParamCaption})}
+
+
+
+Definition at line 57 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a924b87189709b80f75467b8dfdfdf0db}\label{classFF_a924b87189709b80f75467b8dfdfdf0db}} 
+\index{FF@{FF}!setClkIdx@{setClkIdx}}
+\index{setClkIdx@{setClkIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setClkIdx()}{setClkIdx()}}
+{\footnotesize\ttfamily void FF\+::set\+Clk\+Idx (\begin{DoxyParamCaption}\item[{int}]{clk\+Idx }\end{DoxyParamCaption})}
+
+
+
+Definition at line 49 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a923f9e5dba4e7bf0f7a2fb30e3f4b0b6}\label{classFF_a923f9e5dba4e7bf0f7a2fb30e3f4b0b6}} 
+\index{FF@{FF}!setClusterIdx@{setClusterIdx}}
+\index{setClusterIdx@{setClusterIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setClusterIdx()}{setClusterIdx()}}
+{\footnotesize\ttfamily void FF\+::set\+Cluster\+Idx (\begin{DoxyParamCaption}\item[{int}]{cluster\+Idx }\end{DoxyParamCaption})}
+
+
+
+Definition at line 45 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a1541ea47bd527476d984827db67d8a4e}\label{classFF_a1541ea47bd527476d984827db67d8a4e}} 
+\index{FF@{FF}!setClusterSize@{setClusterSize}}
+\index{setClusterSize@{setClusterSize}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setClusterSize()}{setClusterSize()}}
+{\footnotesize\ttfamily void FF\+::set\+Cluster\+Size (\begin{DoxyParamCaption}\item[{int}]{n }\end{DoxyParamCaption})}
+
+
+
+Definition at line 104 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_aa0bf2742a279fecc26d880f92528bbf0}\label{classFF_aa0bf2742a279fecc26d880f92528bbf0}} 
+\index{FF@{FF}!setFFIdx@{setFFIdx}}
+\index{setFFIdx@{setFFIdx}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setFFIdx()}{setFFIdx()}}
+{\footnotesize\ttfamily void FF\+::set\+FFIdx (\begin{DoxyParamCaption}\item[{int}]{ff\+Idx }\end{DoxyParamCaption})}
+
+
+
+Definition at line 41 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ac54b28feb0baf0970f14c47afac311cc}\label{classFF_ac54b28feb0baf0970f14c47afac311cc}} 
+\index{FF@{FF}!setFixed@{setFixed}}
+\index{setFixed@{setFixed}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setFixed()}{setFixed()}}
+{\footnotesize\ttfamily void FF\+::set\+Fixed (\begin{DoxyParamCaption}\item[{bool}]{fixed }\end{DoxyParamCaption})}
+
+
+
+Definition at line 109 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a5978f58e806704311c49ae1c192f68a2}\label{classFF_a5978f58e806704311c49ae1c192f68a2}} 
+\index{FF@{FF}!setIsShifting@{setIsShifting}}
+\index{setIsShifting@{setIsShifting}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setIsShifting()}{setIsShifting()}}
+{\footnotesize\ttfamily void FF\+::set\+Is\+Shifting (\begin{DoxyParamCaption}\item[{bool}]{shift }\end{DoxyParamCaption})}
+
+
+
+Definition at line 77 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a4d90e167d6a2bc434b06363370b7fd3e}\label{classFF_a4d90e167d6a2bc434b06363370b7fd3e}} 
+\index{FF@{FF}!setNewCoor@{setNewCoor}}
+\index{setNewCoor@{setNewCoor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setNewCoor()}{setNewCoor()}}
+{\footnotesize\ttfamily void FF\+::set\+New\+Coor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor }\end{DoxyParamCaption})}
+
+
+
+Definition at line 53 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a55b089185117fe404605d01b98c21627}\label{classFF_a55b089185117fe404605d01b98c21627}} 
+\index{FF@{FF}!setOriginalCoor@{setOriginalCoor}}
+\index{setOriginalCoor@{setOriginalCoor}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setOriginalCoor()}{setOriginalCoor()}}
+{\footnotesize\ttfamily void FF\+::set\+Original\+Coor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coorD,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coorQ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 113 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a3188f04f58e4bf668ff2efeda2b612bb}\label{classFF_a3188f04f58e4bf668ff2efeda2b612bb}} 
+\index{FF@{FF}!setOriginalQpinDelay@{setOriginalQpinDelay}}
+\index{setOriginalQpinDelay@{setOriginalQpinDelay}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setOriginalQpinDelay()}{setOriginalQpinDelay()}}
+{\footnotesize\ttfamily void FF\+::set\+Original\+Qpin\+Delay (\begin{DoxyParamCaption}\item[{double}]{in }\end{DoxyParamCaption})}
+
+
+
+Definition at line 118 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a2dbf665f7df2d5d46e0bbc025633684d}\label{classFF_a2dbf665f7df2d5d46e0bbc025633684d}} 
+\index{FF@{FF}!setPhysicalFF@{setPhysicalFF}}
+\index{setPhysicalFF@{setPhysicalFF}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setPhysicalFF()}{setPhysicalFF()}}
+{\footnotesize\ttfamily void FF\+::set\+Physical\+FF (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFF}{FF}} $\ast$}]{target\+FF,  }\item[{int}]{slot }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em target\+FF} & \\
+\hline
+{\em slot} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 99 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a5474ac472d92b8848da713bcf39a92cd}\label{classFF_a5474ac472d92b8848da713bcf39a92cd}} 
+\index{FF@{FF}!setPrevInstance@{setPrevInstance}}
+\index{setPrevInstance@{setPrevInstance}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setPrevInstance()}{setPrevInstance()}}
+{\footnotesize\ttfamily void FF\+::set\+Prev\+Instance (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structPrevInstance}{Prev\+Instance}}}]{input\+Instance }\end{DoxyParamCaption})}
+
+
+
+Definition at line 85 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a31be6e597424ad89e0ad1dc25039a425}\label{classFF_a31be6e597424ad89e0ad1dc25039a425}} 
+\index{FF@{FF}!setPrevStage@{setPrevStage}}
+\index{setPrevStage@{setPrevStage}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setPrevStage()}{setPrevStage()}}
+{\footnotesize\ttfamily void FF\+::set\+Prev\+Stage (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structPrevStage}{Prev\+Stage}}}]{input\+Stage }\end{DoxyParamCaption})}
+
+
+
+Definition at line 81 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ae44f81148445141c84690f9c7b7179f4}\label{classFF_ae44f81148445141c84690f9c7b7179f4}} 
+\index{FF@{FF}!setTimingSlack@{setTimingSlack}}
+\index{setTimingSlack@{setTimingSlack}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{setTimingSlack()}{setTimingSlack()}}
+{\footnotesize\ttfamily void FF\+::set\+Timing\+Slack (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{pin\+Name,  }\item[{double}]{slack }\end{DoxyParamCaption})}
+
+
+
+Definition at line 33 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_adfbbc49524354ecf8947404afd477109}\label{classFF_adfbbc49524354ecf8947404afd477109}} 
+\index{FF@{FF}!shift@{shift}}
+\index{shift@{shift}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{shift()}{shift()}}
+{\footnotesize\ttfamily double FF\+::shift (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FFs }\end{DoxyParamCaption})}
+
+
+
+Definition at line 214 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_ae53cabe9affef070961682843320ff0c}\label{classFF_ae53cabe9affef070961682843320ff0c}} 
+\index{FF@{FF}!sortNeighbors@{sortNeighbors}}
+\index{sortNeighbors@{sortNeighbors}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{sortNeighbors()}{sortNeighbors()}}
+{\footnotesize\ttfamily void FF\+::sort\+Neighbors (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 207 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a23c1b815e745a44e63e0e371b621cb7f}\label{classFF_a23c1b815e745a44e63e0e371b621cb7f}} 
+\index{FF@{FF}!updateSlack@{updateSlack}}
+\index{updateSlack@{updateSlack}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{updateSlack()}{updateSlack()}}
+{\footnotesize\ttfamily void FF\+::update\+Slack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 273 of file FF.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classFF_afa4f24b27e701eaca038d2f49665d0b7}\label{classFF_afa4f24b27e701eaca038d2f49665d0b7}} 
+\index{FF@{FF}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classFF}{FF}} \&}]{ff }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 297 of file FF.\+cpp.
+
+\mbox{\Hypertarget{classFF_a364629c9267442c0473844c524709227}\label{classFF_a364629c9267442c0473844c524709227}} 
+\index{FF@{FF}!postBankingObjFunction@{postBankingObjFunction}}
+\index{postBankingObjFunction@{postBankingObjFunction}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{postBankingObjFunction}{postBankingObjFunction}}
+{\footnotesize\ttfamily friend class \mbox{\hyperlink{classpostBankingObjFunction}{post\+Banking\+Obj\+Function}}\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 127 of file FF.\+h.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classFF_a582abbe2ac835bb5321f37649ed78287}\label{classFF_a582abbe2ac835bb5321f37649ed78287}} 
+\index{FF@{FF}!alpha@{alpha}}
+\index{alpha@{alpha}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{alpha}{alpha}}
+{\footnotesize\ttfamily double FF\+::alpha = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 129 of file FF.\+h.
+
+\mbox{\Hypertarget{classFF_a20aa91fa457a762f9e00aa8f03a57073}\label{classFF_a20aa91fa457a762f9e00aa8f03a57073}} 
+\index{FF@{FF}!beta@{beta}}
+\index{beta@{beta}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{beta}{beta}}
+{\footnotesize\ttfamily double FF\+::beta = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 130 of file FF.\+h.
+
+\mbox{\Hypertarget{classFF_adf595c10da200789722ad768f6ce4738}\label{classFF_adf595c10da200789722ad768f6ce4738}} 
+\index{FF@{FF}!DisplacementDelay@{DisplacementDelay}}
+\index{DisplacementDelay@{DisplacementDelay}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{DisplacementDelay}{DisplacementDelay}}
+{\footnotesize\ttfamily double FF\+::\+Displacement\+Delay = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 128 of file FF.\+h.
+
+\mbox{\Hypertarget{classFF_a0d56779626339acc9cc38fbe084fcd92}\label{classFF_a0d56779626339acc9cc38fbe084fcd92}} 
+\index{FF@{FF}!gamma@{gamma}}
+\index{gamma@{gamma}!FF@{FF}}
+\doxysubsubsection{\texorpdfstring{gamma}{gamma}}
+{\footnotesize\ttfamily double FF\+::gamma = 0\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 131 of file FF.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{FF_8h}{FF.\+h}}\item 
+src/\mbox{\hyperlink{FF_8cpp}{FF.\+cpp}}\end{DoxyCompactItemize}

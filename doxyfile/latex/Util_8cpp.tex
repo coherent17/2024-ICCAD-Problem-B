@@ -1,0 +1,95 @@
+\hypertarget{Util_8cpp}{}\doxysection{src/\+Util.cpp File Reference}
+\label{Util_8cpp}\index{src/Util.cpp@{src/Util.cpp}}
+{\ttfamily \#include \char`\"{}Util.\+h\char`\"{}}\newline
+Include dependency graph for Util.\+cpp\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{Util_8cpp_acca5b6bac788a0cf95dd498970810885}{Square\+Euclidean\+Distance}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2)
+\item 
+double \mbox{\hyperlink{Util_8cpp_a654437e8705738d45e161f596b2d9713}{Mangattan\+Distance}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2)
+\item 
+double \mbox{\hyperlink{Util_8cpp_a6d4abb3898fe7be04bcd39aadf636c75}{Gaussian\+Kernel}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2, double bandwidth)
+\item 
+double \mbox{\hyperlink{Util_8cpp_ad597d272c52ee8e2018d65b6d095ed75}{HPWL}} (const \mbox{\hyperlink{classCoor}{Coor}} \&c1, const \mbox{\hyperlink{classCoor}{Coor}} \&c2)
+\item 
+bool \mbox{\hyperlink{Util_8cpp_a11adb104b3bb264d60fdef2323dc1d3f}{Is\+Overlap}} (const \mbox{\hyperlink{classCoor}{Coor}} \&coor1, double w1, double h1, const \mbox{\hyperlink{classCoor}{Coor}} \&coor2, double w2, double h2)
+\item 
+std\+::string \mbox{\hyperlink{Util_8cpp_a5e405c835c530210e375ccafbf3c446c}{to\+String\+With\+Precision}} (double value, int num\+After\+Dot)
+\item 
+void \mbox{\hyperlink{Util_8cpp_aad27179c1291c28962de9d710e945c58}{update\+\_\+bar}} (int percent\+\_\+done)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{Util_8cpp_a6d4abb3898fe7be04bcd39aadf636c75}\label{Util_8cpp_a6d4abb3898fe7be04bcd39aadf636c75}} 
+\index{Util.cpp@{Util.cpp}!GaussianKernel@{GaussianKernel}}
+\index{GaussianKernel@{GaussianKernel}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{GaussianKernel()}{GaussianKernel()}}
+{\footnotesize\ttfamily double Gaussian\+Kernel (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2,  }\item[{double}]{bandwidth }\end{DoxyParamCaption})}
+
+
+
+Definition at line 18 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_ad597d272c52ee8e2018d65b6d095ed75}\label{Util_8cpp_ad597d272c52ee8e2018d65b6d095ed75}} 
+\index{Util.cpp@{Util.cpp}!HPWL@{HPWL}}
+\index{HPWL@{HPWL}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{HPWL()}{HPWL()}}
+{\footnotesize\ttfamily double HPWL (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{c1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{c2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 25 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_a11adb104b3bb264d60fdef2323dc1d3f}\label{Util_8cpp_a11adb104b3bb264d60fdef2323dc1d3f}} 
+\index{Util.cpp@{Util.cpp}!IsOverlap@{IsOverlap}}
+\index{IsOverlap@{IsOverlap}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{IsOverlap()}{IsOverlap()}}
+{\footnotesize\ttfamily bool Is\+Overlap (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor1,  }\item[{double}]{w1,  }\item[{double}]{h1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor2,  }\item[{double}]{w2,  }\item[{double}]{h2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 29 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_a654437e8705738d45e161f596b2d9713}\label{Util_8cpp_a654437e8705738d45e161f596b2d9713}} 
+\index{Util.cpp@{Util.cpp}!MangattanDistance@{MangattanDistance}}
+\index{MangattanDistance@{MangattanDistance}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{MangattanDistance()}{MangattanDistance()}}
+{\footnotesize\ttfamily double Mangattan\+Distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 14 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_acca5b6bac788a0cf95dd498970810885}\label{Util_8cpp_acca5b6bac788a0cf95dd498970810885}} 
+\index{Util.cpp@{Util.cpp}!SquareEuclideanDistance@{SquareEuclideanDistance}}
+\index{SquareEuclideanDistance@{SquareEuclideanDistance}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{SquareEuclideanDistance()}{SquareEuclideanDistance()}}
+{\footnotesize\ttfamily double Square\+Euclidean\+Distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 9 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_a5e405c835c530210e375ccafbf3c446c}\label{Util_8cpp_a5e405c835c530210e375ccafbf3c446c}} 
+\index{Util.cpp@{Util.cpp}!toStringWithPrecision@{toStringWithPrecision}}
+\index{toStringWithPrecision@{toStringWithPrecision}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{toStringWithPrecision()}{toStringWithPrecision()}}
+{\footnotesize\ttfamily std\+::string to\+String\+With\+Precision (\begin{DoxyParamCaption}\item[{double}]{value,  }\item[{int}]{num\+After\+Dot }\end{DoxyParamCaption})}
+
+
+
+Definition at line 42 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8cpp_aad27179c1291c28962de9d710e945c58}\label{Util_8cpp_aad27179c1291c28962de9d710e945c58}} 
+\index{Util.cpp@{Util.cpp}!update\_bar@{update\_bar}}
+\index{update\_bar@{update\_bar}!Util.cpp@{Util.cpp}}
+\doxysubsubsection{\texorpdfstring{update\_bar()}{update\_bar()}}
+{\footnotesize\ttfamily void update\+\_\+bar (\begin{DoxyParamCaption}\item[{int}]{percent\+\_\+done }\end{DoxyParamCaption})}
+
+
+
+Definition at line 46 of file Util.\+cpp.
+

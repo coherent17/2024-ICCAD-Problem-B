@@ -1,0 +1,358 @@
+\hypertarget{classNode}{}\doxysection{Node Class Reference}
+\label{classNode}\index{Node@{Node}}
+
+
+{\ttfamily \#include $<$Node.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNode_ad7a34779cad45d997bfd6d3d8043c75f}{Node}} ()
+\item 
+\mbox{\hyperlink{classNode_aa0840c3cb5c7159be6d992adecd2097c}{$\sim$\+Node}} ()
+\item 
+void \mbox{\hyperlink{classNode_a519730c66b26e65c6539a908e6905edc}{set\+Name}} (const std\+::string \&name)
+\item 
+void \mbox{\hyperlink{classNode_a9938bb2654c2ac7b9cc13dab986c0e07}{set\+GPCoor}} (const \mbox{\hyperlink{classCoor}{Coor}} \&gp\+Coor)
+\item 
+void \mbox{\hyperlink{classNode_a0a06b15711e3994d91b67f85e335e6a8}{set\+LGCoor}} (const \mbox{\hyperlink{classCoor}{Coor}} \&lg\+Coor)
+\item 
+void \mbox{\hyperlink{classNode_a360e9aae74ae99efbc609d2f36b0e97d}{set\+Cell}} (\mbox{\hyperlink{classCell}{Cell}} $\ast$cell)
+\item 
+void \mbox{\hyperlink{classNode_a6d42ae047ea27a79e70fa1aefc250537}{setW}} (double w)
+\item 
+void \mbox{\hyperlink{classNode_a7ff22a63d47988963b392a30d6cbd353}{setH}} (double h)
+\item 
+void \mbox{\hyperlink{classNode_afd2e4a6ddda6bbf3536267705c8fb187}{set\+Is\+Place}} (bool is\+Place)
+\item 
+void \mbox{\hyperlink{classNode_af9f9b64384fba8a43baa09df0da89647}{set\+TNS}} (double TNS)
+\item 
+void \mbox{\hyperlink{classNode_ace0db71121fef7c0502c30d0623dd41d}{set\+Closest\+Row\+Idx}} (size\+\_\+t closest\+\_\+rowidx)
+\item 
+void \mbox{\hyperlink{classNode_a0196cf32d49b83ad23ddd27e476699a0}{set\+Place\+Row\+Idx}} (size\+\_\+t place\+\_\+rowidx)
+\item 
+void \mbox{\hyperlink{classNode_aaef299987bedfa86f8ad529eb473e6fb}{set\+FFPtr}} (\mbox{\hyperlink{classFF}{FF}} $\ast$ffptr)
+\item 
+const std\+::string \& \mbox{\hyperlink{classNode_a2ddaa1e6fdada0bec680128d9e732162}{get\+Name}} () const
+\item 
+const \mbox{\hyperlink{classCoor}{Coor}} \& \mbox{\hyperlink{classNode_ae446f31e60bb6a82b7320060c488720a}{get\+GPCoor}} () const
+\item 
+const \mbox{\hyperlink{classCoor}{Coor}} \& \mbox{\hyperlink{classNode_a887c4a8c88dd2d59d1fa6d0760d83d11}{get\+LGCoor}} () const
+\item 
+\mbox{\hyperlink{classCell}{Cell}} $\ast$ \mbox{\hyperlink{classNode_a1d0ec84fc9d24ae436e28090abbcb87a}{get\+Cell}} () const
+\item 
+double \mbox{\hyperlink{classNode_a6b7bead7cfd3301b2d762427da448549}{getW}} () const
+\item 
+double \mbox{\hyperlink{classNode_ac72c8562c1d3fa927600a2c352d9ca33}{getH}} () const
+\item 
+bool \mbox{\hyperlink{classNode_ac31f40333d3eb8e231ad392f8e778f66}{get\+Is\+Place}} () const
+\item 
+double \mbox{\hyperlink{classNode_a45f505cb776eb3189382c6cb9f376b3b}{get\+TNS}} () const
+\item 
+size\+\_\+t \mbox{\hyperlink{classNode_aa158e23130b1bb7891af6adc19d44c0e}{get\+Closest\+Row\+Idx}} () const
+\item 
+size\+\_\+t \mbox{\hyperlink{classNode_ae062cb7958d339225d2f73394b0f831b}{get\+Place\+Row\+Idx}} () const
+\item 
+\mbox{\hyperlink{classFF}{FF}} $\ast$ \mbox{\hyperlink{classNode_a88375fa29f9fb3e28fc3e425a422f151}{get\+FFPtr}} () const
+\item 
+double \mbox{\hyperlink{classNode_ac40358b861498f3834805a6f582e9744}{get\+Displacement}} () const
+\item 
+double \mbox{\hyperlink{classNode_a05f987289f679dcbe5cb119f22fe01c8}{get\+Displacement}} (const \mbox{\hyperlink{classCoor}{Coor}} \&other\+Coor) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classNode_ada22d1a125cc70e462992da2385c04a1}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classNode}{Node}} \&node)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 13 of file Node.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNode_ad7a34779cad45d997bfd6d3d8043c75f}\label{classNode_ad7a34779cad45d997bfd6d3d8043c75f}} 
+\index{Node@{Node}!Node@{Node}}
+\index{Node@{Node}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{Node()}{Node()}}
+{\footnotesize\ttfamily Node\+::\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 4 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_aa0840c3cb5c7159be6d992adecd2097c}\label{classNode_aa0840c3cb5c7159be6d992adecd2097c}} 
+\index{Node@{Node}!````~Node@{$\sim$Node}}
+\index{````~Node@{$\sim$Node}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{$\sim$Node()}{~Node()}}
+{\footnotesize\ttfamily Node\+::$\sim$\+Node (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 13 of file Node.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNode_a1d0ec84fc9d24ae436e28090abbcb87a}\label{classNode_a1d0ec84fc9d24ae436e28090abbcb87a}} 
+\index{Node@{Node}!getCell@{getCell}}
+\index{getCell@{getCell}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getCell()}{getCell()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classCell}{Cell}} $\ast$ Node\+::get\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 73 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_aa158e23130b1bb7891af6adc19d44c0e}\label{classNode_aa158e23130b1bb7891af6adc19d44c0e}} 
+\index{Node@{Node}!getClosestRowIdx@{getClosestRowIdx}}
+\index{getClosestRowIdx@{getClosestRowIdx}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getClosestRowIdx()}{getClosestRowIdx()}}
+{\footnotesize\ttfamily size\+\_\+t Node\+::get\+Closest\+Row\+Idx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 101 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ac40358b861498f3834805a6f582e9744}\label{classNode_ac40358b861498f3834805a6f582e9744}} 
+\index{Node@{Node}!getDisplacement@{getDisplacement}}
+\index{getDisplacement@{getDisplacement}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getDisplacement()}{getDisplacement()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily double Node\+::get\+Displacement (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 89 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a05f987289f679dcbe5cb119f22fe01c8}\label{classNode_a05f987289f679dcbe5cb119f22fe01c8}} 
+\index{Node@{Node}!getDisplacement@{getDisplacement}}
+\index{getDisplacement@{getDisplacement}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getDisplacement()}{getDisplacement()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily double Node\+::get\+Displacement (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{other\+Coor }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 93 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a88375fa29f9fb3e28fc3e425a422f151}\label{classNode_a88375fa29f9fb3e28fc3e425a422f151}} 
+\index{Node@{Node}!getFFPtr@{getFFPtr}}
+\index{getFFPtr@{getFFPtr}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getFFPtr()}{getFFPtr()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classFF}{FF}} $\ast$ Node\+::get\+FFPtr (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 109 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ae446f31e60bb6a82b7320060c488720a}\label{classNode_ae446f31e60bb6a82b7320060c488720a}} 
+\index{Node@{Node}!getGPCoor@{getGPCoor}}
+\index{getGPCoor@{getGPCoor}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getGPCoor()}{getGPCoor()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classCoor}{Coor}} \& Node\+::get\+GPCoor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 65 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ac72c8562c1d3fa927600a2c352d9ca33}\label{classNode_ac72c8562c1d3fa927600a2c352d9ca33}} 
+\index{Node@{Node}!getH@{getH}}
+\index{getH@{getH}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getH()}{getH()}}
+{\footnotesize\ttfamily double Node\+::getH (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 81 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ac31f40333d3eb8e231ad392f8e778f66}\label{classNode_ac31f40333d3eb8e231ad392f8e778f66}} 
+\index{Node@{Node}!getIsPlace@{getIsPlace}}
+\index{getIsPlace@{getIsPlace}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getIsPlace()}{getIsPlace()}}
+{\footnotesize\ttfamily bool Node\+::get\+Is\+Place (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 85 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a887c4a8c88dd2d59d1fa6d0760d83d11}\label{classNode_a887c4a8c88dd2d59d1fa6d0760d83d11}} 
+\index{Node@{Node}!getLGCoor@{getLGCoor}}
+\index{getLGCoor@{getLGCoor}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getLGCoor()}{getLGCoor()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classCoor}{Coor}} \& Node\+::get\+LGCoor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 69 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a2ddaa1e6fdada0bec680128d9e732162}\label{classNode_a2ddaa1e6fdada0bec680128d9e732162}} 
+\index{Node@{Node}!getName@{getName}}
+\index{getName@{getName}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily const std\+::string \& Node\+::get\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 61 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ae062cb7958d339225d2f73394b0f831b}\label{classNode_ae062cb7958d339225d2f73394b0f831b}} 
+\index{Node@{Node}!getPlaceRowIdx@{getPlaceRowIdx}}
+\index{getPlaceRowIdx@{getPlaceRowIdx}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getPlaceRowIdx()}{getPlaceRowIdx()}}
+{\footnotesize\ttfamily size\+\_\+t Node\+::get\+Place\+Row\+Idx (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 105 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a45f505cb776eb3189382c6cb9f376b3b}\label{classNode_a45f505cb776eb3189382c6cb9f376b3b}} 
+\index{Node@{Node}!getTNS@{getTNS}}
+\index{getTNS@{getTNS}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getTNS()}{getTNS()}}
+{\footnotesize\ttfamily double Node\+::get\+TNS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 97 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a6b7bead7cfd3301b2d762427da448549}\label{classNode_a6b7bead7cfd3301b2d762427da448549}} 
+\index{Node@{Node}!getW@{getW}}
+\index{getW@{getW}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{getW()}{getW()}}
+{\footnotesize\ttfamily double Node\+::getW (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 77 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a360e9aae74ae99efbc609d2f36b0e97d}\label{classNode_a360e9aae74ae99efbc609d2f36b0e97d}} 
+\index{Node@{Node}!setCell@{setCell}}
+\index{setCell@{setCell}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setCell()}{setCell()}}
+{\footnotesize\ttfamily void Node\+::set\+Cell (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classCell}{Cell}} $\ast$}]{cell }\end{DoxyParamCaption})}
+
+
+
+Definition at line 28 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_ace0db71121fef7c0502c30d0623dd41d}\label{classNode_ace0db71121fef7c0502c30d0623dd41d}} 
+\index{Node@{Node}!setClosestRowIdx@{setClosestRowIdx}}
+\index{setClosestRowIdx@{setClosestRowIdx}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setClosestRowIdx()}{setClosestRowIdx()}}
+{\footnotesize\ttfamily void Node\+::set\+Closest\+Row\+Idx (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{closest\+\_\+rowidx }\end{DoxyParamCaption})}
+
+
+
+Definition at line 48 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_aaef299987bedfa86f8ad529eb473e6fb}\label{classNode_aaef299987bedfa86f8ad529eb473e6fb}} 
+\index{Node@{Node}!setFFPtr@{setFFPtr}}
+\index{setFFPtr@{setFFPtr}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setFFPtr()}{setFFPtr()}}
+{\footnotesize\ttfamily void Node\+::set\+FFPtr (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFF}{FF}} $\ast$}]{ffptr }\end{DoxyParamCaption})}
+
+
+
+Definition at line 56 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a9938bb2654c2ac7b9cc13dab986c0e07}\label{classNode_a9938bb2654c2ac7b9cc13dab986c0e07}} 
+\index{Node@{Node}!setGPCoor@{setGPCoor}}
+\index{setGPCoor@{setGPCoor}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setGPCoor()}{setGPCoor()}}
+{\footnotesize\ttfamily void Node\+::set\+GPCoor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{gp\+Coor }\end{DoxyParamCaption})}
+
+
+
+Definition at line 20 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a7ff22a63d47988963b392a30d6cbd353}\label{classNode_a7ff22a63d47988963b392a30d6cbd353}} 
+\index{Node@{Node}!setH@{setH}}
+\index{setH@{setH}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setH()}{setH()}}
+{\footnotesize\ttfamily void Node\+::setH (\begin{DoxyParamCaption}\item[{double}]{h }\end{DoxyParamCaption})}
+
+
+
+Definition at line 36 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_afd2e4a6ddda6bbf3536267705c8fb187}\label{classNode_afd2e4a6ddda6bbf3536267705c8fb187}} 
+\index{Node@{Node}!setIsPlace@{setIsPlace}}
+\index{setIsPlace@{setIsPlace}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setIsPlace()}{setIsPlace()}}
+{\footnotesize\ttfamily void Node\+::set\+Is\+Place (\begin{DoxyParamCaption}\item[{bool}]{is\+Place }\end{DoxyParamCaption})}
+
+
+
+Definition at line 40 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a0a06b15711e3994d91b67f85e335e6a8}\label{classNode_a0a06b15711e3994d91b67f85e335e6a8}} 
+\index{Node@{Node}!setLGCoor@{setLGCoor}}
+\index{setLGCoor@{setLGCoor}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setLGCoor()}{setLGCoor()}}
+{\footnotesize\ttfamily void Node\+::set\+LGCoor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{lg\+Coor }\end{DoxyParamCaption})}
+
+
+
+Definition at line 24 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a519730c66b26e65c6539a908e6905edc}\label{classNode_a519730c66b26e65c6539a908e6905edc}} 
+\index{Node@{Node}!setName@{setName}}
+\index{setName@{setName}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setName()}{setName()}}
+{\footnotesize\ttfamily void Node\+::set\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 16 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a0196cf32d49b83ad23ddd27e476699a0}\label{classNode_a0196cf32d49b83ad23ddd27e476699a0}} 
+\index{Node@{Node}!setPlaceRowIdx@{setPlaceRowIdx}}
+\index{setPlaceRowIdx@{setPlaceRowIdx}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setPlaceRowIdx()}{setPlaceRowIdx()}}
+{\footnotesize\ttfamily void Node\+::set\+Place\+Row\+Idx (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{place\+\_\+rowidx }\end{DoxyParamCaption})}
+
+
+
+Definition at line 52 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_af9f9b64384fba8a43baa09df0da89647}\label{classNode_af9f9b64384fba8a43baa09df0da89647}} 
+\index{Node@{Node}!setTNS@{setTNS}}
+\index{setTNS@{setTNS}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setTNS()}{setTNS()}}
+{\footnotesize\ttfamily void Node\+::set\+TNS (\begin{DoxyParamCaption}\item[{double}]{TNS }\end{DoxyParamCaption})}
+
+
+
+Definition at line 44 of file Node.\+cpp.
+
+\mbox{\Hypertarget{classNode_a6d42ae047ea27a79e70fa1aefc250537}\label{classNode_a6d42ae047ea27a79e70fa1aefc250537}} 
+\index{Node@{Node}!setW@{setW}}
+\index{setW@{setW}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{setW()}{setW()}}
+{\footnotesize\ttfamily void Node\+::setW (\begin{DoxyParamCaption}\item[{double}]{w }\end{DoxyParamCaption})}
+
+
+
+Definition at line 32 of file Node.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classNode_ada22d1a125cc70e462992da2385c04a1}\label{classNode_ada22d1a125cc70e462992da2385c04a1}} 
+\index{Node@{Node}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Node@{Node}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classNode}{Node}} \&}]{node }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 113 of file Node.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{Node_8h}{Node.\+h}}\item 
+src/\mbox{\hyperlink{Node_8cpp}{Node.\+cpp}}\end{DoxyCompactItemize}

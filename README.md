@@ -76,3 +76,10 @@ $ make cppcheck
 Assign c119cheng:
 *   Debanking, finish
 *   Update Instance::coor for OptimalLocation.
+
+# Doxygen
+$ doxygen -s -g
+$ doxygen Doxyfile
+VScode Extension:
+*   Live Server
+doxyfile/index.html ----> right click ----> open with live server

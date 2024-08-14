@@ -1,0 +1,234 @@
+\hypertarget{classobjFunction}{}\doxysection{obj\+Function Class Reference}
+\label{classobjFunction}\index{objFunction@{objFunction}}
+
+
+{\ttfamily \#include $<$Optimal\+Location.\+h$>$}
+
+
+
+Inheritance diagram for obj\+Function\+:
+% FIG 0
+
+
+Collaboration diagram for obj\+Function\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classobjFunction_a3bdbfe0ac56ec6582b321a00409d774d}{obj\+Function}} (\mbox{\hyperlink{classManager}{Manager}} \&\mbox{\hyperlink{classobjFunction_a801826171d462be3cfbb72dad713fc65}{mgr}}, std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}{FF\+\_\+list}}, unordered\+\_\+map$<$ string, int $>$ \&\mbox{\hyperlink{classobjFunction_a65cf56e6c826a7454071789eb1517c61}{idx\+\_\+map}}, int total\+FF, std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}{FFs}})
+\item 
+virtual double \mbox{\hyperlink{classobjFunction_a25ec62f39d5b77d1045cb81c2e88a91e}{forward}} ()=0
+\item 
+virtual vector$<$ \mbox{\hyperlink{classCoor}{Coor}} $>$ \& \mbox{\hyperlink{classobjFunction_a9138d54803db365aefa90b61fd124d6c}{backward}} (int step, bool only\+Negative)=0
+\item 
+virtual const vector$<$ \mbox{\hyperlink{classCoor}{Coor}} $>$ \& \mbox{\hyperlink{classobjFunction_abf64168d3752c0af017f683ecff95d04}{grad}} () const
+\item 
+virtual void \mbox{\hyperlink{classobjFunction_a8c6d4a9e7a3cf6c88dbfac613a108089}{get\+Weight}} (\mbox{\hyperlink{classFF}{FF}} $\ast$cur\+\_\+ff, vector$<$ double $>$ \&weight)=0
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classManager}{Manager}} \& \mbox{\hyperlink{classobjFunction_a801826171d462be3cfbb72dad713fc65}{mgr}}
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \& \mbox{\hyperlink{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}{FF\+\_\+list}}
+\item 
+unordered\+\_\+map$<$ string, int $>$ \& \mbox{\hyperlink{classobjFunction_a65cf56e6c826a7454071789eb1517c61}{idx\+\_\+map}}
+\item 
+vector$<$ \mbox{\hyperlink{classCoor}{Coor}} $>$ \mbox{\hyperlink{classobjFunction_a2bcb50529a019d316446c2a576e5bff1}{grad\+\_\+}}
+\item 
+double \mbox{\hyperlink{classobjFunction_af0ccad77d2cbbcbd1d804ce0607fe657}{loss}}
+\item 
+double \mbox{\hyperlink{classobjFunction_aff88409f34691ab40495c8ff97c27ef8}{gamma}}
+\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{classobjFunction_a1ef446a44850711d2e79d79a03b45c1e}{x\+\_\+pos}}
+\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{classobjFunction_af964d164a73bba48a28369b760f6b5cf}{x\+\_\+neg}}
+\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{classobjFunction_a3e706d1cccd6e926f6e465721baab5ed}{y\+\_\+pos}}
+\item 
+vector$<$ vector$<$ double $>$ $>$ \mbox{\hyperlink{classobjFunction_a67743714bf045145cca866c304d7f7bc}{y\+\_\+neg}}
+\item 
+std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \& \mbox{\hyperlink{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}{FFs}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 12 of file Optimal\+Location.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classobjFunction_a3bdbfe0ac56ec6582b321a00409d774d}\label{classobjFunction_a3bdbfe0ac56ec6582b321a00409d774d}} 
+\index{objFunction@{objFunction}!objFunction@{objFunction}}
+\index{objFunction@{objFunction}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{objFunction()}{objFunction()}}
+{\footnotesize\ttfamily obj\+Function\+::obj\+Function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classManager}{Manager}} \&}]{mgr,  }\item[{std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FF\+\_\+list,  }\item[{unordered\+\_\+map$<$ string, int $>$ \&}]{idx\+\_\+map,  }\item[{int}]{total\+FF,  }\item[{std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FFs }\end{DoxyParamCaption})}
+
+
+
+Definition at line 3 of file Optimal\+Location.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classobjFunction_a9138d54803db365aefa90b61fd124d6c}\label{classobjFunction_a9138d54803db365aefa90b61fd124d6c}} 
+\index{objFunction@{objFunction}!backward@{backward}}
+\index{backward@{backward}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{backward()}{backward()}}
+{\footnotesize\ttfamily virtual vector$<$\mbox{\hyperlink{classCoor}{Coor}}$>$\& obj\+Function\+::backward (\begin{DoxyParamCaption}\item[{int}]{step,  }\item[{bool}]{only\+Negative }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classpostBankingObjFunction_a1ed354229170184b9b32991d51de6151}{post\+Banking\+Obj\+Function}}, and \mbox{\hyperlink{classpreprocessObjFunction_ab6c6b547974f840767a0e7f102cb03f9}{preprocess\+Obj\+Function}}.
+
+\mbox{\Hypertarget{classobjFunction_a25ec62f39d5b77d1045cb81c2e88a91e}\label{classobjFunction_a25ec62f39d5b77d1045cb81c2e88a91e}} 
+\index{objFunction@{objFunction}!forward@{forward}}
+\index{forward@{forward}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{forward()}{forward()}}
+{\footnotesize\ttfamily virtual double obj\+Function\+::forward (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classpostBankingObjFunction_abc42c4179c65091ad78cc0679c456ae0}{post\+Banking\+Obj\+Function}}, and \mbox{\hyperlink{classpreprocessObjFunction_ad53146ebe8bfacac6a46bcee3a2dfef6}{preprocess\+Obj\+Function}}.
+
+\mbox{\Hypertarget{classobjFunction_a8c6d4a9e7a3cf6c88dbfac613a108089}\label{classobjFunction_a8c6d4a9e7a3cf6c88dbfac613a108089}} 
+\index{objFunction@{objFunction}!getWeight@{getWeight}}
+\index{getWeight@{getWeight}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{getWeight()}{getWeight()}}
+{\footnotesize\ttfamily virtual void obj\+Function\+::get\+Weight (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classFF}{FF}} $\ast$}]{cur\+\_\+ff,  }\item[{vector$<$ double $>$ \&}]{weight }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+
+
+Implemented in \mbox{\hyperlink{classpostBankingObjFunction_aac2744d8c6cdada6e4a66fa22db3ed86}{post\+Banking\+Obj\+Function}}, and \mbox{\hyperlink{classpreprocessObjFunction_ad51bbe23031dfa402bc63be67d929098}{preprocess\+Obj\+Function}}.
+
+\mbox{\Hypertarget{classobjFunction_abf64168d3752c0af017f683ecff95d04}\label{classobjFunction_abf64168d3752c0af017f683ecff95d04}} 
+\index{objFunction@{objFunction}!grad@{grad}}
+\index{grad@{grad}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{grad()}{grad()}}
+{\footnotesize\ttfamily virtual const vector$<$\mbox{\hyperlink{classCoor}{Coor}}$>$\& obj\+Function\+::grad (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [virtual]}}
+
+
+
+Definition at line 27 of file Optimal\+Location.\+h.
+
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}\label{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}} 
+\index{objFunction@{objFunction}!FF\_list@{FF\_list}}
+\index{FF\_list@{FF\_list}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{FF\_list}{FF\_list}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$std\+::string, \mbox{\hyperlink{classFF}{FF}}$\ast$$>$\& obj\+Function\+::\+FF\+\_\+list\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 15 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}\label{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}} 
+\index{objFunction@{objFunction}!FFs@{FFs}}
+\index{FFs@{FFs}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{FFs}{FFs}}
+{\footnotesize\ttfamily std\+::vector$<$\mbox{\hyperlink{classFF}{FF}}$\ast$$>$\& obj\+Function\+::\+FFs\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 21 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_aff88409f34691ab40495c8ff97c27ef8}\label{classobjFunction_aff88409f34691ab40495c8ff97c27ef8}} 
+\index{objFunction@{objFunction}!gamma@{gamma}}
+\index{gamma@{gamma}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{gamma}{gamma}}
+{\footnotesize\ttfamily double obj\+Function\+::gamma\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 19 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a2bcb50529a019d316446c2a576e5bff1}\label{classobjFunction_a2bcb50529a019d316446c2a576e5bff1}} 
+\index{objFunction@{objFunction}!grad\_@{grad\_}}
+\index{grad\_@{grad\_}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{grad\_}{grad\_}}
+{\footnotesize\ttfamily vector$<$\mbox{\hyperlink{classCoor}{Coor}}$>$ obj\+Function\+::grad\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 17 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a65cf56e6c826a7454071789eb1517c61}\label{classobjFunction_a65cf56e6c826a7454071789eb1517c61}} 
+\index{objFunction@{objFunction}!idx\_map@{idx\_map}}
+\index{idx\_map@{idx\_map}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{idx\_map}{idx\_map}}
+{\footnotesize\ttfamily unordered\+\_\+map$<$string, int$>$\& obj\+Function\+::idx\+\_\+map\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 16 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_af0ccad77d2cbbcbd1d804ce0607fe657}\label{classobjFunction_af0ccad77d2cbbcbd1d804ce0607fe657}} 
+\index{objFunction@{objFunction}!loss@{loss}}
+\index{loss@{loss}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{loss}{loss}}
+{\footnotesize\ttfamily double obj\+Function\+::loss\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 18 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a801826171d462be3cfbb72dad713fc65}\label{classobjFunction_a801826171d462be3cfbb72dad713fc65}} 
+\index{objFunction@{objFunction}!mgr@{mgr}}
+\index{mgr@{mgr}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{mgr}{mgr}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classManager}{Manager}}\& obj\+Function\+::mgr\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 14 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_af964d164a73bba48a28369b760f6b5cf}\label{classobjFunction_af964d164a73bba48a28369b760f6b5cf}} 
+\index{objFunction@{objFunction}!x\_neg@{x\_neg}}
+\index{x\_neg@{x\_neg}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{x\_neg}{x\_neg}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ obj\+Function\+::x\+\_\+neg\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 20 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a1ef446a44850711d2e79d79a03b45c1e}\label{classobjFunction_a1ef446a44850711d2e79d79a03b45c1e}} 
+\index{objFunction@{objFunction}!x\_pos@{x\_pos}}
+\index{x\_pos@{x\_pos}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{x\_pos}{x\_pos}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ obj\+Function\+::x\+\_\+pos\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 20 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a67743714bf045145cca866c304d7f7bc}\label{classobjFunction_a67743714bf045145cca866c304d7f7bc}} 
+\index{objFunction@{objFunction}!y\_neg@{y\_neg}}
+\index{y\_neg@{y\_neg}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{y\_neg}{y\_neg}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ obj\+Function\+::y\+\_\+neg\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 20 of file Optimal\+Location.\+h.
+
+\mbox{\Hypertarget{classobjFunction_a3e706d1cccd6e926f6e465721baab5ed}\label{classobjFunction_a3e706d1cccd6e926f6e465721baab5ed}} 
+\index{objFunction@{objFunction}!y\_pos@{y\_pos}}
+\index{y\_pos@{y\_pos}!objFunction@{objFunction}}
+\doxysubsubsection{\texorpdfstring{y\_pos}{y\_pos}}
+{\footnotesize\ttfamily vector$<$vector$<$double$>$ $>$ obj\+Function\+::y\+\_\+pos\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 20 of file Optimal\+Location.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{OptimalLocation_8h}{Optimal\+Location.\+h}}\item 
+src/\mbox{\hyperlink{OptimalLocation_8cpp}{Optimal\+Location.\+cpp}}\end{DoxyCompactItemize}

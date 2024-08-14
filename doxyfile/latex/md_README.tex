@@ -1,0 +1,91 @@
+
+\begin{DoxyItemize}
+\item think how to setup netlist structure
+\item need to refactor net class(also create a pin class?)
+\item input preplace \mbox{\hyperlink{classFF}{FF}} may also be a multi-\/bit ff(not single-\/bit only), appropriate debanking algorithm is needed...
+\end{DoxyItemize}
+
+Current Process\+:
+
+
+\begin{DoxyEnumerate}
+\item Eliminate possible negative slack The preplace \mbox{\hyperlink{classFF}{FF(\+MBFF)}} may also have negative slack, however, most of the algorithm on \mbox{\hyperlink{classFF}{FF}} clustering are mainly focus on min timing degradation(min displacement). Should we first model the timing path(2 HPWL with 1 Qpin delay) for the \mbox{\hyperlink{classFF}{FF}} as the differential expression(eg\+: ntuplace wirelength log sum exponential model), and run gradient method to move the \mbox{\hyperlink{classFF}{FF}} to eliminate the negative slack?
+\item Run any kind of cluster algorithm(min displacement) For graceful cluster\+:
+\begin{DoxyItemize}
+\item For each \mbox{\hyperlink{classFF}{FF}}, construct a gaussain kernal function
+\item For each comb cell, construct a quick down-\/stream function -\/$>$ avoid \mbox{\hyperlink{classFF}{FF}} move to there
+\item Run gradient-\/ascent method to cluster the \mbox{\hyperlink{classFF}{FF}} (with displacement small)
+\end{DoxyItemize}
+\item \mbox{\hyperlink{classLegalizer}{Legalizer}} + Placer to determine the \mbox{\hyperlink{classFF}{FF}} or debanking the \mbox{\hyperlink{classFF}{FF}}
+\end{DoxyEnumerate}
+\begin{DoxyItemize}
+\item Add Boost Package 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ sudo apt-\/get install libboost-\/all-\/dev}
+\DoxyCodeLine{\$ make boost}
+
+\end{DoxyCode}
+
+\item Compile 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ make or make -\/j}
+
+\end{DoxyCode}
+
+\item Run 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ make run1}
+\DoxyCodeLine{\$ make run2}
+\DoxyCodeLine{\$ make run3}
+\DoxyCodeLine{\$ make run4}
+
+\end{DoxyCode}
+
+\item Valgrind 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ make check}
+
+\end{DoxyCode}
+
+\item Cppcheck 
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\$ make cppcheck}
+
+\end{DoxyCode}
+
+\item Discussion Log\+: 0515\+:
+\begin{DoxyItemize}
+\item \mbox{\hyperlink{classNet}{Net}} structure? Should be convenient \& efficient for calculating the slack
+\item Negative slack elimination??
+\end{DoxyItemize}
+\item update log\+:
+\begin{DoxyItemize}
+\item Finish debanking, but need logic \mbox{\hyperlink{classFF}{FF}} naming rule(?). -\/$>$ solved
+\item Get name function. (in util using counter, prefix = \char`\"{}\+FF\+\_\+\char`\"{}). -\/$>$ solved
+\item prev \mbox{\hyperlink{classFF}{FF}} pointer currently fixed point to largest initial HPWL. -\/$>$ solved
+\item \mbox{\hyperlink{classParser}{Parser}} check whether to run preprocessing. (gradient to get all slack positive).
+\end{DoxyItemize}
+\item log 06/17\+:
+\begin{DoxyItemize}
+\item Output floating problem.
+\item \mbox{\hyperlink{classFF}{FF}} input doesn\textquotesingle{}t come from IO or other \mbox{\hyperlink{classFF}{FF}}, ie come from std cell and this std cell is floating input.
+\end{DoxyItemize}
+\item log 0625 init cluster and add script to download boost, run \$ make boost first before compile the code...
+\begin{DoxyItemize}
+\item Cheng help to check if the newest testcase still have output floating problem...
+\item \mbox{\hyperlink{classMeanShift}{Mean\+Shift}}\+: build\+Rtree $>$ KNN $>$ shift\+FF
+\item compile flags, all program should be static-\/link, otherwise, the program can\textquotesingle{}t be run on TSRI server, see detailed in makefile
+\end{DoxyItemize}
+\item log 0706
+\begin{DoxyItemize}
+\item still have floating input/output in testcase1\+\_\+0614
+\item the result after gradient to find optimal location is worse, the cell assignment after debank is important.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Assign c119cheng\+:
+\begin{DoxyItemize}
+\item Debanking, finish
+\item Update \mbox{\hyperlink{classInstance_a725371da2335a65476b1803e328a7861}{Instance\+::coor}} for Optimal\+Location.
+\end{DoxyItemize}\hypertarget{md_README_autotoc_md1}{}\doxysection{Doxygen}\label{md_README_autotoc_md1}
+\$ doxygen -\/s -\/g \$ doxygen Doxyfile 
