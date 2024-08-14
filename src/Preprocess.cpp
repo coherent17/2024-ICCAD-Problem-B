@@ -22,6 +22,10 @@ void Preprocess::run(){
     changed = false;
     Debank();
     Build_Circuit_Gragh();
+    #ifndef NDEBUG
+    std::cout << "Slack statistic before Preprocess" << std::endl;
+    getSlackStatistic(true);
+    #endif
     ChangeCell();
     // if(changed)
     optimal_FF_location();
@@ -130,10 +134,6 @@ void Preprocess::Build_Circuit_Gragh(){
  */
 void Preprocess::optimal_FF_location(){
     double prevTNS = getSlackStatistic(false);
-    #ifndef NDEBUG
-    std::cout << "Slack statistic before Optimize" << std::endl;
-    prevTNS = getSlackStatistic(true);
-    #endif
     // create FF logic
     std::unordered_map<std::string, int> idx_map;
     std::vector<FF*> FFsFixed;
@@ -161,7 +161,6 @@ void Preprocess::optimal_FF_location(){
         for(auto& ff_m : FF_list){
             FF* cur_ff = ff_m.second;
             cur_ff->setOriginalCoor(cur_ff->getCoor() + cur_ff->getPinCoor("D"), cur_ff->getCoor() + cur_ff->getPinCoor("Q"));
-            cur_ff->setOriginalQpinDelay(cur_ff->getCell()->getQpinDelay());    // Should I update this every time?
         }
         if(i % 25 == 0){
             #ifndef NDEBUG
@@ -231,6 +230,14 @@ void Preprocess::ChangeCell(){
             curFF->setCell(bestCell);
             curFF->setFixed(false);
         }
+    }
+
+    // update slack and change origialQpinDelay
+    updateSlack(FFs);
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<FFs.size();i++){
+        FF* curFF = FFs[i];
+        curFF->setOriginalQpinDelay(curFF->getCell()->getQpinDelay());
     }
 }
 
@@ -378,17 +385,23 @@ void Preprocess::DelayPropagation(){
     }
 
     // propagation
+    std::unordered_map<std::string, bool> visitedGate;
     while(!q.empty()){
         Instance* curInst = q.front();
         q.pop();
-
+        visitedGate[curInst->getInstanceName()] = true;
         if(mgr.Gate_Map.count(curInst->getInstanceName())){
             propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
         }
         else{
             assert(0 && "Something wrong!!!");
             // should never go here
-            // its OUTPUT PIN
+        }
+    }
+
+    for(auto& gate : mgr.Gate_Map){
+        if(!visitedGate.count(gate.first)){
+            // std::cout << "[WARNING] Gate " + gate.first + " didn't visited!!!" << std::endl;
         }
     }
 }

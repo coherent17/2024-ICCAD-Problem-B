@@ -57,87 +57,31 @@ release:
 	rm -rf $(OBJDIR)
 	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015
 
-TESTCASES := ./testcase/sampleCase ./testcase/testcase1_0614.txt ./testcase/testcase1_balanced.txt ./testcase/testcase2.txt
-releaseCheck:
-	rm -rf $(OBJDIR)
-	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015_release
-	rm -rf $(OBJDIR)
-	$(MAKE) DEBUGFLAGS="$(DEBUGFLAGS)" BIN=cadb0015
-	@echo "\nCompare with normal version";
-	@for testcase in $(TESTCASES); do \
-		./cadb0015 "$$testcase" "$$testcase.out" > /dev/null; \
-		start_time=$$(date +%s.%N); \
-		./cadb0015_release "$$testcase" "$$testcase.release.out"; \
-		end_time=$$(date +%s.%N); \
-		duration=$$(echo "$$end_time - $$start_time" | bc); \
-		if diff "$$testcase.out" "$$testcase.release.out" > /dev/null; then \
-			echo "Correct: $$testcase"; \
-		else \
-			echo "Fail: $$testcase"; \
-		fi; \
-		echo "Runtime for $$testcase: $$duration seconds\n"; \
-	done
-
-
 run1:
 	./$(BIN) testcase/sampleCase testcase/sampleCase.out
 	chmod +x sanity_checker/sanity
+	chmod +x sanity_checker/placement_checker
 	./sanity_checker/sanity testcase/sampleCase testcase/sampleCase.out
+	./sanity_checker/placement_checker testcase/sampleCase testcase/sampleCase.out
 
 run2:
-	./$(BIN) testcase/sample.txt testcase/sample.txt.out
+	./$(BIN) testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
 	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/sample.txt testcase/sample.txt.out
+	chmod +x sanity_checker/placement_checker
+	./sanity_checker/sanity testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
+	./sanity_checker/placement_checker testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
 
 run3:
-	./$(BIN) testcase/testcase1.txt testcase/testcase1.txt.out
+	./$(BIN) testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
 	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase1.txt testcase/testcase1.txt.out
-
-run4:
-	./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
-
-run5:
-	./$(BIN) testcase/cornerNotAligned.txt testcase/cornerNotAligned.txt.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/cornerNotAligned.txt testcase/cornerNotAligned.txt.out
-
-run6:
-	./$(BIN) testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase1_balanced.txt testcase/testcase1_balanced.txt.out
-
-run7:
-	./$(BIN) testcase/testcase2_0802_v2.txt testcase/testcase2_0802_v2.txt.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase2_0802_v2.txt testcase/testcase2_0802_v2.txt.out
-
-runArea:
-	./$(BIN) testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out 
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/testcase1_0718.txt testcase/testcase1_0718.txt.out
-
-runTNS:
-	./$(BIN) testcase/cornerTNS.txt testcase/cornerTNS.txt.out 
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/cornerTNS.txt testcase/cornerTNS.txt.out
-
-runPower:
-	./$(BIN) testcase/cornerPower.txt testcase/cornerPower.txt.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/cornerPower.txt testcase/cornerPower.txt.out
+	chmod +x sanity_checker/placement_checker
+	./sanity_checker/sanity testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
+	./sanity_checker/placement_checker testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
 
 runMBFF:
 	./$(BIN) testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
 	chmod +x sanity_checker/sanity
 	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
-
-v6:
-	./$(BIN) testcase/sample_0718.txt testcase/sample_0718.out
-	chmod +x drawDie/drawDie
-	./drawDie/drawDie -i Legalize.out -m die_pic.png -t sample_0718 -p -nl -o
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
