@@ -1,0 +1,382 @@
+\hypertarget{classCell}{}\doxysection{Cell Class Reference}
+\label{classCell}\index{Cell@{Cell}}
+
+
+{\ttfamily \#include $<$Cell.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classCell_a394510643e8664cf12b5efaf5cb99f71}{Cell}} ()
+\item 
+virtual \mbox{\hyperlink{classCell_a9fa559f7a28e2b4336c6879ca09304d8}{$\sim$\+Cell}} ()
+\item 
+void \mbox{\hyperlink{classCell_ac36d5ff32b0fd56bf80dbfade8db6d39}{set\+Cell\+Name}} (const std\+::string \&cell\+Name)
+\item 
+void \mbox{\hyperlink{classCell_ad8f3d0579b842a8e751c28fe24aff5b1}{set\+Type}} (\mbox{\hyperlink{Cell_8h_ae14d80d8ae75ce68a8e54e3da49dc77b}{Cell\+\_\+\+Type}} type)
+\item 
+void \mbox{\hyperlink{classCell_a621c6b1e0626555932cf7999653c3cf0}{set\+Bits}} (int bits)
+\item 
+void \mbox{\hyperlink{classCell_ad178114687cf7910bb6bb1b95eb63485}{setW}} (double w)
+\item 
+void \mbox{\hyperlink{classCell_a911b67aeddaebeeef2ca907f32164925}{setH}} (double h)
+\item 
+void \mbox{\hyperlink{classCell_a1fa75b518df18bd7aa6d2128995c6b33}{set\+Score}} (double score)
+\item 
+void \mbox{\hyperlink{classCell_a32dae1c593ade7d14582a5c876ad90d6}{set\+Pin\+Count}} (int pin\+Count)
+\item 
+void \mbox{\hyperlink{classCell_a457a4ffd17827a5fe9e2db9b1453f110}{set\+Input\+Count}} (int input\+Count)
+\item 
+void \mbox{\hyperlink{classCell_ae45d226b61c172dd10bdc1d67d1a4c58}{add\+Pin\+Coor}} (const std\+::string \&pin\+Name, const \mbox{\hyperlink{classCoor}{Coor}} \&coor)
+\item 
+void \mbox{\hyperlink{classCell_ace5a6c5c2f407d1c91b2b29d844c64e8}{add\+Pin\+Name}} (const std\+::string \&pin\+Name)
+\item 
+void \mbox{\hyperlink{classCell_a7f0b416f32e433505959b9d87bc4824c}{set\+Qpin\+Delay}} (double delay)
+\item 
+void \mbox{\hyperlink{classCell_a35ad4b0650cbcd037ad42da558c028a6}{set\+Gate\+Power}} (double power)
+\item 
+const std\+::string \& \mbox{\hyperlink{classCell_ab0184f903ac023646e899a162a069d71}{get\+Cell\+Name}} () const
+\item 
+\mbox{\hyperlink{Cell_8h_ae14d80d8ae75ce68a8e54e3da49dc77b}{Cell\+\_\+\+Type}} \mbox{\hyperlink{classCell_a6a40bd2e49ebfe6ef89dcb927ce36003}{get\+Type}} () const
+\item 
+int \mbox{\hyperlink{classCell_af9914756c4115e23401673c13acc0370}{get\+Bits}} () const
+\item 
+double \mbox{\hyperlink{classCell_ab69b43cb58f3523442e05ebc252225a1}{getW}} () const
+\item 
+double \mbox{\hyperlink{classCell_a49a2fcd956ab05e5502e978dfdfbb8ef}{getH}} () const
+\item 
+double \mbox{\hyperlink{classCell_a0e6e3adde886b565c7efb07065b0b727}{get\+Area}} () const
+\item 
+double \mbox{\hyperlink{classCell_a2cefc82b29430611c5579b5ff5bd545b}{get\+Score}} () const
+\item 
+int \mbox{\hyperlink{classCell_a1a7d1e35c9b3c09aca7bbde04383e18a}{get\+Pin\+Count}} () const
+\item 
+int \mbox{\hyperlink{classCell_ad438cb15ec33fa9602b2efd6bccdbbf1}{get\+Input\+Count}} () const
+\item 
+const std\+::string \& \mbox{\hyperlink{classCell_affc61a37ae72649826d15f94576cb8c1}{get\+Pin\+Name}} (size\+\_\+t pin\+Idx) const
+\item 
+const \mbox{\hyperlink{classCoor}{Coor}} \& \mbox{\hyperlink{classCell_a83cfa5f319f22d982bde0277739108d5}{get\+Pin\+Coor}} (const std\+::string \&pin\+Name) const
+\item 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classCoor}{Coor}} $>$ \mbox{\hyperlink{classCell_a8c2efa51a2d391859fe90b760d4801e5}{get\+Pin\+Coor\+Map}} () const
+\item 
+double \mbox{\hyperlink{classCell_ad6ebda7080ef80db267af21cd7b25d7a}{get\+Qpin\+Delay}} () const
+\item 
+double \mbox{\hyperlink{classCell_a40ba62acf3943da552a6058965221879}{get\+Gate\+Power}} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classCell_a18c5003bde2144a087676f7b59341a1c}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classCell}{Cell}} \&cell)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 18 of file Cell.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classCell_a394510643e8664cf12b5efaf5cb99f71}\label{classCell_a394510643e8664cf12b5efaf5cb99f71}} 
+\index{Cell@{Cell}!Cell@{Cell}}
+\index{Cell@{Cell}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{Cell()}{Cell()}}
+{\footnotesize\ttfamily Cell\+::\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 4 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a9fa559f7a28e2b4336c6879ca09304d8}\label{classCell_a9fa559f7a28e2b4336c6879ca09304d8}} 
+\index{Cell@{Cell}!````~Cell@{$\sim$Cell}}
+\index{````~Cell@{$\sim$Cell}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{$\sim$Cell()}{~Cell()}}
+{\footnotesize\ttfamily Cell\+::$\sim$\+Cell (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Definition at line 16 of file Cell.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classCell_ae45d226b61c172dd10bdc1d67d1a4c58}\label{classCell_ae45d226b61c172dd10bdc1d67d1a4c58}} 
+\index{Cell@{Cell}!addPinCoor@{addPinCoor}}
+\index{addPinCoor@{addPinCoor}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{addPinCoor()}{addPinCoor()}}
+{\footnotesize\ttfamily void Cell\+::add\+Pin\+Coor (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{pin\+Name,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor }\end{DoxyParamCaption})}
+
+
+
+Definition at line 51 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ace5a6c5c2f407d1c91b2b29d844c64e8}\label{classCell_ace5a6c5c2f407d1c91b2b29d844c64e8}} 
+\index{Cell@{Cell}!addPinName@{addPinName}}
+\index{addPinName@{addPinName}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{addPinName()}{addPinName()}}
+{\footnotesize\ttfamily void Cell\+::add\+Pin\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{pin\+Name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 55 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a0e6e3adde886b565c7efb07065b0b727}\label{classCell_a0e6e3adde886b565c7efb07065b0b727}} 
+\index{Cell@{Cell}!getArea@{getArea}}
+\index{getArea@{getArea}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getArea()}{getArea()}}
+{\footnotesize\ttfamily double Cell\+::get\+Area (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 89 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_af9914756c4115e23401673c13acc0370}\label{classCell_af9914756c4115e23401673c13acc0370}} 
+\index{Cell@{Cell}!getBits@{getBits}}
+\index{getBits@{getBits}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getBits()}{getBits()}}
+{\footnotesize\ttfamily int Cell\+::get\+Bits (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 77 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ab0184f903ac023646e899a162a069d71}\label{classCell_ab0184f903ac023646e899a162a069d71}} 
+\index{Cell@{Cell}!getCellName@{getCellName}}
+\index{getCellName@{getCellName}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getCellName()}{getCellName()}}
+{\footnotesize\ttfamily const std\+::string \& Cell\+::get\+Cell\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 69 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a40ba62acf3943da552a6058965221879}\label{classCell_a40ba62acf3943da552a6058965221879}} 
+\index{Cell@{Cell}!getGatePower@{getGatePower}}
+\index{getGatePower@{getGatePower}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getGatePower()}{getGatePower()}}
+{\footnotesize\ttfamily double Cell\+::get\+Gate\+Power (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 129 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a49a2fcd956ab05e5502e978dfdfbb8ef}\label{classCell_a49a2fcd956ab05e5502e978dfdfbb8ef}} 
+\index{Cell@{Cell}!getH@{getH}}
+\index{getH@{getH}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getH()}{getH()}}
+{\footnotesize\ttfamily double Cell\+::getH (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 85 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ad438cb15ec33fa9602b2efd6bccdbbf1}\label{classCell_ad438cb15ec33fa9602b2efd6bccdbbf1}} 
+\index{Cell@{Cell}!getInputCount@{getInputCount}}
+\index{getInputCount@{getInputCount}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getInputCount()}{getInputCount()}}
+{\footnotesize\ttfamily int Cell\+::get\+Input\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 101 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a83cfa5f319f22d982bde0277739108d5}\label{classCell_a83cfa5f319f22d982bde0277739108d5}} 
+\index{Cell@{Cell}!getPinCoor@{getPinCoor}}
+\index{getPinCoor@{getPinCoor}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getPinCoor()}{getPinCoor()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classCoor}{Coor}} \& Cell\+::get\+Pin\+Coor (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{pin\+Name }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 112 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a8c2efa51a2d391859fe90b760d4801e5}\label{classCell_a8c2efa51a2d391859fe90b760d4801e5}} 
+\index{Cell@{Cell}!getPinCoorMap@{getPinCoorMap}}
+\index{getPinCoorMap@{getPinCoorMap}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getPinCoorMap()}{getPinCoorMap()}}
+{\footnotesize\ttfamily std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classCoor}{Coor}} $>$ Cell\+::get\+Pin\+Coor\+Map (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 120 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a1a7d1e35c9b3c09aca7bbde04383e18a}\label{classCell_a1a7d1e35c9b3c09aca7bbde04383e18a}} 
+\index{Cell@{Cell}!getPinCount@{getPinCount}}
+\index{getPinCount@{getPinCount}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getPinCount()}{getPinCount()}}
+{\footnotesize\ttfamily int Cell\+::get\+Pin\+Count (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 97 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_affc61a37ae72649826d15f94576cb8c1}\label{classCell_affc61a37ae72649826d15f94576cb8c1}} 
+\index{Cell@{Cell}!getPinName@{getPinName}}
+\index{getPinName@{getPinName}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getPinName()}{getPinName()}}
+{\footnotesize\ttfamily const std\+::string \& Cell\+::get\+Pin\+Name (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{pin\+Idx }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 105 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ad6ebda7080ef80db267af21cd7b25d7a}\label{classCell_ad6ebda7080ef80db267af21cd7b25d7a}} 
+\index{Cell@{Cell}!getQpinDelay@{getQpinDelay}}
+\index{getQpinDelay@{getQpinDelay}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getQpinDelay()}{getQpinDelay()}}
+{\footnotesize\ttfamily double Cell\+::get\+Qpin\+Delay (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 124 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a2cefc82b29430611c5579b5ff5bd545b}\label{classCell_a2cefc82b29430611c5579b5ff5bd545b}} 
+\index{Cell@{Cell}!getScore@{getScore}}
+\index{getScore@{getScore}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getScore()}{getScore()}}
+{\footnotesize\ttfamily double Cell\+::get\+Score (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 93 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a6a40bd2e49ebfe6ef89dcb927ce36003}\label{classCell_a6a40bd2e49ebfe6ef89dcb927ce36003}} 
+\index{Cell@{Cell}!getType@{getType}}
+\index{getType@{getType}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getType()}{getType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{Cell_8h_ae14d80d8ae75ce68a8e54e3da49dc77b}{Cell\+\_\+\+Type}} Cell\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 73 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ab69b43cb58f3523442e05ebc252225a1}\label{classCell_ab69b43cb58f3523442e05ebc252225a1}} 
+\index{Cell@{Cell}!getW@{getW}}
+\index{getW@{getW}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{getW()}{getW()}}
+{\footnotesize\ttfamily double Cell\+::getW (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 81 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a621c6b1e0626555932cf7999653c3cf0}\label{classCell_a621c6b1e0626555932cf7999653c3cf0}} 
+\index{Cell@{Cell}!setBits@{setBits}}
+\index{setBits@{setBits}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setBits()}{setBits()}}
+{\footnotesize\ttfamily void Cell\+::set\+Bits (\begin{DoxyParamCaption}\item[{int}]{bits }\end{DoxyParamCaption})}
+
+
+
+Definition at line 27 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ac36d5ff32b0fd56bf80dbfade8db6d39}\label{classCell_ac36d5ff32b0fd56bf80dbfade8db6d39}} 
+\index{Cell@{Cell}!setCellName@{setCellName}}
+\index{setCellName@{setCellName}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setCellName()}{setCellName()}}
+{\footnotesize\ttfamily void Cell\+::set\+Cell\+Name (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{cell\+Name }\end{DoxyParamCaption})}
+
+
+
+Definition at line 19 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a35ad4b0650cbcd037ad42da558c028a6}\label{classCell_a35ad4b0650cbcd037ad42da558c028a6}} 
+\index{Cell@{Cell}!setGatePower@{setGatePower}}
+\index{setGatePower@{setGatePower}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setGatePower()}{setGatePower()}}
+{\footnotesize\ttfamily void Cell\+::set\+Gate\+Power (\begin{DoxyParamCaption}\item[{double}]{power }\end{DoxyParamCaption})}
+
+
+
+Definition at line 64 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a911b67aeddaebeeef2ca907f32164925}\label{classCell_a911b67aeddaebeeef2ca907f32164925}} 
+\index{Cell@{Cell}!setH@{setH}}
+\index{setH@{setH}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setH()}{setH()}}
+{\footnotesize\ttfamily void Cell\+::setH (\begin{DoxyParamCaption}\item[{double}]{h }\end{DoxyParamCaption})}
+
+
+
+Definition at line 35 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a457a4ffd17827a5fe9e2db9b1453f110}\label{classCell_a457a4ffd17827a5fe9e2db9b1453f110}} 
+\index{Cell@{Cell}!setInputCount@{setInputCount}}
+\index{setInputCount@{setInputCount}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setInputCount()}{setInputCount()}}
+{\footnotesize\ttfamily void Cell\+::set\+Input\+Count (\begin{DoxyParamCaption}\item[{int}]{input\+Count }\end{DoxyParamCaption})}
+
+
+
+Definition at line 47 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a32dae1c593ade7d14582a5c876ad90d6}\label{classCell_a32dae1c593ade7d14582a5c876ad90d6}} 
+\index{Cell@{Cell}!setPinCount@{setPinCount}}
+\index{setPinCount@{setPinCount}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setPinCount()}{setPinCount()}}
+{\footnotesize\ttfamily void Cell\+::set\+Pin\+Count (\begin{DoxyParamCaption}\item[{int}]{pin\+Count }\end{DoxyParamCaption})}
+
+
+
+Definition at line 43 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a7f0b416f32e433505959b9d87bc4824c}\label{classCell_a7f0b416f32e433505959b9d87bc4824c}} 
+\index{Cell@{Cell}!setQpinDelay@{setQpinDelay}}
+\index{setQpinDelay@{setQpinDelay}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setQpinDelay()}{setQpinDelay()}}
+{\footnotesize\ttfamily void Cell\+::set\+Qpin\+Delay (\begin{DoxyParamCaption}\item[{double}]{delay }\end{DoxyParamCaption})}
+
+
+
+Definition at line 59 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_a1fa75b518df18bd7aa6d2128995c6b33}\label{classCell_a1fa75b518df18bd7aa6d2128995c6b33}} 
+\index{Cell@{Cell}!setScore@{setScore}}
+\index{setScore@{setScore}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setScore()}{setScore()}}
+{\footnotesize\ttfamily void Cell\+::set\+Score (\begin{DoxyParamCaption}\item[{double}]{score }\end{DoxyParamCaption})}
+
+
+
+Definition at line 39 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ad8f3d0579b842a8e751c28fe24aff5b1}\label{classCell_ad8f3d0579b842a8e751c28fe24aff5b1}} 
+\index{Cell@{Cell}!setType@{setType}}
+\index{setType@{setType}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setType()}{setType()}}
+{\footnotesize\ttfamily void Cell\+::set\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{Cell_8h_ae14d80d8ae75ce68a8e54e3da49dc77b}{Cell\+\_\+\+Type}}}]{type }\end{DoxyParamCaption})}
+
+
+
+Definition at line 23 of file Cell.\+cpp.
+
+\mbox{\Hypertarget{classCell_ad178114687cf7910bb6bb1b95eb63485}\label{classCell_ad178114687cf7910bb6bb1b95eb63485}} 
+\index{Cell@{Cell}!setW@{setW}}
+\index{setW@{setW}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{setW()}{setW()}}
+{\footnotesize\ttfamily void Cell\+::setW (\begin{DoxyParamCaption}\item[{double}]{w }\end{DoxyParamCaption})}
+
+
+
+Definition at line 31 of file Cell.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classCell_a18c5003bde2144a087676f7b59341a1c}\label{classCell_a18c5003bde2144a087676f7b59341a1c}} 
+\index{Cell@{Cell}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Cell@{Cell}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classCell}{Cell}} \&}]{cell }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 134 of file Cell.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{Cell_8h}{Cell.\+h}}\item 
+src/\mbox{\hyperlink{Cell_8cpp}{Cell.\+cpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,519 @@
+\hypertarget{classPrettyTable}{}\doxysection{Pretty\+Table Class Reference}
+\label{classPrettyTable}\index{PrettyTable@{PrettyTable}}
+
+
+{\ttfamily \#include $<$Pretty\+Table.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structPrettyTable_1_1BorderStyle}{Border\+Style}}
+\item 
+struct \mbox{\hyperlink{structPrettyTable_1_1Header}{Header}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum class \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}} \{ \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Left}}
+, \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a92b09c7c48c520c3c55e497875da437c}{Right}}
+, \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585aafbf0897a5a83fdd873dfb032ec695d3}{Internal}}
+ \}
+\item 
+typedef string \mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{String}}
+\item 
+typedef vector$<$ string $>$ \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}}
+\item 
+typedef vector$<$ vector$<$ string $>$ $>$ \mbox{\hyperlink{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}{Multi\+String\+Array}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classPrettyTable_a270994a1718d363b6faee0350f67711d}{Pretty\+Table}} ()
+\item 
+\mbox{\hyperlink{classPrettyTable_adde941d00b8e8195af77805416379743}{$\sim$\+Pretty\+Table}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_aea5620ab5d9504c1d22b75dc0def491d}{Cancel\+Frame\+Style}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_aab4ee617112d77aa9b59fd288c38a765}{Set\+Border\+Style}} (\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} \+\_\+\+Corner=\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbabbab278af824311474b72971b6c45aee}{Sign\+::\+PT\+\_\+\+PLUS}}, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} \+\_\+\+Border\+\_\+h=\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba6db178a32f49f8898a2495eab4a23627}{Sign\+::\+PT\+\_\+V}}, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} \+\_\+\+Border\+\_\+v=\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbae4b24e539750448aecebcda084ccf7e1}{Sign\+::\+PT\+\_\+H}})
+\item 
+\mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{String}} \mbox{\hyperlink{classPrettyTable_ae8628a4e97f3a506403324681094fbd6}{to\+\_\+\+String}} (int \+\_\+start=1, int \+\_\+end=-\/1)
+\item 
+void \mbox{\hyperlink{classPrettyTable_a40b5fc08ff9847395b4f1cc4f286463c}{Add\+Header}} (const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&\+\_\+header, \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}} \+\_\+align=\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}})
+\item 
+void \mbox{\hyperlink{classPrettyTable_af91f9159862955743b60a1bab486884b}{Add\+Row}} (const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&\+\_\+row)
+\item 
+void \mbox{\hyperlink{classPrettyTable_abf8642bb5d533e12ed67af417bdc1d5f}{Add\+Rows}} (const \mbox{\hyperlink{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}{Multi\+String\+Array}} \&\+\_\+rows)
+\item 
+void \mbox{\hyperlink{classPrettyTable_aec57fe6529a990421760dcb44a9e9c23}{Add\+Column}} (const \mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{String}} \&\+\_\+header\+\_\+title, const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&\+\_\+column)
+\item 
+void \mbox{\hyperlink{classPrettyTable_afef90a9039f8a3e2341948cef437a491}{Draw\+Table}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_ab864d47dea59b894b679b28d295fe881}{Set\+Align}} (\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}} align=\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}})
+\item 
+void \mbox{\hyperlink{classPrettyTable_a5a1cb4b5e008867b0d27dfb9c8a9f3cb}{Output\+File}} (const string \&\+\_\+file\+\_\+path=\char`\"{}output\+\_\+table.\+txt\char`\"{})
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classPrettyTable_a90e5e244b8abcac86ddd753282fd73f3}{\+\_\+draw\+\_\+header}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_a05dd457722a74ff3214542fe5471a723}{\+\_\+draw\+\_\+rows}} (int, int)
+\item 
+void \mbox{\hyperlink{classPrettyTable_a7ea3035240c0bea3e8c96f899658967e}{\+\_\+draw\+\_\+table}} (int, int)
+\item 
+const vector$<$ int $>$ \& \mbox{\hyperlink{classPrettyTable_a62b71cbe2b6c3b8bc4470ae7562c7f2a}{\+\_\+get\+Maximum\+\_\+str\+Length}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_af1acda4c4d5187761e43cf31bbbac48e}{\+\_\+\+Row\+Convert\+Column}} (const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&\+\_\+row)
+\item 
+void \mbox{\hyperlink{classPrettyTable_a47d37d8f0329407ece8aa69107dbb674}{\+\_\+\+Rows\+Convert\+Columns}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_a05cd281299fba6c130f1dc410bd8fd8a}{padding}} (int n, \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}} align=\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}})
+\item 
+void \mbox{\hyperlink{classPrettyTable_ada8ae118ebfebbe6222bc42fb5c379dd}{\+\_\+put\+\_\+chars}} (const \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} c, int n)
+\item 
+void \mbox{\hyperlink{classPrettyTable_adbdf69c3b7917bad477fe106cc9179ec}{\+\_\+put\+\_\+char}} (const \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} c)
+\item 
+void \mbox{\hyperlink{classPrettyTable_a02285b16ab69355fefb27e8cc36d5c63}{\+\_\+put\+\_\+endline}} ()
+\item 
+void \mbox{\hyperlink{classPrettyTable_a2e447e8b4bcbc6af7a9f1113a6b9935b}{\+\_\+cleanup}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static wstring \mbox{\hyperlink{classPrettyTable_a672b7223a5b44b78ad8ee62b6fb7a2c2}{String\+To\+WString}} (const string \&str)
+\item 
+static int \mbox{\hyperlink{classPrettyTable_a2fee8b16bdf149f8a27eec290b05565c}{String\+Capacity}} (const string \&raw\+\_\+str)
+\item 
+static int \mbox{\hyperlink{classPrettyTable_af4256e6d51ebc973ca8085e8a8507da8}{\+\_\+get\+\_\+\+Chinese\+\_\+len}} (const string \&str)
+\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+ostream \& \mbox{\hyperlink{classPrettyTable_a1721c81140a2efb1ab4981d453c2dc73}{operator$<$$<$}} (ostream \&out, \mbox{\hyperlink{classPrettyTable}{Pretty\+Table}} \&pt)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\mbox{\hyperlink{classPrettyTable}{Pretty\+Table}} can format and print a table from data 
+
+Definition at line 84 of file Pretty\+Table.\+h.
+
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}\label{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}} 
+\index{PrettyTable@{PrettyTable}!MultiStringArray@{MultiStringArray}}
+\index{MultiStringArray@{MultiStringArray}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{MultiStringArray}{MultiStringArray}}
+{\footnotesize\ttfamily typedef vector$<$vector$<$string$>$ $>$ \mbox{\hyperlink{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}{Pretty\+Table\+::\+Multi\+String\+Array}}}
+
+
+
+Definition at line 99 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}\label{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}} 
+\index{PrettyTable@{PrettyTable}!String@{String}}
+\index{String@{String}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{String}{String}}
+{\footnotesize\ttfamily typedef string \mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{Pretty\+Table\+::\+String}}}
+
+
+
+Definition at line 97 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}\label{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}} 
+\index{PrettyTable@{PrettyTable}!StringArray@{StringArray}}
+\index{StringArray@{StringArray}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{StringArray}{StringArray}}
+{\footnotesize\ttfamily typedef vector$<$string$>$ \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{Pretty\+Table\+::\+String\+Array}}}
+
+
+
+Definition at line 98 of file Pretty\+Table.\+h.
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}\label{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}} 
+\index{PrettyTable@{PrettyTable}!Align@{Align}}
+\index{Align@{Align}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{Align}{Align}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Pretty\+Table\+::\+Align}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Left@{Left}!PrettyTable@{PrettyTable}}\index{PrettyTable@{PrettyTable}!Left@{Left}}}\mbox{\Hypertarget{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}\label{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}} 
+Left&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Right@{Right}!PrettyTable@{PrettyTable}}\index{PrettyTable@{PrettyTable}!Right@{Right}}}\mbox{\Hypertarget{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a92b09c7c48c520c3c55e497875da437c}\label{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a92b09c7c48c520c3c55e497875da437c}} 
+Right&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Internal@{Internal}!PrettyTable@{PrettyTable}}\index{PrettyTable@{PrettyTable}!Internal@{Internal}}}\mbox{\Hypertarget{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585aafbf0897a5a83fdd873dfb032ec695d3}\label{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585aafbf0897a5a83fdd873dfb032ec695d3}} 
+Internal&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 87 of file Pretty\+Table.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classPrettyTable_a270994a1718d363b6faee0350f67711d}\label{classPrettyTable_a270994a1718d363b6faee0350f67711d}} 
+\index{PrettyTable@{PrettyTable}!PrettyTable@{PrettyTable}}
+\index{PrettyTable@{PrettyTable}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{PrettyTable()}{PrettyTable()}}
+{\footnotesize\ttfamily Pretty\+Table\+::\+Pretty\+Table (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [explicit]}}
+
+
+
+Definition at line 3 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_adde941d00b8e8195af77805416379743}\label{classPrettyTable_adde941d00b8e8195af77805416379743}} 
+\index{PrettyTable@{PrettyTable}!````~PrettyTable@{$\sim$PrettyTable}}
+\index{````~PrettyTable@{$\sim$PrettyTable}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{$\sim$PrettyTable()}{~PrettyTable()}}
+{\footnotesize\ttfamily Pretty\+Table\+::$\sim$\+Pretty\+Table (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 13 of file Pretty\+Table.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPrettyTable_a2e447e8b4bcbc6af7a9f1113a6b9935b}\label{classPrettyTable_a2e447e8b4bcbc6af7a9f1113a6b9935b}} 
+\index{PrettyTable@{PrettyTable}!\_cleanup@{\_cleanup}}
+\index{\_cleanup@{\_cleanup}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_cleanup()}{\_cleanup()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+cleanup (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 267 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a90e5e244b8abcac86ddd753282fd73f3}\label{classPrettyTable_a90e5e244b8abcac86ddd753282fd73f3}} 
+\index{PrettyTable@{PrettyTable}!\_draw\_header@{\_draw\_header}}
+\index{\_draw\_header@{\_draw\_header}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_draw\_header()}{\_draw\_header()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+draw\+\_\+header (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+build header\+: +-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---+ $\vert$ xx $\vert$ xx $\vert$ xx $\vert$ xx $\vert$ xx $\vert$ +-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/---+-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---+ 
+
+Definition at line 87 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a05dd457722a74ff3214542fe5471a723}\label{classPrettyTable_a05dd457722a74ff3214542fe5471a723}} 
+\index{PrettyTable@{PrettyTable}!\_draw\_rows@{\_draw\_rows}}
+\index{\_draw\_rows@{\_draw\_rows}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_draw\_rows()}{\_draw\_rows()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+draw\+\_\+rows (\begin{DoxyParamCaption}\item[{int}]{s,  }\item[{int}]{e }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 144 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a7ea3035240c0bea3e8c96f899658967e}\label{classPrettyTable_a7ea3035240c0bea3e8c96f899658967e}} 
+\index{PrettyTable@{PrettyTable}!\_draw\_table@{\_draw\_table}}
+\index{\_draw\_table@{\_draw\_table}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_draw\_table()}{\_draw\_table()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+draw\+\_\+table (\begin{DoxyParamCaption}\item[{int}]{s,  }\item[{int}]{e }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 75 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_af4256e6d51ebc973ca8085e8a8507da8}\label{classPrettyTable_af4256e6d51ebc973ca8085e8a8507da8}} 
+\index{PrettyTable@{PrettyTable}!\_get\_Chinese\_len@{\_get\_Chinese\_len}}
+\index{\_get\_Chinese\_len@{\_get\_Chinese\_len}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_get\_Chinese\_len()}{\_get\_Chinese\_len()}}
+{\footnotesize\ttfamily int Pretty\+Table\+::\+\_\+get\+\_\+\+Chinese\+\_\+len (\begin{DoxyParamCaption}\item[{const string \&}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+Get number of Chinese characters from a string 
+\begin{DoxyParams}{Parameters}
+{\em str} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 239 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a62b71cbe2b6c3b8bc4470ae7562c7f2a}\label{classPrettyTable_a62b71cbe2b6c3b8bc4470ae7562c7f2a}} 
+\index{PrettyTable@{PrettyTable}!\_getMaximum\_strLength@{\_getMaximum\_strLength}}
+\index{\_getMaximum\_strLength@{\_getMaximum\_strLength}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_getMaximum\_strLength()}{\_getMaximum\_strLength()}}
+{\footnotesize\ttfamily const vector$<$ int $>$ \& Pretty\+Table\+::\+\_\+get\+Maximum\+\_\+str\+Length (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 199 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_adbdf69c3b7917bad477fe106cc9179ec}\label{classPrettyTable_adbdf69c3b7917bad477fe106cc9179ec}} 
+\index{PrettyTable@{PrettyTable}!\_put\_char@{\_put\_char}}
+\index{\_put\_char@{\_put\_char}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_put\_char()}{\_put\_char()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+put\+\_\+char (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}}]{c }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Definition at line 187 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_ada8ae118ebfebbe6222bc42fb5c379dd}\label{classPrettyTable_ada8ae118ebfebbe6222bc42fb5c379dd}} 
+\index{PrettyTable@{PrettyTable}!\_put\_chars@{\_put\_chars}}
+\index{\_put\_chars@{\_put\_chars}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_put\_chars()}{\_put\_chars()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+put\+\_\+chars (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}}]{c,  }\item[{int}]{n }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Definition at line 182 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_a02285b16ab69355fefb27e8cc36d5c63}\label{classPrettyTable_a02285b16ab69355fefb27e8cc36d5c63}} 
+\index{PrettyTable@{PrettyTable}!\_put\_endline@{\_put\_endline}}
+\index{\_put\_endline@{\_put\_endline}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_put\_endline()}{\_put\_endline()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+put\+\_\+endline (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Definition at line 190 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_af1acda4c4d5187761e43cf31bbbac48e}\label{classPrettyTable_af1acda4c4d5187761e43cf31bbbac48e}} 
+\index{PrettyTable@{PrettyTable}!\_RowConvertColumn@{\_RowConvertColumn}}
+\index{\_RowConvertColumn@{\_RowConvertColumn}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_RowConvertColumn()}{\_RowConvertColumn()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+\+Row\+Convert\+Column (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&}]{\+\_\+row }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 214 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a47d37d8f0329407ece8aa69107dbb674}\label{classPrettyTable_a47d37d8f0329407ece8aa69107dbb674}} 
+\index{PrettyTable@{PrettyTable}!\_RowsConvertColumns@{\_RowsConvertColumns}}
+\index{\_RowsConvertColumns@{\_RowsConvertColumns}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{\_RowsConvertColumns()}{\_RowsConvertColumns()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+\_\+\+Rows\+Convert\+Columns (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definition at line 219 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_aec57fe6529a990421760dcb44a9e9c23}\label{classPrettyTable_aec57fe6529a990421760dcb44a9e9c23}} 
+\index{PrettyTable@{PrettyTable}!AddColumn@{AddColumn}}
+\index{AddColumn@{AddColumn}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{AddColumn()}{AddColumn()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Add\+Column (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{String}} \&}]{\+\_\+header\+\_\+title,  }\item[{const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&}]{\+\_\+column }\end{DoxyParamCaption})}
+
+Add a column 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+header\+\_\+title} & \\
+\hline
+{\em \+\_\+column} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 56 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a40b5fc08ff9847395b4f1cc4f286463c}\label{classPrettyTable_a40b5fc08ff9847395b4f1cc4f286463c}} 
+\index{PrettyTable@{PrettyTable}!AddHeader@{AddHeader}}
+\index{AddHeader@{AddHeader}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{AddHeader()}{AddHeader()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Add\+Header (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&}]{\+\_\+header,  }\item[{\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}}}]{\+\_\+align = {\ttfamily \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}}} }\end{DoxyParamCaption})}
+
+Add a header, it is necessary 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+header} & \\
+\hline
+{\em \+\_\+align} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_af91f9159862955743b60a1bab486884b}\label{classPrettyTable_af91f9159862955743b60a1bab486884b}} 
+\index{PrettyTable@{PrettyTable}!AddRow@{AddRow}}
+\index{AddRow@{AddRow}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{AddRow()}{AddRow()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Add\+Row (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPrettyTable_a4c7f896e609ecadb7bcb07558256d78e}{String\+Array}} \&}]{\+\_\+row }\end{DoxyParamCaption})}
+
+Add a row 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+row} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 41 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_abf8642bb5d533e12ed67af417bdc1d5f}\label{classPrettyTable_abf8642bb5d533e12ed67af417bdc1d5f}} 
+\index{PrettyTable@{PrettyTable}!AddRows@{AddRows}}
+\index{AddRows@{AddRows}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{AddRows()}{AddRows()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Add\+Rows (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classPrettyTable_a92b1d765d40571f5217bbbb9fd31ab9a}{Multi\+String\+Array}} \&}]{\+\_\+rows }\end{DoxyParamCaption})}
+
+Add multi rows 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+rows} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 51 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_aea5620ab5d9504c1d22b75dc0def491d}\label{classPrettyTable_aea5620ab5d9504c1d22b75dc0def491d}} 
+\index{PrettyTable@{PrettyTable}!CancelFrameStyle@{CancelFrameStyle}}
+\index{CancelFrameStyle@{CancelFrameStyle}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{CancelFrameStyle()}{CancelFrameStyle()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Cancel\+Frame\+Style (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Cancel the border frame style 
+
+Definition at line 110 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_afef90a9039f8a3e2341948cef437a491}\label{classPrettyTable_afef90a9039f8a3e2341948cef437a491}} 
+\index{PrettyTable@{PrettyTable}!DrawTable@{DrawTable}}
+\index{DrawTable@{DrawTable}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{DrawTable()}{DrawTable()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Draw\+Table (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Start draw a table
+
+Start draw a table Note that this function will draw all rows! After you call this method, you call to\+\_\+\+String(s,e) with two parameters, it is invalid 
+
+Definition at line 71 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a5a1cb4b5e008867b0d27dfb9c8a9f3cb}\label{classPrettyTable_a5a1cb4b5e008867b0d27dfb9c8a9f3cb}} 
+\index{PrettyTable@{PrettyTable}!OutputFile@{OutputFile}}
+\index{OutputFile@{OutputFile}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{OutputFile()}{OutputFile()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Output\+File (\begin{DoxyParamCaption}\item[{const string \&}]{\+\_\+file\+\_\+path = {\ttfamily \char`\"{}output\+\_\+table.txt\char`\"{}} }\end{DoxyParamCaption})}
+
+Save to file on disk 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+file\+\_\+path} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 259 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a05cd281299fba6c130f1dc410bd8fd8a}\label{classPrettyTable_a05cd281299fba6c130f1dc410bd8fd8a}} 
+\index{PrettyTable@{PrettyTable}!padding@{padding}}
+\index{padding@{padding}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{padding()}{padding()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::padding (\begin{DoxyParamCaption}\item[{int}]{n,  }\item[{\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}}}]{align = {\ttfamily \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}}} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Definition at line 169 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{classPrettyTable_ab864d47dea59b894b679b28d295fe881}\label{classPrettyTable_ab864d47dea59b894b679b28d295fe881}} 
+\index{PrettyTable@{PrettyTable}!SetAlign@{SetAlign}}
+\index{SetAlign@{SetAlign}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{SetAlign()}{SetAlign()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Set\+Align (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585}{Align}}}]{align = {\ttfamily \mbox{\hyperlink{classPrettyTable_a7334d91d4c3bbf6b368a45f282ef3585a945d5e233cf7d6240f6b783b36a374ff}{Align\+::\+Left}}} }\end{DoxyParamCaption})}
+
+Set table content aligning 
+
+Definition at line 255 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_aab4ee617112d77aa9b59fd288c38a765}\label{classPrettyTable_aab4ee617112d77aa9b59fd288c38a765}} 
+\index{PrettyTable@{PrettyTable}!SetBorderStyle@{SetBorderStyle}}
+\index{SetBorderStyle@{SetBorderStyle}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{SetBorderStyle()}{SetBorderStyle()}}
+{\footnotesize\ttfamily void Pretty\+Table\+::\+Set\+Border\+Style (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}}]{\+\_\+\+Corner = {\ttfamily \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbabbab278af824311474b72971b6c45aee}{Sign\+::\+PT\+\_\+\+PLUS}}},  }\item[{\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}}]{\+\_\+\+Border\+\_\+h = {\ttfamily \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba6db178a32f49f8898a2495eab4a23627}{Sign\+::\+PT\+\_\+V}}},  }\item[{\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}}]{\+\_\+\+Border\+\_\+v = {\ttfamily \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbae4b24e539750448aecebcda084ccf7e1}{Sign\+::\+PT\+\_\+H}}} }\end{DoxyParamCaption})}
+
+Set table border 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+\+Corner} & suck as \textquotesingle{}+\textquotesingle{} \\
+\hline
+{\em \+\_\+\+Border\+\_\+h} & such as \textquotesingle{}-\/\textquotesingle{} \\
+\hline
+{\em \+\_\+\+Border\+\_\+v} & such as \textquotesingle{}$\vert$\textquotesingle{} \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 16 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a2fee8b16bdf149f8a27eec290b05565c}\label{classPrettyTable_a2fee8b16bdf149f8a27eec290b05565c}} 
+\index{PrettyTable@{PrettyTable}!StringCapacity@{StringCapacity}}
+\index{StringCapacity@{StringCapacity}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{StringCapacity()}{StringCapacity()}}
+{\footnotesize\ttfamily int Pretty\+Table\+::\+String\+Capacity (\begin{DoxyParamCaption}\item[{const string \&}]{raw\+\_\+str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+In UTF-\/8, If string include Chinese characters, it will obtain obvious characters Such as string s=\char`\"{}你好cpp\char`\"{} \+:ouput 9-\/2=7 But in Windows, this is will output\+: 7 
+\begin{DoxyParams}{Parameters}
+{\em raw\+\_\+str} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 235 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_a672b7223a5b44b78ad8ee62b6fb7a2c2}\label{classPrettyTable_a672b7223a5b44b78ad8ee62b6fb7a2c2}} 
+\index{PrettyTable@{PrettyTable}!StringToWString@{StringToWString}}
+\index{StringToWString@{StringToWString}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{StringToWString()}{StringToWString()}}
+{\footnotesize\ttfamily wstring Pretty\+Table\+::\+String\+To\+WString (\begin{DoxyParamCaption}\item[{const string \&}]{str }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+Deal with Chinese characters 
+\begin{DoxyParams}{Parameters}
+{\em str} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 224 of file Pretty\+Table.\+cpp.
+
+\mbox{\Hypertarget{classPrettyTable_ae8628a4e97f3a506403324681094fbd6}\label{classPrettyTable_ae8628a4e97f3a506403324681094fbd6}} 
+\index{PrettyTable@{PrettyTable}!to\_String@{to\_String}}
+\index{to\_String@{to\_String}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{to\_String()}{to\_String()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classPrettyTable_a47d4a15a7309c49bb124190adb44b863}{Pretty\+Table\+::\+String}} Pretty\+Table\+::to\+\_\+\+String (\begin{DoxyParamCaption}\item[{int}]{\+\_\+start = {\ttfamily 1},  }\item[{int}]{\+\_\+end = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+Return a string table 
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+start} & \\
+\hline
+{\em \+\_\+end} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+
+
+Definition at line 22 of file Pretty\+Table.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classPrettyTable_a1721c81140a2efb1ab4981d453c2dc73}\label{classPrettyTable_a1721c81140a2efb1ab4981d453c2dc73}} 
+\index{PrettyTable@{PrettyTable}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!PrettyTable@{PrettyTable}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{ostream \&}]{out,  }\item[{\mbox{\hyperlink{classPrettyTable}{Pretty\+Table}} \&}]{pt }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 160 of file Pretty\+Table.\+h.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{PrettyTable_8h}{Pretty\+Table.\+h}}\item 
+src/\mbox{\hyperlink{PrettyTable_8cpp}{Pretty\+Table.\+cpp}}\end{DoxyCompactItemize}

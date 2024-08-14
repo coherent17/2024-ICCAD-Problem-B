@@ -1,0 +1,268 @@
+\hypertarget{PrettyTable_8h}{}\doxysection{inc/\+Pretty\+Table.h File Reference}
+\label{PrettyTable_8h}\index{inc/PrettyTable.h@{inc/PrettyTable.h}}
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$iomanip$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$fstream$>$}\newline
+{\ttfamily \#include $<$exception$>$}\newline
+Include dependency graph for Pretty\+Table.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classException}{Exception}}
+\item 
+class \mbox{\hyperlink{classPrettyTable}{Pretty\+Table}}
+\item 
+struct \mbox{\hyperlink{structPrettyTable_1_1BorderStyle}{Pretty\+Table\+::\+Border\+Style}}
+\item 
+struct \mbox{\hyperlink{structPrettyTable_1_1Header}{Pretty\+Table\+::\+Header}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{PrettyTable_8h_ad4e9432ffb5c0e973cc654c70a88ecb4}{PADDING\+\_\+\+LEFT\+\_\+\+RIGHT}}~2
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \{ \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba666a45aaab1dece0a062debad9ce22d9}{PC1}} =0x3002u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba6c7ab61d54ae3d66dd7685f398b3ea74}{PC2}} =0x\+FF1\+Fu
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba50342dfa1631d15b5511276629cea8f4}{PC3}} =0x\+FF01u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4fa6d9da8c57f1bc272b0295748a727b}{PC4}} =0x\+FF0\+Cu
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4493d2f747a631748a798d226b4c95b1}{PC5}} =0x3001u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba90af524f20137759a0bb0e126aefdb3e}{PC6}} =0x\+FF1\+Bu
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafb268f9eb312a356caadc0f752b9210e}{PC7}} =0x\+FF1\+Au
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bab03264238bdf9e84a801b9a90df00b2a}{PC8}} =0x300\+Cu
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa409438bfc05ab62bccff2cd28d5150a}{PC9}} =0x300\+Du
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba370d1c2dcdb3be1dd9ad85b447856e27}{PC10}} =0x2018u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4dcc06fe662d777f69fd571a3f71a4fb}{PC11}} =0x2019u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba5b70dcf33b69f1c62bd4ca5330c7676f}{PC12}} =0x\+FF08u
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf24b60794f891878292ab1264f328e5f}{PC13}} =0x\+FF09u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba1193fcfd1c4b39a13201d79206376266}{PC14}} =0x3014u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafc608487d364c80862aaf9997c6be012}{PC15}} =0x3015u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba3dffc6d076bc21aa87de9a44378b1a4e}{PC16}} =0x3010u
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba00c666a42c9aa0045fd20c9e0ce3d35c}{PC17}} =0x3011u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa23da99bf08bfae11d676b44392d67fc}{PC18}} =0x2014u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bae5eb0a6cee98086155b9a6af236bc6bb}{PC19}} =0x2026u
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf8a2d1e35fac4b1792d14e87c14521da}{PC20}} =0x2013u
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba69f294d25c7b7c253c5132c1ca22fe27}{PC21}} =0x\+FF0\+Eu
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba8f3be82353199b9871341bb3dc253409}{PC22}} =0x300\+Au
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bac8a53ccd5bc851fceabfb3e522aeb34a}{PC23}} =0x300\+Bu
+, \mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba965f05659423c2b13879330bca47dc72}{PC24}} =0x3008u
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba59d0938c92874bb39fd9599448927cfb}{PC25}} =0x3009u
+ \}
+\item 
+enum class \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}} \{ \newline
+\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbabbab278af824311474b72971b6c45aee}{PT\+\_\+\+PLUS}} =\textquotesingle{}+\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbae4b24e539750448aecebcda084ccf7e1}{PT\+\_\+H}} =\textquotesingle{}-\/\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba6db178a32f49f8898a2495eab4a23627}{PT\+\_\+V}} =\textquotesingle{}$\vert$\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba729675686253d8710303478bd55e0a9f}{PT\+\_\+\+DOT}} = \textquotesingle{}.\textquotesingle{}
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbaf308a19a60359a61be3b67d6bb36e45c}{PT\+\_\+\+EQUAL}} = \textquotesingle{}=\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba0112587c71bd6ee01b111258fe3d1b74}{PT\+\_\+\+SIG\+\_\+1}} = \textquotesingle{}@\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba76453b8a7209ef9f34cc6c91a8012501}{PT\+\_\+\+SIG\+\_\+2}} = \textquotesingle{}\#\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba5fd85d283293c5c7d866a08b8197c3dd}{PT\+\_\+\+SIG\+\_\+3}} = \textquotesingle{}\$\textquotesingle{}
+, \newline
+\mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba8e97a5816e922308b12c3219fba9b7c3}{PT\+\_\+\+SIG\+\_\+4}} = \textquotesingle{}\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba3b54854e1f03b60a78405dd334072eea}{PT\+\_\+\+SIG\+\_\+5}} = \textquotesingle{}\textbackslash{}\textbackslash{}\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbadc1015d78ca270f5d108a766c7b4ad97}{PT\+\_\+\+SIG\+\_\+6}} =\textquotesingle{}$\ast$\textquotesingle{}
+, \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba02ab98067a594340d80536cb9a196aad}{PT\+\_\+\+SIG\+\_\+7}} =\textquotesingle{}/\textquotesingle{}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{PrettyTable_8h_ad4e9432ffb5c0e973cc654c70a88ecb4}\label{PrettyTable_8h_ad4e9432ffb5c0e973cc654c70a88ecb4}} 
+\index{PrettyTable.h@{PrettyTable.h}!PADDING\_LEFT\_RIGHT@{PADDING\_LEFT\_RIGHT}}
+\index{PADDING\_LEFT\_RIGHT@{PADDING\_LEFT\_RIGHT}!PrettyTable.h@{PrettyTable.h}}
+\doxysubsubsection{\texorpdfstring{PADDING\_LEFT\_RIGHT}{PADDING\_LEFT\_RIGHT}}
+{\footnotesize\ttfamily \#define PADDING\+\_\+\+LEFT\+\_\+\+RIGHT~2}
+
+
+
+Definition at line 70 of file Pretty\+Table.\+h.
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55b}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55b}} 
+\doxysubsubsection{\texorpdfstring{anonymous enum}{anonymous enum}}
+{\footnotesize\ttfamily anonymous enum}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC1@{PC1}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC1@{PC1}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba666a45aaab1dece0a062debad9ce22d9}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba666a45aaab1dece0a062debad9ce22d9}} 
+PC1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC2@{PC2}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC2@{PC2}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba6c7ab61d54ae3d66dd7685f398b3ea74}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba6c7ab61d54ae3d66dd7685f398b3ea74}} 
+PC2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC3@{PC3}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC3@{PC3}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba50342dfa1631d15b5511276629cea8f4}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba50342dfa1631d15b5511276629cea8f4}} 
+PC3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC4@{PC4}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC4@{PC4}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4fa6d9da8c57f1bc272b0295748a727b}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4fa6d9da8c57f1bc272b0295748a727b}} 
+PC4&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC5@{PC5}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC5@{PC5}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4493d2f747a631748a798d226b4c95b1}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4493d2f747a631748a798d226b4c95b1}} 
+PC5&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC6@{PC6}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC6@{PC6}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba90af524f20137759a0bb0e126aefdb3e}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba90af524f20137759a0bb0e126aefdb3e}} 
+PC6&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC7@{PC7}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC7@{PC7}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafb268f9eb312a356caadc0f752b9210e}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafb268f9eb312a356caadc0f752b9210e}} 
+PC7&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC8@{PC8}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC8@{PC8}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bab03264238bdf9e84a801b9a90df00b2a}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bab03264238bdf9e84a801b9a90df00b2a}} 
+PC8&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC9@{PC9}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC9@{PC9}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa409438bfc05ab62bccff2cd28d5150a}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa409438bfc05ab62bccff2cd28d5150a}} 
+PC9&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC10@{PC10}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC10@{PC10}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba370d1c2dcdb3be1dd9ad85b447856e27}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba370d1c2dcdb3be1dd9ad85b447856e27}} 
+PC10&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC11@{PC11}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC11@{PC11}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4dcc06fe662d777f69fd571a3f71a4fb}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba4dcc06fe662d777f69fd571a3f71a4fb}} 
+PC11&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC12@{PC12}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC12@{PC12}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba5b70dcf33b69f1c62bd4ca5330c7676f}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba5b70dcf33b69f1c62bd4ca5330c7676f}} 
+PC12&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC13@{PC13}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC13@{PC13}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf24b60794f891878292ab1264f328e5f}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf24b60794f891878292ab1264f328e5f}} 
+PC13&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC14@{PC14}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC14@{PC14}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba1193fcfd1c4b39a13201d79206376266}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba1193fcfd1c4b39a13201d79206376266}} 
+PC14&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC15@{PC15}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC15@{PC15}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafc608487d364c80862aaf9997c6be012}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bafc608487d364c80862aaf9997c6be012}} 
+PC15&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC16@{PC16}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC16@{PC16}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba3dffc6d076bc21aa87de9a44378b1a4e}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba3dffc6d076bc21aa87de9a44378b1a4e}} 
+PC16&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC17@{PC17}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC17@{PC17}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba00c666a42c9aa0045fd20c9e0ce3d35c}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba00c666a42c9aa0045fd20c9e0ce3d35c}} 
+PC17&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC18@{PC18}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC18@{PC18}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa23da99bf08bfae11d676b44392d67fc}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baa23da99bf08bfae11d676b44392d67fc}} 
+PC18&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC19@{PC19}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC19@{PC19}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bae5eb0a6cee98086155b9a6af236bc6bb}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bae5eb0a6cee98086155b9a6af236bc6bb}} 
+PC19&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC20@{PC20}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC20@{PC20}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf8a2d1e35fac4b1792d14e87c14521da}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55baf8a2d1e35fac4b1792d14e87c14521da}} 
+PC20&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC21@{PC21}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC21@{PC21}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba69f294d25c7b7c253c5132c1ca22fe27}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba69f294d25c7b7c253c5132c1ca22fe27}} 
+PC21&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC22@{PC22}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC22@{PC22}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba8f3be82353199b9871341bb3dc253409}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba8f3be82353199b9871341bb3dc253409}} 
+PC22&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC23@{PC23}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC23@{PC23}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bac8a53ccd5bc851fceabfb3e522aeb34a}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55bac8a53ccd5bc851fceabfb3e522aeb34a}} 
+PC23&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC24@{PC24}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC24@{PC24}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba965f05659423c2b13879330bca47dc72}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba965f05659423c2b13879330bca47dc72}} 
+PC24&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PC25@{PC25}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PC25@{PC25}}}\mbox{\Hypertarget{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba59d0938c92874bb39fd9599448927cfb}\label{PrettyTable_8h_a06fc87d81c62e9abb8790b6e5713c55ba59d0938c92874bb39fd9599448927cfb}} 
+PC25&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 13 of file Pretty\+Table.\+h.
+
+\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}} 
+\index{PrettyTable.h@{PrettyTable.h}!Sign@{Sign}}
+\index{Sign@{Sign}!PrettyTable.h@{PrettyTable.h}}
+\doxysubsubsection{\texorpdfstring{Sign}{Sign}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cb}{Sign}}\hspace{0.3cm}{\ttfamily [strong]}}
+
+\begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_PLUS@{PT\_PLUS}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_PLUS@{PT\_PLUS}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbabbab278af824311474b72971b6c45aee}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbabbab278af824311474b72971b6c45aee}} 
+PT\+\_\+\+PLUS&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_H@{PT\_H}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_H@{PT\_H}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbae4b24e539750448aecebcda084ccf7e1}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbae4b24e539750448aecebcda084ccf7e1}} 
+PT\+\_\+H&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_V@{PT\_V}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_V@{PT\_V}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba6db178a32f49f8898a2495eab4a23627}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba6db178a32f49f8898a2495eab4a23627}} 
+PT\+\_\+V&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_DOT@{PT\_DOT}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_DOT@{PT\_DOT}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba729675686253d8710303478bd55e0a9f}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba729675686253d8710303478bd55e0a9f}} 
+PT\+\_\+\+DOT&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_EQUAL@{PT\_EQUAL}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_EQUAL@{PT\_EQUAL}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbaf308a19a60359a61be3b67d6bb36e45c}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbaf308a19a60359a61be3b67d6bb36e45c}} 
+PT\+\_\+\+EQUAL&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_1@{PT\_SIG\_1}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_1@{PT\_SIG\_1}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba0112587c71bd6ee01b111258fe3d1b74}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba0112587c71bd6ee01b111258fe3d1b74}} 
+PT\+\_\+\+SIG\+\_\+1&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_2@{PT\_SIG\_2}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_2@{PT\_SIG\_2}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba76453b8a7209ef9f34cc6c91a8012501}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba76453b8a7209ef9f34cc6c91a8012501}} 
+PT\+\_\+\+SIG\+\_\+2&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_3@{PT\_SIG\_3}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_3@{PT\_SIG\_3}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba5fd85d283293c5c7d866a08b8197c3dd}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba5fd85d283293c5c7d866a08b8197c3dd}} 
+PT\+\_\+\+SIG\+\_\+3&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_4@{PT\_SIG\_4}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_4@{PT\_SIG\_4}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba8e97a5816e922308b12c3219fba9b7c3}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba8e97a5816e922308b12c3219fba9b7c3}} 
+PT\+\_\+\+SIG\+\_\+4&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_5@{PT\_SIG\_5}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_5@{PT\_SIG\_5}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba3b54854e1f03b60a78405dd334072eea}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba3b54854e1f03b60a78405dd334072eea}} 
+PT\+\_\+\+SIG\+\_\+5&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_6@{PT\_SIG\_6}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_6@{PT\_SIG\_6}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbadc1015d78ca270f5d108a766c7b4ad97}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cbadc1015d78ca270f5d108a766c7b4ad97}} 
+PT\+\_\+\+SIG\+\_\+6&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{PT\_SIG\_7@{PT\_SIG\_7}!PrettyTable.h@{PrettyTable.h}}\index{PrettyTable.h@{PrettyTable.h}!PT\_SIG\_7@{PT\_SIG\_7}}}\mbox{\Hypertarget{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba02ab98067a594340d80536cb9a196aad}\label{PrettyTable_8h_ad870f3a2c3baacb65e34071ae73c66cba02ab98067a594340d80536cb9a196aad}} 
+PT\+\_\+\+SIG\+\_\+7&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line 41 of file Pretty\+Table.\+h.
+

@@ -1,0 +1,323 @@
+\hypertarget{classRow}{}\doxysection{Row Class Reference}
+\label{classRow}\index{Row@{Row}}
+
+
+{\ttfamily \#include $<$Row.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classRow_a5cca50abc389396e26ec68cbd3fb6596}{Row}} ()
+\item 
+\mbox{\hyperlink{classRow_a8cc0869c91dc94ee595069309ba15690}{$\sim$\+Row}} ()
+\item 
+void \mbox{\hyperlink{classRow_ab1317205121278e6b63a85e790d463c9}{set\+Start\+Coor}} (const \mbox{\hyperlink{classCoor}{Coor}} \&start\+Coor)
+\item 
+void \mbox{\hyperlink{classRow_aa103d78e68686bc2a96e3697a06ba835}{set\+Site\+Height}} (double site\+Height)
+\item 
+void \mbox{\hyperlink{classRow_ad5f84ade607b8c151ee92040ed1f0ed7}{set\+Site\+Width}} (double site\+Width)
+\item 
+void \mbox{\hyperlink{classRow_a1673612aaabd3d613fd8fe0adca810b6}{set\+Num\+Of\+Site}} (int num\+Of\+Sites)
+\item 
+void \mbox{\hyperlink{classRow_a73e6cd7185c0b06eddfb7ddf2443fc4b}{set\+EndX}} (double endX)
+\item 
+void \mbox{\hyperlink{classRow_a208e8c7369edce8d027e0d0a1dfa0f68}{add\+Subrows}} (\mbox{\hyperlink{classSubrow}{Subrow}} $\ast$subrow)
+\item 
+void \mbox{\hyperlink{classRow_a29435e72aeb788a7560e0aa386c15d1e}{add\+Reject\+Cell}} (\mbox{\hyperlink{classCell}{Cell}} $\ast$cell)
+\item 
+void \mbox{\hyperlink{classRow_a0d46efcb08af0e89a41fe4af7ec2a03f}{add\+FFs}} (\mbox{\hyperlink{classNode}{Node}} $\ast$ff)
+\item 
+const \mbox{\hyperlink{classCoor}{Coor}} \& \mbox{\hyperlink{classRow_a5c1f6451012331ac6c7db919b1124119}{get\+Start\+Coor}} () const
+\item 
+double \mbox{\hyperlink{classRow_a8c9f579e4739084f867ed1634b7dd625}{get\+Site\+Height}} () const
+\item 
+double \mbox{\hyperlink{classRow_a51d3417d008b6627ff7bba7ea9a88742}{get\+Site\+Width}} () const
+\item 
+int \mbox{\hyperlink{classRow_aea69281e6b6d720d53aeedd97a3ed2bf}{get\+Num\+Of\+Site}} () const
+\item 
+double \mbox{\hyperlink{classRow_ab29731d67c2efd12bc28167a3b1aa144}{get\+EndX}} () const
+\item 
+std\+::vector$<$ \mbox{\hyperlink{classSubrow}{Subrow}} $\ast$ $>$ \& \mbox{\hyperlink{classRow_a4f08ecc51d1eabf41baecd8977ea9fb1}{get\+Subrows}} ()
+\item 
+bool \mbox{\hyperlink{classRow_ada5c540a80a2303c2cd6376626785d21}{has\+Cell}} (\mbox{\hyperlink{classCell}{Cell}} $\ast$cell)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{classNode}{Node}} $\ast$ $>$ \& \mbox{\hyperlink{classRow_ae8036cec1e83a8ebc91b1908aadfc972}{get\+FFs}} ()
+\item 
+void \mbox{\hyperlink{classRow_a3d6f700d53e6a25b776fb314f598e984}{slicing}} (\mbox{\hyperlink{classNode}{Node}} $\ast$gate)
+\begin{DoxyCompactList}\small\item\em If \mbox{\hyperlink{classNode}{Node}} $\ast$gate overlap with current row, split the current row. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classRow_af05cad8cc01bc04c2ee3e5f2fa7dc746}{can\+Place}} (double startX, double endX, double \&lowestH)
+\begin{DoxyCompactList}\small\item\em Check if the current row start from startX to endX have empty space with height h or not. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classRow_a2792a214f97aa3d623de6223fac6b3ec}{operator$<$}} (const \mbox{\hyperlink{classRow}{Row}} \&rhs) const
+\begin{DoxyCompactList}\small\item\em The cmp function for sort the placement row. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+std\+::ostream \& \mbox{\hyperlink{classRow_ad07b377993b0af211415f60c91ea351a}{operator$<$$<$}} (std\+::ostream \&os, const \mbox{\hyperlink{classRow}{Row}} \&row)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line 16 of file Row.\+h.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classRow_a5cca50abc389396e26ec68cbd3fb6596}\label{classRow_a5cca50abc389396e26ec68cbd3fb6596}} 
+\index{Row@{Row}!Row@{Row}}
+\index{Row@{Row}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{Row()}{Row()}}
+{\footnotesize\ttfamily Row\+::\+Row (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 3 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a8cc0869c91dc94ee595069309ba15690}\label{classRow_a8cc0869c91dc94ee595069309ba15690}} 
+\index{Row@{Row}!````~Row@{$\sim$Row}}
+\index{````~Row@{$\sim$Row}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{$\sim$Row()}{~Row()}}
+{\footnotesize\ttfamily Row\+::$\sim$\+Row (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 10 of file Row.\+cpp.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classRow_a0d46efcb08af0e89a41fe4af7ec2a03f}\label{classRow_a0d46efcb08af0e89a41fe4af7ec2a03f}} 
+\index{Row@{Row}!addFFs@{addFFs}}
+\index{addFFs@{addFFs}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{addFFs()}{addFFs()}}
+{\footnotesize\ttfamily void Row\+::add\+FFs (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classNode}{Node}} $\ast$}]{ff }\end{DoxyParamCaption})}
+
+
+
+Definition at line 46 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a29435e72aeb788a7560e0aa386c15d1e}\label{classRow_a29435e72aeb788a7560e0aa386c15d1e}} 
+\index{Row@{Row}!addRejectCell@{addRejectCell}}
+\index{addRejectCell@{addRejectCell}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{addRejectCell()}{addRejectCell()}}
+{\footnotesize\ttfamily void Row\+::add\+Reject\+Cell (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classCell}{Cell}} $\ast$}]{cell }\end{DoxyParamCaption})}
+
+
+
+Definition at line 42 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a208e8c7369edce8d027e0d0a1dfa0f68}\label{classRow_a208e8c7369edce8d027e0d0a1dfa0f68}} 
+\index{Row@{Row}!addSubrows@{addSubrows}}
+\index{addSubrows@{addSubrows}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{addSubrows()}{addSubrows()}}
+{\footnotesize\ttfamily void Row\+::add\+Subrows (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classSubrow}{Subrow}} $\ast$}]{subrow }\end{DoxyParamCaption})}
+
+
+
+Definition at line 38 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_af05cad8cc01bc04c2ee3e5f2fa7dc746}\label{classRow_af05cad8cc01bc04c2ee3e5f2fa7dc746}} 
+\index{Row@{Row}!canPlace@{canPlace}}
+\index{canPlace@{canPlace}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{canPlace()}{canPlace()}}
+{\footnotesize\ttfamily bool Row\+::can\+Place (\begin{DoxyParamCaption}\item[{double}]{startX,  }\item[{double}]{endX,  }\item[{double \&}]{lowestH }\end{DoxyParamCaption})}
+
+
+
+Check if the current row start from startX to endX have empty space with height h or not. 
+
+
+
+Definition at line 148 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_ab29731d67c2efd12bc28167a3b1aa144}\label{classRow_ab29731d67c2efd12bc28167a3b1aa144}} 
+\index{Row@{Row}!getEndX@{getEndX}}
+\index{getEndX@{getEndX}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getEndX()}{getEndX()}}
+{\footnotesize\ttfamily double Row\+::get\+EndX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 67 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_ae8036cec1e83a8ebc91b1908aadfc972}\label{classRow_ae8036cec1e83a8ebc91b1908aadfc972}} 
+\index{Row@{Row}!getFFs@{getFFs}}
+\index{getFFs@{getFFs}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getFFs()}{getFFs()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classNode}{Node}} $\ast$ $>$ \& Row\+::get\+FFs (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 82 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_aea69281e6b6d720d53aeedd97a3ed2bf}\label{classRow_aea69281e6b6d720d53aeedd97a3ed2bf}} 
+\index{Row@{Row}!getNumOfSite@{getNumOfSite}}
+\index{getNumOfSite@{getNumOfSite}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getNumOfSite()}{getNumOfSite()}}
+{\footnotesize\ttfamily int Row\+::get\+Num\+Of\+Site (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 63 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a8c9f579e4739084f867ed1634b7dd625}\label{classRow_a8c9f579e4739084f867ed1634b7dd625}} 
+\index{Row@{Row}!getSiteHeight@{getSiteHeight}}
+\index{getSiteHeight@{getSiteHeight}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getSiteHeight()}{getSiteHeight()}}
+{\footnotesize\ttfamily double Row\+::get\+Site\+Height (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 55 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a51d3417d008b6627ff7bba7ea9a88742}\label{classRow_a51d3417d008b6627ff7bba7ea9a88742}} 
+\index{Row@{Row}!getSiteWidth@{getSiteWidth}}
+\index{getSiteWidth@{getSiteWidth}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getSiteWidth()}{getSiteWidth()}}
+{\footnotesize\ttfamily double Row\+::get\+Site\+Width (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 59 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a5c1f6451012331ac6c7db919b1124119}\label{classRow_a5c1f6451012331ac6c7db919b1124119}} 
+\index{Row@{Row}!getStartCoor@{getStartCoor}}
+\index{getStartCoor@{getStartCoor}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getStartCoor()}{getStartCoor()}}
+{\footnotesize\ttfamily const \mbox{\hyperlink{classCoor}{Coor}} \& Row\+::get\+Start\+Coor (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Definition at line 51 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a4f08ecc51d1eabf41baecd8977ea9fb1}\label{classRow_a4f08ecc51d1eabf41baecd8977ea9fb1}} 
+\index{Row@{Row}!getSubrows@{getSubrows}}
+\index{getSubrows@{getSubrows}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{getSubrows()}{getSubrows()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classSubrow}{Subrow}} $\ast$ $>$ \& Row\+::get\+Subrows (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 71 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_ada5c540a80a2303c2cd6376626785d21}\label{classRow_ada5c540a80a2303c2cd6376626785d21}} 
+\index{Row@{Row}!hasCell@{hasCell}}
+\index{hasCell@{hasCell}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{hasCell()}{hasCell()}}
+{\footnotesize\ttfamily bool Row\+::has\+Cell (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classCell}{Cell}} $\ast$}]{cell }\end{DoxyParamCaption})}
+
+
+
+Definition at line 75 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a2792a214f97aa3d623de6223fac6b3ec}\label{classRow_a2792a214f97aa3d623de6223fac6b3ec}} 
+\index{Row@{Row}!operator$<$@{operator$<$}}
+\index{operator$<$@{operator$<$}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{operator$<$()}{operator<()}}
+{\footnotesize\ttfamily bool Row\+::operator$<$ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classRow}{Row}} \&}]{rhs }\end{DoxyParamCaption}) const}
+
+
+
+The cmp function for sort the placement row. 
+
+\begin{DoxyAttention}{Attention}
+First sort by y in ascending order, and sort x in ascending order 
+\end{DoxyAttention}
+
+
+Definition at line 171 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a73e6cd7185c0b06eddfb7ddf2443fc4b}\label{classRow_a73e6cd7185c0b06eddfb7ddf2443fc4b}} 
+\index{Row@{Row}!setEndX@{setEndX}}
+\index{setEndX@{setEndX}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{setEndX()}{setEndX()}}
+{\footnotesize\ttfamily void Row\+::set\+EndX (\begin{DoxyParamCaption}\item[{double}]{endX }\end{DoxyParamCaption})}
+
+
+
+Definition at line 34 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a1673612aaabd3d613fd8fe0adca810b6}\label{classRow_a1673612aaabd3d613fd8fe0adca810b6}} 
+\index{Row@{Row}!setNumOfSite@{setNumOfSite}}
+\index{setNumOfSite@{setNumOfSite}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{setNumOfSite()}{setNumOfSite()}}
+{\footnotesize\ttfamily void Row\+::set\+Num\+Of\+Site (\begin{DoxyParamCaption}\item[{int}]{num\+Of\+Sites }\end{DoxyParamCaption})}
+
+
+
+Definition at line 30 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_aa103d78e68686bc2a96e3697a06ba835}\label{classRow_aa103d78e68686bc2a96e3697a06ba835}} 
+\index{Row@{Row}!setSiteHeight@{setSiteHeight}}
+\index{setSiteHeight@{setSiteHeight}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{setSiteHeight()}{setSiteHeight()}}
+{\footnotesize\ttfamily void Row\+::set\+Site\+Height (\begin{DoxyParamCaption}\item[{double}]{site\+Height }\end{DoxyParamCaption})}
+
+
+
+Definition at line 22 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_ad5f84ade607b8c151ee92040ed1f0ed7}\label{classRow_ad5f84ade607b8c151ee92040ed1f0ed7}} 
+\index{Row@{Row}!setSiteWidth@{setSiteWidth}}
+\index{setSiteWidth@{setSiteWidth}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{setSiteWidth()}{setSiteWidth()}}
+{\footnotesize\ttfamily void Row\+::set\+Site\+Width (\begin{DoxyParamCaption}\item[{double}]{site\+Width }\end{DoxyParamCaption})}
+
+
+
+Definition at line 26 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_ab1317205121278e6b63a85e790d463c9}\label{classRow_ab1317205121278e6b63a85e790d463c9}} 
+\index{Row@{Row}!setStartCoor@{setStartCoor}}
+\index{setStartCoor@{setStartCoor}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{setStartCoor()}{setStartCoor()}}
+{\footnotesize\ttfamily void Row\+::set\+Start\+Coor (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{start\+Coor }\end{DoxyParamCaption})}
+
+
+
+Definition at line 18 of file Row.\+cpp.
+
+\mbox{\Hypertarget{classRow_a3d6f700d53e6a25b776fb314f598e984}\label{classRow_a3d6f700d53e6a25b776fb314f598e984}} 
+\index{Row@{Row}!slicing@{slicing}}
+\index{slicing@{slicing}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{slicing()}{slicing()}}
+{\footnotesize\ttfamily void Row\+::slicing (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classNode}{Node}} $\ast$}]{gate }\end{DoxyParamCaption})}
+
+
+
+If \mbox{\hyperlink{classNode}{Node}} $\ast$gate overlap with current row, split the current row. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em param} & can be either gate of ff \\
+\hline
+\end{DoxyParams}
+\begin{DoxyAttention}{Attention}
+3 types of condition must be consider a) Part before the gate b) Part under the gate c) Part after the gate 
+\end{DoxyAttention}
+\begin{DoxyRefDesc}{Bug}
+\item[\mbox{\hyperlink{bug__bug000001}{Bug}}]memory leak in this function, need to consider implement garbage collection \end{DoxyRefDesc}
+
+
+Definition at line 86 of file Row.\+cpp.
+
+
+
+\doxysubsection{Friends And Related Function Documentation}
+\mbox{\Hypertarget{classRow_ad07b377993b0af211415f60c91ea351a}\label{classRow_ad07b377993b0af211415f60c91ea351a}} 
+\index{Row@{Row}!operator$<$$<$@{operator$<$$<$}}
+\index{operator$<$$<$@{operator$<$$<$}!Row@{Row}}
+\doxysubsubsection{\texorpdfstring{operator$<$$<$}{operator<<}}
+{\footnotesize\ttfamily std\+::ostream\& operator$<$$<$ (\begin{DoxyParamCaption}\item[{std\+::ostream \&}]{os,  }\item[{const \mbox{\hyperlink{classRow}{Row}} \&}]{row }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [friend]}}
+
+
+
+Definition at line 179 of file Row.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+inc/\mbox{\hyperlink{Row_8h}{Row.\+h}}\item 
+src/\mbox{\hyperlink{Row_8cpp}{Row.\+cpp}}\end{DoxyCompactItemize}

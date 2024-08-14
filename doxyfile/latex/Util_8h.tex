@@ -1,0 +1,233 @@
+\hypertarget{Util_8h}{}\doxysection{inc/\+Util.h File Reference}
+\label{Util_8h}\index{inc/Util.h@{inc/Util.h}}
+{\ttfamily \#include \char`\"{}Coor.\+h\char`\"{}}\newline
+{\ttfamily \#include $<$string$>$}\newline
+{\ttfamily \#include $<$sstream$>$}\newline
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$cstdio$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+Include dependency graph for Util.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classParam}{Param}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{Util_8h_ab6fecd8522a725f49d8d3678f13f5e8a}{DEBUG\+\_\+\+MSG}}(message)
+\item 
+\#define \mbox{\hyperlink{Util_8h_ad122b50a5bed0af22a4f3b4f8219e7fb}{MIN\+\_\+\+WEIGHT}}~0.\+0000000001
+\item 
+\#define \mbox{\hyperlink{Util_8h_ac56d861561a6a5a614293e91ffa40d2d}{UNSET\+\_\+\+IDX}}~-\/1
+\item 
+\#define \mbox{\hyperlink{Util_8h_a8fe6c347e79d9cd15811aa5c4e38d5de}{P\+\_\+\+PER\+\_\+\+NODE}}~16
+\item 
+\#define \mbox{\hyperlink{Util_8h_a2b1d39159e4114f433745f15a201c93c}{MAX\+\_\+\+NEIGHBORS}}~20
+\item 
+\#define \mbox{\hyperlink{Util_8h_abc6e5957e61682001f6ca07da367291d}{BANDWIDTH\+\_\+\+SELECTION\+\_\+\+NEIGHBOR}}~4
+\item 
+\#define \mbox{\hyperlink{Util_8h_ac8e884e37bca4dc00cc023af8f23cabd}{SHIFT\+\_\+\+TOLERANCE}}~0.\+1
+\item 
+\#define \mbox{\hyperlink{Util_8h_a8ec18eda9ce313263d4114184089d53c}{SQUARE\+\_\+\+EPSILON}}~25000000
+\item 
+\#define \mbox{\hyperlink{Util_8h_a8b5173357adb02a86c027316e0acdfa0}{MAX\+\_\+\+THREADS}}~8
+\item 
+\#define \mbox{\hyperlink{Util_8h_af4191c6855cb419d0ec4cde36e7063d3}{PRO\+\_\+\+BAR\+\_\+\+LENGTH}}~50
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+double \mbox{\hyperlink{Util_8h_acca5b6bac788a0cf95dd498970810885}{Square\+Euclidean\+Distance}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2)
+\item 
+double \mbox{\hyperlink{Util_8h_a654437e8705738d45e161f596b2d9713}{Mangattan\+Distance}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2)
+\item 
+double \mbox{\hyperlink{Util_8h_a6d4abb3898fe7be04bcd39aadf636c75}{Gaussian\+Kernel}} (const \mbox{\hyperlink{classCoor}{Coor}} \&p1, const \mbox{\hyperlink{classCoor}{Coor}} \&p2, double bandwidth)
+\item 
+double \mbox{\hyperlink{Util_8h_a0db0b0d63907204ab9502a14cfe9ec7c}{HPWL}} (const \mbox{\hyperlink{classCoor}{Coor}} \&, const \mbox{\hyperlink{classCoor}{Coor}} \&)
+\item 
+bool \mbox{\hyperlink{Util_8h_a11adb104b3bb264d60fdef2323dc1d3f}{Is\+Overlap}} (const \mbox{\hyperlink{classCoor}{Coor}} \&coor1, double w1, double h1, const \mbox{\hyperlink{classCoor}{Coor}} \&coor2, double w2, double h2)
+\item 
+std\+::string \mbox{\hyperlink{Util_8h_a5e405c835c530210e375ccafbf3c446c}{to\+String\+With\+Precision}} (double value, int num\+After\+Dot)
+\item 
+void \mbox{\hyperlink{Util_8h_aad27179c1291c28962de9d710e945c58}{update\+\_\+bar}} (int percent\+\_\+done)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{Util_8h_abc6e5957e61682001f6ca07da367291d}\label{Util_8h_abc6e5957e61682001f6ca07da367291d}} 
+\index{Util.h@{Util.h}!BANDWIDTH\_SELECTION\_NEIGHBOR@{BANDWIDTH\_SELECTION\_NEIGHBOR}}
+\index{BANDWIDTH\_SELECTION\_NEIGHBOR@{BANDWIDTH\_SELECTION\_NEIGHBOR}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{BANDWIDTH\_SELECTION\_NEIGHBOR}{BANDWIDTH\_SELECTION\_NEIGHBOR}}
+{\footnotesize\ttfamily \#define BANDWIDTH\+\_\+\+SELECTION\+\_\+\+NEIGHBOR~4}
+
+
+
+Definition at line 20 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_ab6fecd8522a725f49d8d3678f13f5e8a}\label{Util_8h_ab6fecd8522a725f49d8d3678f13f5e8a}} 
+\index{Util.h@{Util.h}!DEBUG\_MSG@{DEBUG\_MSG}}
+\index{DEBUG\_MSG@{DEBUG\_MSG}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{DEBUG\_MSG}{DEBUG\_MSG}}
+{\footnotesize\ttfamily \#define DEBUG\+\_\+\+MSG(\begin{DoxyParamCaption}\item[{}]{message }\end{DoxyParamCaption})}
+
+
+
+Definition at line 7 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_a2b1d39159e4114f433745f15a201c93c}\label{Util_8h_a2b1d39159e4114f433745f15a201c93c}} 
+\index{Util.h@{Util.h}!MAX\_NEIGHBORS@{MAX\_NEIGHBORS}}
+\index{MAX\_NEIGHBORS@{MAX\_NEIGHBORS}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_NEIGHBORS}{MAX\_NEIGHBORS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+NEIGHBORS~20}
+
+
+
+Definition at line 17 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_a8b5173357adb02a86c027316e0acdfa0}\label{Util_8h_a8b5173357adb02a86c027316e0acdfa0}} 
+\index{Util.h@{Util.h}!MAX\_THREADS@{MAX\_THREADS}}
+\index{MAX\_THREADS@{MAX\_THREADS}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{MAX\_THREADS}{MAX\_THREADS}}
+{\footnotesize\ttfamily \#define MAX\+\_\+\+THREADS~8}
+
+
+
+Definition at line 25 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_ad122b50a5bed0af22a4f3b4f8219e7fb}\label{Util_8h_ad122b50a5bed0af22a4f3b4f8219e7fb}} 
+\index{Util.h@{Util.h}!MIN\_WEIGHT@{MIN\_WEIGHT}}
+\index{MIN\_WEIGHT@{MIN\_WEIGHT}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{MIN\_WEIGHT}{MIN\_WEIGHT}}
+{\footnotesize\ttfamily \#define MIN\+\_\+\+WEIGHT~0.\+0000000001}
+
+
+
+Definition at line 11 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_a8fe6c347e79d9cd15811aa5c4e38d5de}\label{Util_8h_a8fe6c347e79d9cd15811aa5c4e38d5de}} 
+\index{Util.h@{Util.h}!P\_PER\_NODE@{P\_PER\_NODE}}
+\index{P\_PER\_NODE@{P\_PER\_NODE}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{P\_PER\_NODE}{P\_PER\_NODE}}
+{\footnotesize\ttfamily \#define P\+\_\+\+PER\+\_\+\+NODE~16}
+
+
+
+Definition at line 14 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_af4191c6855cb419d0ec4cde36e7063d3}\label{Util_8h_af4191c6855cb419d0ec4cde36e7063d3}} 
+\index{Util.h@{Util.h}!PRO\_BAR\_LENGTH@{PRO\_BAR\_LENGTH}}
+\index{PRO\_BAR\_LENGTH@{PRO\_BAR\_LENGTH}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{PRO\_BAR\_LENGTH}{PRO\_BAR\_LENGTH}}
+{\footnotesize\ttfamily \#define PRO\+\_\+\+BAR\+\_\+\+LENGTH~50}
+
+
+
+Definition at line 28 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_ac8e884e37bca4dc00cc023af8f23cabd}\label{Util_8h_ac8e884e37bca4dc00cc023af8f23cabd}} 
+\index{Util.h@{Util.h}!SHIFT\_TOLERANCE@{SHIFT\_TOLERANCE}}
+\index{SHIFT\_TOLERANCE@{SHIFT\_TOLERANCE}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{SHIFT\_TOLERANCE}{SHIFT\_TOLERANCE}}
+{\footnotesize\ttfamily \#define SHIFT\+\_\+\+TOLERANCE~0.\+1}
+
+
+
+Definition at line 21 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_a8ec18eda9ce313263d4114184089d53c}\label{Util_8h_a8ec18eda9ce313263d4114184089d53c}} 
+\index{Util.h@{Util.h}!SQUARE\_EPSILON@{SQUARE\_EPSILON}}
+\index{SQUARE\_EPSILON@{SQUARE\_EPSILON}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{SQUARE\_EPSILON}{SQUARE\_EPSILON}}
+{\footnotesize\ttfamily \#define SQUARE\+\_\+\+EPSILON~25000000}
+
+
+
+Definition at line 22 of file Util.\+h.
+
+\mbox{\Hypertarget{Util_8h_ac56d861561a6a5a614293e91ffa40d2d}\label{Util_8h_ac56d861561a6a5a614293e91ffa40d2d}} 
+\index{Util.h@{Util.h}!UNSET\_IDX@{UNSET\_IDX}}
+\index{UNSET\_IDX@{UNSET\_IDX}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{UNSET\_IDX}{UNSET\_IDX}}
+{\footnotesize\ttfamily \#define UNSET\+\_\+\+IDX~-\/1}
+
+
+
+Definition at line 13 of file Util.\+h.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{Util_8h_a6d4abb3898fe7be04bcd39aadf636c75}\label{Util_8h_a6d4abb3898fe7be04bcd39aadf636c75}} 
+\index{Util.h@{Util.h}!GaussianKernel@{GaussianKernel}}
+\index{GaussianKernel@{GaussianKernel}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{GaussianKernel()}{GaussianKernel()}}
+{\footnotesize\ttfamily double Gaussian\+Kernel (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2,  }\item[{double}]{bandwidth }\end{DoxyParamCaption})}
+
+
+
+Definition at line 18 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_a0db0b0d63907204ab9502a14cfe9ec7c}\label{Util_8h_a0db0b0d63907204ab9502a14cfe9ec7c}} 
+\index{Util.h@{Util.h}!HPWL@{HPWL}}
+\index{HPWL@{HPWL}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{HPWL()}{HPWL()}}
+{\footnotesize\ttfamily double HPWL (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{c1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{c2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 25 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_a11adb104b3bb264d60fdef2323dc1d3f}\label{Util_8h_a11adb104b3bb264d60fdef2323dc1d3f}} 
+\index{Util.h@{Util.h}!IsOverlap@{IsOverlap}}
+\index{IsOverlap@{IsOverlap}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{IsOverlap()}{IsOverlap()}}
+{\footnotesize\ttfamily bool Is\+Overlap (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor1,  }\item[{double}]{w1,  }\item[{double}]{h1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{coor2,  }\item[{double}]{w2,  }\item[{double}]{h2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 29 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_a654437e8705738d45e161f596b2d9713}\label{Util_8h_a654437e8705738d45e161f596b2d9713}} 
+\index{Util.h@{Util.h}!MangattanDistance@{MangattanDistance}}
+\index{MangattanDistance@{MangattanDistance}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{MangattanDistance()}{MangattanDistance()}}
+{\footnotesize\ttfamily double Mangattan\+Distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 14 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_acca5b6bac788a0cf95dd498970810885}\label{Util_8h_acca5b6bac788a0cf95dd498970810885}} 
+\index{Util.h@{Util.h}!SquareEuclideanDistance@{SquareEuclideanDistance}}
+\index{SquareEuclideanDistance@{SquareEuclideanDistance}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{SquareEuclideanDistance()}{SquareEuclideanDistance()}}
+{\footnotesize\ttfamily double Square\+Euclidean\+Distance (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p1,  }\item[{const \mbox{\hyperlink{classCoor}{Coor}} \&}]{p2 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 9 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_a5e405c835c530210e375ccafbf3c446c}\label{Util_8h_a5e405c835c530210e375ccafbf3c446c}} 
+\index{Util.h@{Util.h}!toStringWithPrecision@{toStringWithPrecision}}
+\index{toStringWithPrecision@{toStringWithPrecision}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{toStringWithPrecision()}{toStringWithPrecision()}}
+{\footnotesize\ttfamily std\+::string to\+String\+With\+Precision (\begin{DoxyParamCaption}\item[{double}]{value,  }\item[{int}]{num\+After\+Dot }\end{DoxyParamCaption})}
+
+
+
+Definition at line 42 of file Util.\+cpp.
+
+\mbox{\Hypertarget{Util_8h_aad27179c1291c28962de9d710e945c58}\label{Util_8h_aad27179c1291c28962de9d710e945c58}} 
+\index{Util.h@{Util.h}!update\_bar@{update\_bar}}
+\index{update\_bar@{update\_bar}!Util.h@{Util.h}}
+\doxysubsubsection{\texorpdfstring{update\_bar()}{update\_bar()}}
+{\footnotesize\ttfamily void update\+\_\+bar (\begin{DoxyParamCaption}\item[{int}]{percent\+\_\+done }\end{DoxyParamCaption})}
+
+
+
+Definition at line 46 of file Util.\+cpp.
+
