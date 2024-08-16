@@ -141,10 +141,15 @@ void Banking::doClustering(){
             
             
             if(!toRemoveFFs.empty()){
-                Coor clusterCoor = getMedian(toRemoveFFs);
+                Coor medianCoor = getMedian(toRemoveFFs);
+                Coor clusterCoor = mgr.legalizer->FindPlace(medianCoor, chooseCell);
+                if(clusterCoor.x == DBL_MAX && clusterCoor.y == DBL_MAX) 
+                    continue; 
                 if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
                     continue;
-                mgr.bankFF(clusterCoor, chooseCell, FFToBank);
+                    
+                FF* newFF = mgr.bankFF(clusterCoor, chooseCell, FFToBank);
+                mgr.legalizer->UpdateRows(newFF);
                 for (size_t j = 0; j < toRemoveFFs.size(); j++)
                 {
                     isClustered[toRemoveFFs[j].second] = true;
