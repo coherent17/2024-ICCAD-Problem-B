@@ -91,15 +91,28 @@ void Manager::checker(){
     checker.run();
 }
 
-void Manager::dump(const std::string &filename){
+void Manager::dump(const std::string &filename, double prePlaceCost, double finalCost){
+    DEBUG_MGR("Dump result ...");
+    DEBUG_MGR("Input cost : " + std::to_string(prePlaceCost));
+    DEBUG_MGR("Final cost : " + std::to_string(finalCost));
     Dumper dumper(filename);
-    dumper.dump(*this);
+    if(finalCost < prePlaceCost)
+        dumper.dump(*this);
+    else{
+        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
+        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
+        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
+        FF_Map = originalFF_Map;    // retrieve input FF
+        for(auto& ff : FF_Map){
+            ff.second->setNewCoor(ff.second->getCoor());    
+        }
+        this->legalize();           // make sure result is legal
+        this->getOverallCost(true);
+        dumper.dumpPrePlace(*this); // write result
+    }
 }
 
 void Manager::dumpVisual(const std::string &filename){
-    #ifdef NDEBUG
-        return ;
-    #endif
     std::ofstream fout;
     fout.open(filename.c_str());
     assert(fout.good());
@@ -490,9 +503,6 @@ void Manager::deleteFF(FF* in){
  * @return double overall cost
  */
 double Manager::getOverallCost(bool verbose){
-    #ifdef NDEBUG
-        return 0;
-    #endif
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -578,7 +588,7 @@ void Manager::libScoring(){
         std::vector<Cell *> &cell_vector = pair.second;
         for(size_t i = 0; i < cell_vector.size(); i++){
             double area = cell_vector[i]->getArea();
-            double score = alpha*cell_vector[i]->getQpinDelay() * (cell_vector[i]->getW() + cell_vector[i]->getH()) + beta*cell_vector[i]->getGatePower() + gamma*area;
+            double score = alpha*cell_vector[i]->getQpinDelay() + beta*cell_vector[i]->getGatePower() + gamma*area;
             cell_vector[i]->setScore(score);
         }
         sortCell(cell_vector);

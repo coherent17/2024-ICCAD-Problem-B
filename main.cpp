@@ -16,7 +16,7 @@ int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.libScoring();
-    mgr.getOverallCost(cost_verbose);
+    double prePlaceCost = mgr.getOverallCost(cost_verbose);
     mgr.preprocess();
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Preprocessor.out");
@@ -39,10 +39,10 @@ int main(int argc, char *argv[]){
     mgr.checker();
 
     mgr.detailplacement();
-    mgr.getOverallCost(cost_verbose);
+    double finalCost = mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("DetailPlacement.out");
     mgr.checker();
 
-    mgr.dump(argv[2]);
+    mgr.dump(argv[2], prePlaceCost, finalCost);
     return 0;
 }
