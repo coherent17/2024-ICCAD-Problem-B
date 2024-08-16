@@ -635,6 +635,35 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
     double costPower = 0;
     double costArea = 0;
     double costQ = 0;
+    
+    // bank to a psudo MBFF
+    // size_t bit = bankCellType->getBits();
+    // FF* newFF = getNewFF();
+    // newFF->setCoor(newbankCoor);
+    // newFF->setNewCoor(newbankCoor);
+    // newFF->setCell(bankCellType);
+    // newFF->setClusterSize(bit);
+    // for(size_t i=0;i<FFToBank.size();i++){
+    //     for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
+    //         newFF->addClusterFF(FFToBank[i]->getClusterFF()[j], i + j);
+    //         FFToBank[i]->getClusterFF()[j]->setPhysicalFF(newFF, i + j);
+    //     }
+    // }
+    // assignSlot(newFF);
+
+    // for(auto& ff : newFF->getClusterFF()){
+    //     costHPWL += -(ff->getSlack());
+    //     for(auto& next : ff->getNextStage())
+    //         costHPWL += -(next.ff->getSlack());
+    // }
+
+    // for(size_t i=0;i<FFToBank.size();i++){
+    //     for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
+    //         FFToBank[i]->getClusterFF()[j]->setPhysicalFF(FFToBank[i], j);
+    //     }
+    // }
+    // deleteFF(newFF);
+
     for(auto& MBFF : FFToBank){
         for(auto& ff : MBFF->getClusterFF()){ // old slack
             costHPWL -= -(ff->getSlack()); // D pin slack
