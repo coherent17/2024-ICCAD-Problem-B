@@ -78,6 +78,20 @@ run3:
 	./sanity_checker/sanity testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
 	./sanity_checker/placement_checker testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
 
+run4:
+	./$(BIN) testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
+	chmod +x sanity_checker/sanity
+	chmod +x sanity_checker/placement_checker
+	./sanity_checker/sanity testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
+	./sanity_checker/placement_checker testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
+
+run5:
+	./$(BIN) testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
+	chmod +x sanity_checker/sanity
+	chmod +x sanity_checker/placement_checker
+	./sanity_checker/sanity testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
+	./sanity_checker/placement_checker testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
+
 runMBFF:
 	./$(BIN) testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
 	chmod +x sanity_checker/sanity
