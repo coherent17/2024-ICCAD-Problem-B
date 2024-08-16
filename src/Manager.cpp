@@ -113,8 +113,10 @@ void Manager::dump(const std::string &filename, double prePlaceCost, double fina
         for(auto& ff : FF_Map){
             ff.second->setNewCoor(ff.second->getCoor());    
         }
-        this->legalize();           // make sure result is legal
-        this->getOverallCost(true);
+        legalizer = new Legalizer(*this); // make sure result is legal
+        legalizer->initial();
+        legalizer->run();           
+        this->getOverallCost(true); 
         dumper.dumpPrePlace(*this); // write result
     }
 }
@@ -645,9 +647,9 @@ double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF
         double QDiff = bankCellType->getQpinDelay() - MBFF->getCell()->getQpinDelay();
 
         for(auto& ff : MBFF->getClusterFF()){
-            costHPWL += -(ff->getSlack()) + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());
+            costHPWL += -(ff->getSlack());
             for(auto& next : ff->getNextStage())
-                costHPWL += -(next.ff->getSlack()) + DisplacementDelay * (bankCellType->getW() + bankCellType->getH());
+                costHPWL += -(next.ff->getSlack());
             costQ += QDiff * ff->getNextStage().size();
         }
         costPower -= MBFF->getCell()->getGatePower();

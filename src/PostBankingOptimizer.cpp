@@ -22,7 +22,8 @@ void postBankingOptimizer::run(){
 
     for(auto& FF_m : mgr.FF_Map){
         FF* curFF = FF_m.second;
-        if(1 || !curFF->getFixed()){ // ignore fixed idea, it does improve :( 
+        // if(1 || !curFF->getFixed()){ // ignore fixed idea, it does improve :( 
+        if(curFF->getCell()->getBits() == 1){
             FFsFixed.push_back(curFF);
         }
         FFs[i] = curFF;
