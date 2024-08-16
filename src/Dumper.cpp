@@ -62,6 +62,34 @@ void Dumper::dump(Manager &mgr){
     }
 }
 
+void Dumper::dumpPrePlace(Manager &mgr){
+    fout << "CellInst " << mgr.FF_Map.size() << std::endl;
+    // using map to get the consistent order
+    std::map<std::string, FF *> ordered_map(mgr.FF_Map.begin(), mgr.FF_Map.end());
+
+    for(const auto &pair: ordered_map){
+        std::string newInstanceName = GenNewInstanceName(pair.second->getInstanceName());
+        fout << "Inst " 
+             << newInstanceName << " " 
+             << pair.second->getCell()->getCellName() << " " 
+             << pair.second->getNewCoor().x << " " 
+             << pair.second->getNewCoor().y << std::endl;
+    }
+
+    for(const auto &pair: mgr.FF_Map){
+        FF* inputFF = pair.second;
+        std::string inputInstance = pair.first;
+        for(int i = 0; i < inputFF->getCell()->getPinCount(); i++){
+            std::string pinName = inputFF->getCell()->getPinName(i);
+            std::string newInstanceName = GenNewInstanceName(inputInstance); // register renaming
+            fout << inputInstance << "/"
+                     << pinName << " map "
+                     << newInstanceName << "/"
+                     << pinName << std::endl;
+        }
+    }
+}
+
 const std::string Dumper::GenNewInstanceName(const std::string &instanceName){
     return std::string(NEW_INSTANCE_PREFIX + instanceName);
 }

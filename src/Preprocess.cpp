@@ -196,7 +196,7 @@ void Preprocess::ChangeCell(){
         FFs[i] = ff_m.second;
         i++;
     }
-    bool forceSmaller = mgr.alpha / (mgr.alpha + mgr.beta + mgr.gamma) > 0.1;
+    // bool forceSmaller = mgr.alpha / (mgr.alpha + mgr.beta + mgr.gamma) > 0.1;
     // debank and save all the FF in logic_FF;
     // which is all one bit ff without technology mapping(no cell library)
     #pragma omp parallel for num_threads(MAX_THREADS)
@@ -220,7 +220,7 @@ void Preprocess::ChangeCell(){
             double PowerCost = targetCell->getGatePower() - curCell->getGatePower();
             double totalCost = mgr.alpha * TimingCost + mgr.beta * PowerCost + mgr.gamma * AreaCost;
             // hard constraint for using smaller cell, for easier legalize, need reconsider
-            if(totalCost < bestCost && ((targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()) || !forceSmaller)){
+            if(totalCost < bestCost){// && ((targetCell->getW() <= curCell->getW() && targetCell->getH() <= curCell->getH()) || !forceSmaller)){
                 bestCost = totalCost;
                 bestCell = targetCell;
             }

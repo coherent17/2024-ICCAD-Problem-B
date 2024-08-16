@@ -27,6 +27,12 @@
 
 #define SKIP_BIN_CALC true
 
+#ifdef ENABLE_DEBUG_MGR
+#define DEBUG_MGR(message) std::cout << "[MANAGER] " << message << std::endl
+#else
+#define DEBUG_MGR(message)
+#endif
+
 class FF;
 class Preprocess;
 class Cluster;
@@ -96,7 +102,7 @@ public:
     void detailplacement();
     void checker();
 
-    void dump(const std::string &filename);
+    void dump(const std::string &filename, double prePlaceCost, double finalCost);
     void dumpVisual(const std::string &filename);
     void print();
     
