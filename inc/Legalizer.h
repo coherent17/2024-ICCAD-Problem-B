@@ -1,6 +1,7 @@
 #ifndef _LEGALIZER_H_
 #define _LEGALIZER_H_
 
+#include "Cell.h"
 #include "Node.h"
 #include "Row.h"
 #include "Subrow.h"
@@ -32,9 +33,13 @@ private:
 public:
     explicit Legalizer(Manager& mgr);
     ~Legalizer();
+    void initial();
     void run();
+    Coor FindPlace(const Coor &coor, Cell * cell);
+    void UpdateRows(FF* newFF);
 
 private:
+    // void CheckIfMBFFMove();
     void LoadFF();
     void LoadGate();
     void LoadPlacementRow();
@@ -46,10 +51,12 @@ private:
 
     // Helper Function
     void UpdateXList(double start, double end, std::list<XTour> & xList);
-    size_t FindClosestRow(Node *ff);
+    size_t FindClosestRow(const Coor &coor);
     int FindClosestSubrow(Node *ff, Row *row);
+    void PredictFFLGPlace(const Coor &coor, Cell* cell, size_t row_idx, bool &placeable, double &minDisplacement, Coor &newCoor);
     double PlaceFF(Node *ff, size_t row_idx, bool& placeable);
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
+    double getDisplacement(const Coor &Coor1, const Coor &Coor2)const;
     
     friend class DetailPlacement;
 };

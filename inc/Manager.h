@@ -96,6 +96,7 @@ public:
     void parse(const std::string &filename);
     void preprocess();
     void meanshift();
+    void preLegalize();
     void banking();
     void postBankingOptimize();
     void legalize();

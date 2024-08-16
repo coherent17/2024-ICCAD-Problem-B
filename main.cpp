@@ -25,6 +25,10 @@ int main(int argc, char *argv[]){
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Meanshift.out");
 
+    mgr.preLegalize();
+    mgr.getOverallCost(cost_verbose);
+    mgr.dumpVisual("PreLegalize.out");
+
     mgr.banking();
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Banking.out");
