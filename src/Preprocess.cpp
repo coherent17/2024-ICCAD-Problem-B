@@ -191,10 +191,10 @@ void Preprocess::optimal_FF_location(){
 void Preprocess::ChangeCell(){
     size_t bitMapSize = mgr.Bit_FF_Map[1].size();
     vector<FF*> FFs(FF_list.size());
-    size_t i = 0;
+    size_t FFidx = 0;
     for(auto& ff_m : FF_list){
-        FFs[i] = ff_m.second;
-        i++;
+        FFs[FFidx] = ff_m.second;
+        FFidx++;
     }
     // bool forceSmaller = mgr.alpha / (mgr.alpha + mgr.beta + mgr.gamma) > 0.1;
     // debank and save all the FF in logic_FF;

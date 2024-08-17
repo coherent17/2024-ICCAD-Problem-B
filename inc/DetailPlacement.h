@@ -69,6 +69,9 @@ private:
     // 3 main methods for detail placement
     void GlobalSwap();
     void LocalSwap();
+
+    // 
+    void ChangeCell();
 };
 
 
