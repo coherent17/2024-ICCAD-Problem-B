@@ -14,6 +14,18 @@ CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes
 CPPCHECKCC = cppcheck
 CPPCHECKFLAGS = --enable=all --inconclusive --std=c++11 --language=c++ --suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction --suppress=unreadVariable --suppress=unmatchedSuppression --suppress=unusedStructMember --suppress=functionConst
 
+# Checker
+SANITY_CHECKER := checker/sanity
+PLACEMENT_CHECKER := checker/placement_checker
+
+# Test cases
+TEST_CASES := \
+    testcase/sampleCase \
+    testcase/testcase1_0812.txt \
+    testcase/testcase2_0812.txt \
+    testcase/testcase1_MBFF.txt \
+    testcase/testcase2_MBFF.txt
+
 # Source files and object files
 SRCDIR = src
 OBJDIR = obj
@@ -57,45 +69,35 @@ release:
 	rm -rf $(OBJDIR)
 	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015
 
-run1:
-	./$(BIN) testcase/sampleCase testcase/sampleCase.out
-	chmod +x sanity_checker/sanity
-	chmod +x sanity_checker/placement_checker
-	./sanity_checker/sanity testcase/sampleCase testcase/sampleCase.out
-	./sanity_checker/placement_checker testcase/sampleCase testcase/sampleCase.out
+setup:
+	chmod +x $(SANITY_CHECKER)
+	chmod +x $(PLACEMENT_CHECKER)
 
-run2:
-	./$(BIN) testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
-	chmod +x sanity_checker/sanity
-	chmod +x sanity_checker/placement_checker
-	./sanity_checker/sanity testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
-	./sanity_checker/placement_checker testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
+# Pattern rule for running tests
+define RUN_TEST
+./$(BIN) $1 $1.out
+./$(SANITY_CHECKER) $1 $1.out
+./$(PLACEMENT_CHECKER) $1 $1.out
+endef
 
-run3:
-	./$(BIN) testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
-	chmod +x sanity_checker/sanity
-	chmod +x sanity_checker/placement_checker
-	./sanity_checker/sanity testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
-	./sanity_checker/placement_checker testcase/testcase2_0812.txt testcase/testcase2_0812.txt.out
+# Targets for each test case
+run1: setup
+	$(call RUN_TEST,testcase/sampleCase)
 
-run4:
-	./$(BIN) testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
-	chmod +x sanity_checker/sanity
-	chmod +x sanity_checker/placement_checker
-	./sanity_checker/sanity testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
-	./sanity_checker/placement_checker testcase/testcase1_MBFF.txt testcase/testcase1_MBFF.txt.out
+run2: setup
+	$(call RUN_TEST,testcase/testcase1_0812.txt)
 
-run5:
-	./$(BIN) testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
-	chmod +x sanity_checker/sanity
-	chmod +x sanity_checker/placement_checker
-	./sanity_checker/sanity testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
-	./sanity_checker/placement_checker testcase/testcase2_MBFF.txt testcase/testcase2_MBFF.txt.out
+run3: setup
+	$(call RUN_TEST,testcase/testcase2_0812.txt)
 
-runMBFF:
-	./$(BIN) testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
-	chmod +x sanity_checker/sanity
-	./sanity_checker/sanity testcase/sampleCaseMBFF testcase/sampleCaseMBFF.out
+run4: setup
+	$(call RUN_TEST,testcase/testcase1_MBFF.txt)
+
+run5: setup
+	$(call RUN_TEST,testcase/testcase2_MBFF.txt)
+
+# Target to run all tests
+runall: run1 run2 run3 run4 run5
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
