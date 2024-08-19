@@ -323,10 +323,9 @@ void Manager::assignSlot(FF* newFF){
         return ;
 
     vector<FF*> FFs = newFF->getClusterFF();
-    // Stable Marriage Problem (Gale-Shapley Algorithm)
+
     std::vector<std::vector<double>> cost(bit, std::vector<double>(bit, 0)); // ith FF cost for putting it in j slot
-    std::queue<int> waitSlot; // slot wait to be assigned FF
-    std::priority_queue<std::pair<double, int>> pq[bit];
+
     for(int i=0;i<bit;i++){
         FF* curFF = FFs[i];
         for(int j=0;j<bit;j++){
@@ -358,7 +357,7 @@ void Manager::assignSlot(FF* newFF){
                 }
             }
             double newSlack = curFF->getTimingSlack("D") + DisplacementDelay * delta_hpwl;
-            cost[i][j] = newSlack < 0 ? newSlack : 0;
+            cost[i][j] = newSlack < 0 ? -newSlack : 0;
 
             // Q pin cost
             for(auto& nextFF : curFF->getNextStage()){
@@ -378,33 +377,19 @@ void Manager::assignSlot(FF* newFF){
                     delta_hpwl = old_hpwl - new_hpwl;
                 }
                 newSlack = nextFF.ff->getTimingSlack("D") + DisplacementDelay * delta_hpwl;
-                cost[i][j] += newSlack < 0 ? newSlack : 0;
+                cost[i][j] += newSlack < 0 ? -newSlack : 0;
             }
-            pq[j].push({cost[i][j], i});
         }
-        waitSlot.push(i);
     }
 
-    for(int i=0;i<bit;i++)
-        FFs[i]->setPhysicalFF(nullptr, -1);
-
-    while(!waitSlot.empty()){
-        int slot = waitSlot.front();
-        int preferFF = pq[slot].top().second;   // this is idx = =
-        pq[slot].pop();
-        FF* curFF = FFs[preferFF];
-        if(curFF->getPhysicalFF() != newFF){ // is a single FF
-            curFF->setPhysicalFF(newFF, slot);
-            newFF->addClusterFF(curFF, slot);
-            waitSlot.pop();
-        }
-        else if(cost[preferFF][slot] < cost[preferFF][curFF->getSlot()]){ // is married, you want to be small three !!!!
-            // the one who is not loved is small three ~~~~~
-            waitSlot.push(curFF->getSlot()); // get find your new FF
-            curFF->setPhysicalFF(newFF, slot);
-            newFF->addClusterFF(curFF, slot);
-            waitSlot.pop();
-        }
+    HungarianAlgorithm HungAlgo;
+    std::vector<int> assignment;
+    HungAlgo.Solve(cost, assignment);
+    
+    for(size_t i=0;i<FFs.size();i++){ // write back assignment result
+        FF* curFF = FFs[i];
+        curFF->setPhysicalFF(newFF, assignment[i]);
+        newFF->addClusterFF(curFF, assignment[i]);
     }
 }
 
@@ -631,62 +616,32 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
  * 
  */
 double Manager::getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank){
-    double costHPWL = 0;
-    double costPower = 0;
-    double costArea = 0;
-    double costQ = 0;
-    
     // bank to a psudo MBFF
-    // size_t bit = bankCellType->getBits();
-    // FF* newFF = getNewFF();
-    // newFF->setCoor(newbankCoor);
-    // newFF->setNewCoor(newbankCoor);
-    // newFF->setCell(bankCellType);
-    // newFF->setClusterSize(bit);
-    // for(size_t i=0;i<FFToBank.size();i++){
-    //     for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
-    //         newFF->addClusterFF(FFToBank[i]->getClusterFF()[j], i + j);
-    //         FFToBank[i]->getClusterFF()[j]->setPhysicalFF(newFF, i + j);
-    //     }
-    // }
-    // assignSlot(newFF);
-
-    // for(auto& ff : newFF->getClusterFF()){
-    //     costHPWL += -(ff->getSlack());
-    //     for(auto& next : ff->getNextStage())
-    //         costHPWL += -(next.ff->getSlack());
-    // }
-
-    // for(size_t i=0;i<FFToBank.size();i++){
-    //     for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
-    //         FFToBank[i]->getClusterFF()[j]->setPhysicalFF(FFToBank[i], j);
-    //     }
-    // }
-    // deleteFF(newFF);
-
-    for(auto& MBFF : FFToBank){
-        for(auto& ff : MBFF->getClusterFF()){ // old slack
-            costHPWL -= -(ff->getSlack()); // D pin slack
-            for(auto& next : ff->getNextStage())
-                costHPWL -= -(next.ff->getSlack()); // Q pin relate slack
+    size_t bit = bankCellType->getBits();
+    FF* newFF = getNewFF();
+    newFF->setCoor(newbankCoor);
+    newFF->setNewCoor(newbankCoor);
+    newFF->setCell(bankCellType);
+    newFF->setClusterSize(bit);
+    for(size_t i=0;i<FFToBank.size();i++){
+        for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
+            newFF->addClusterFF(FFToBank[i]->getClusterFF()[j], i + j);
+            FFToBank[i]->getClusterFF()[j]->setPhysicalFF(newFF, i + j);
         }
-
-        Coor oldCoor = MBFF->getNewCoor();
-        MBFF->setNewCoor(newbankCoor);
-        double QDiff = bankCellType->getQpinDelay() - MBFF->getCell()->getQpinDelay();
-
-        for(auto& ff : MBFF->getClusterFF()){
-            costHPWL += -(ff->getSlack());
-            for(auto& next : ff->getNextStage())
-                costHPWL += -(next.ff->getSlack());
-            costQ += QDiff * ff->getNextStage().size();
-        }
-        costPower -= MBFF->getCell()->getGatePower();
-        costArea -= MBFF->getCell()->getArea();
-        MBFF->setNewCoor(oldCoor);
     }
-    costPower += bankCellType->getGatePower();
-    costArea += bankCellType->getArea();
-    // costHPWL *= DisplacementDelay;
-    return alpha * (costHPWL + costQ) + beta * costPower + gamma * costArea;
+    assignSlot(newFF);
+
+    double cost = newFF->getCost();
+    for(size_t i=0;i<FFToBank.size();i++){
+        for(size_t j=0;j<FFToBank[i]->getClusterFF().size();j++){
+            FFToBank[i]->getClusterFF()[j]->setPhysicalFF(FFToBank[i], j);
+        }
+    }
+    deleteFF(newFF);
+
+    double oldCost = 0;
+    for(auto& MBFF : FFToBank){
+        oldCost += MBFF->getCost();
+    }
+    return cost - oldCost;
 }
