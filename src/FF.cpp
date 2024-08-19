@@ -425,18 +425,13 @@ double FF::getCost(){
     double areaCost = cell->getArea();
     double powerCost = cell->getGatePower();
 
-    // Q pin delay cost
-    size_t nextSize = 0;
     for(auto& curFF : clusterFF){
-        nextSize += curFF->getNextStage().size();
         double slack = curFF->getSlack();
-        timingCost += slack < 0 ? slack : 0;
-        // slack of next stage
+        timingCost += slack < 0 ? -slack : 0;
         for(auto& next : curFF->getNextStage()){
             slack = next.ff->getSlack();
-            timingCost += slack < 0 ? slack : 0;
+            timingCost += slack < 0 ? -slack : 0;
         }
     }
-    timingCost += cell->getQpinDelay() * nextSize;
     return FF::alpha * timingCost + FF::beta * powerCost + FF::gamma * areaCost;
 }
