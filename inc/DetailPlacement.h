@@ -10,6 +10,7 @@
 #include "Legalizer.h"
 #include "Manager.h"
 #include "Random.h"
+#include "Hungarian.h"
 #include <iostream>
 #include <vector>
 #include <set>
@@ -71,6 +72,7 @@ private:
     void LocalSwap();
 
     // 
+    void DetailAssignmentMBFF(); // for same clk
     void ChangeCell();
 };
 
