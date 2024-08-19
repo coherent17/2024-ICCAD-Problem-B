@@ -1,6 +1,6 @@
 #include "OptimalLocation.h"
 
-objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
+objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : mgr(mgr), FF_list(FF_list), idx_map(idx_map),
     x_pos(totalFF), x_neg(totalFF), 
     y_pos(totalFF), y_neg(totalFF),
@@ -8,15 +8,15 @@ objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_l
     gamma = (mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01;
 }
 
-preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
+preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    grad_ = vector<Coor>(FFs.size());
+    grad_ = std::vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = FFs[i]->getNextStage().size() + 1;
-        x_pos[i] = vector<double>(size);
-        x_neg[i] = vector<double>(size);
-        y_pos[i] = vector<double>(size);
-        y_neg[i] = vector<double>(size);
+        x_pos[i] = std::vector<double>(size);
+        x_neg[i] = std::vector<double>(size);
+        y_pos[i] = std::vector<double>(size);
+        y_neg[i] = std::vector<double>(size);
     }
 }
 
@@ -60,7 +60,7 @@ double preprocessObjFunction::forward(){
             net++;
         }
         // output net
-        const vector<NextStage>& nextStage = cur_ff->getNextStage();
+        const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
         if(nextStage.size()){
             for(auto& next_p : nextStage){
                 std::string outputInstanceName;
@@ -97,7 +97,7 @@ double preprocessObjFunction::forward(){
  * 
  * @param step What does step actually do in this function?? @chengc119
  * @param onlyNegative 
- * @return vector<Coor>& 
+ * @return std::vector<Coor>& 
  */
 vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
     for(size_t i=0;i<grad_.size();i++){
@@ -109,8 +109,8 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
         FF* cur_ff = FFs[i];
         size_t net=0;
         // weigt by slack
-        const vector<NextStage>& nextStage = cur_ff->getNextStage();
-        vector<double> weight(1 + nextStage.size());
+        const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
+        std::vector<double> weight(1 + nextStage.size());
         getWeight(cur_ff, weight);
 
         // net of D pin
@@ -135,10 +135,10 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
  * @param cur_ff the ff to calculate the input/output pin
  * @param weight the reference of the weight vectpr to set
  */
-void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
+void preprocessObjFunction::getWeight(FF* cur_ff, std::vector<double>& weight){
     // weigt by slack
     double D_slack = cur_ff->getTimingSlack("D");
-    const vector<NextStage>& nextStage = cur_ff->getNextStage();
+    const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
     double sum = 0.0000001;
     // get total
     bool hasNegative = false;
@@ -172,18 +172,18 @@ void preprocessObjFunction::getWeight(FF* cur_ff, vector<double>& weight){
     }
 }
 
-postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
+postBankingObjFunction::postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
     : objFunction(mgr, FF_list, idx_map, totalFF, FFs){
-    grad_ = vector<Coor>(FFs.size());
+    grad_ = std::vector<Coor>(FFs.size());
     for(size_t i=0;i<FFs.size();i++){
         size_t size = 0;
         for(const auto& ff : FFs[i]->getClusterFF()){
             size += 1 + ff->getNextStage().size();
         }
-        x_pos[i] = vector<double>(size);
-        x_neg[i] = vector<double>(size);
-        y_pos[i] = vector<double>(size);
-        y_neg[i] = vector<double>(size);
+        x_pos[i] = std::vector<double>(size);
+        x_neg[i] = std::vector<double>(size);
+        y_pos[i] = std::vector<double>(size);
+        y_neg[i] = std::vector<double>(size);
     }
 }
 
@@ -225,7 +225,7 @@ double postBankingObjFunction::forward(){
             loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
             net++;
             // output net (only for the ff output to IO, to avoid double calculation)
-            const vector<NextStage>& nextStage = cur_ff->getNextStage();
+            const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
             if(nextStage.size()){
                 for(auto& next_p : nextStage){
                     std::string outputInstanceName;
@@ -274,7 +274,7 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
         size_t weightSize = bit;
         for(auto& clusterFF : MBFF->getClusterFF())
             weightSize += clusterFF->getNextStage().size();
-        vector<double> weight(weightSize);
+        std::vector<double> weight(weightSize);
         getWeight(MBFF, weight);
         size_t curWeight = 0;
         for(size_t j=0;j<bit;j++){
@@ -298,13 +298,13 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
     return grad_;
 }
 
-void postBankingObjFunction::getWeight(FF* MBFF, vector<double>& weight){
+void postBankingObjFunction::getWeight(FF* MBFF, std::vector<double>& weight){
     double sum = 0.0000001;
     bool hasNegative = false;
     // weigt by slack
     for(auto cur_ff : MBFF->getClusterFF()){
         double D_slack = cur_ff->physicalFF->getTimingSlack("D" + cur_ff->getPhysicalPinName());
-        const vector<NextStage>& nextStage = cur_ff->getNextStage();
+        const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
         // get total
         if(D_slack < 0){
             sum += D_slack;
@@ -322,7 +322,7 @@ void postBankingObjFunction::getWeight(FF* MBFF, vector<double>& weight){
     size_t curWeight = 0;
     for(auto cur_ff : MBFF->getClusterFF()){
         double D_slack = cur_ff->physicalFF->getTimingSlack("D" + cur_ff->getPhysicalPinName());
-        const vector<NextStage>& nextStage = cur_ff->getNextStage();
+        const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
         // get total
         if(D_slack < 0)
             weight[curWeight] = D_slack / sum;
@@ -348,7 +348,7 @@ Gradient::Gradient( Manager &mgr,
                     std::unordered_map<std::string, FF*>& FF_list,
                     objFunction &obj,
                     const double &alpha,
-                    unordered_map<string, int>& idx_map,
+                    std::unordered_map<string, int>& idx_map,
                     size_t kNumModule,
                     std::vector<FF*>& FFs)
     : grad_prev_(kNumModule),
