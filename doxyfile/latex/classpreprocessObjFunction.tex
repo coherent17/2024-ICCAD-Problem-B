@@ -7,15 +7,27 @@
 
 
 Inheritance diagram for preprocess\+Obj\+Function\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=208pt]{classpreprocessObjFunction__inherit__graph}
+\end{center}
+\end{figure}
 
 
 Collaboration diagram for preprocess\+Obj\+Function\+:
-% FIG 1
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classpreprocessObjFunction__coll__graph}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classpreprocessObjFunction_ad025415497ed6047ca886fa9cb5ee04c}{preprocess\+Obj\+Function}} (\mbox{\hyperlink{classManager}{Manager}} \&\mbox{\hyperlink{classobjFunction_a801826171d462be3cfbb72dad713fc65}{mgr}}, std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}{FF\+\_\+list}}, unordered\+\_\+map$<$ string, int $>$ \&\mbox{\hyperlink{classobjFunction_a65cf56e6c826a7454071789eb1517c61}{idx\+\_\+map}}, int total\+FF, std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}{FFs}})
+\mbox{\hyperlink{classpreprocessObjFunction_aa71a1d717ba06d583359543a00d4ca70}{preprocess\+Obj\+Function}} (\mbox{\hyperlink{classManager}{Manager}} \&\mbox{\hyperlink{classobjFunction_a801826171d462be3cfbb72dad713fc65}{mgr}}, std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_a903648d4f1fa332ac0dc3757f409e875}{FF\+\_\+list}}, std\+::unordered\+\_\+map$<$ string, int $>$ \&\mbox{\hyperlink{classobjFunction_abb09026ee7df43e1810b91a43b8fcbe0}{idx\+\_\+map}}, int total\+FF, std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&\mbox{\hyperlink{classobjFunction_ab618792a6f6ea3ddac5995e1e8941066}{FFs}})
 \item 
 \mbox{\hyperlink{classpreprocessObjFunction_a3a0566bae3ab07319482c37d6ec48eac}{$\sim$preprocess\+Obj\+Function}} ()
 \item 
@@ -31,16 +43,16 @@ void \mbox{\hyperlink{classpreprocessObjFunction_ad51bbe23031dfa402bc63be67d9290
 \doxysubsection{Detailed Description}
 
 
-Definition at line 31 of file Optimal\+Location.\+h.
+Definition at line 26 of file Optimal\+Location.\+h.
 
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classpreprocessObjFunction_ad025415497ed6047ca886fa9cb5ee04c}\label{classpreprocessObjFunction_ad025415497ed6047ca886fa9cb5ee04c}} 
+\mbox{\Hypertarget{classpreprocessObjFunction_aa71a1d717ba06d583359543a00d4ca70}\label{classpreprocessObjFunction_aa71a1d717ba06d583359543a00d4ca70}} 
 \index{preprocessObjFunction@{preprocessObjFunction}!preprocessObjFunction@{preprocessObjFunction}}
 \index{preprocessObjFunction@{preprocessObjFunction}!preprocessObjFunction@{preprocessObjFunction}}
 \doxysubsubsection{\texorpdfstring{preprocessObjFunction()}{preprocessObjFunction()}}
-{\footnotesize\ttfamily preprocess\+Obj\+Function\+::preprocess\+Obj\+Function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classManager}{Manager}} \&}]{mgr,  }\item[{std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FF\+\_\+list,  }\item[{unordered\+\_\+map$<$ string, int $>$ \&}]{idx\+\_\+map,  }\item[{int}]{total\+FF,  }\item[{std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FFs }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily preprocess\+Obj\+Function\+::preprocess\+Obj\+Function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classManager}{Manager}} \&}]{mgr,  }\item[{std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FF\+\_\+list,  }\item[{std\+::unordered\+\_\+map$<$ string, int $>$ \&}]{idx\+\_\+map,  }\item[{int}]{total\+FF,  }\item[{std\+::vector$<$ \mbox{\hyperlink{classFF}{FF}} $\ast$ $>$ \&}]{FFs }\end{DoxyParamCaption})}
 
 
 
@@ -77,7 +89,7 @@ Do partial derivative to get the gradient from the log sum exp model.
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
-vector$<$\+Coor$>$\& 
+std\+::vector$<$\+Coor$>$\& 
 \end{DoxyReturn}
 
 

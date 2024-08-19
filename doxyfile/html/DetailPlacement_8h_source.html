@@ -81,70 +81,76 @@ $(function() {
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Legalizer_8h.html">Legalizer.h</a>&quot;</span></div>
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Manager_8h.html">Manager.h</a>&quot;</span></div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Random_8h.html">Random.h</a>&quot;</span></div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160; </div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#ifdef ENABLE_DEBUG_DP</span></div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#define DEBUG_DP(message) std::cout &lt;&lt; &quot;[DetailPlacement] &quot;</span> &lt;&lt; message &lt;&lt; std::endl</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#a3130dbb317da3cc9d58c5daf6698f1ba">   20</a></span>&#160;<span class="preprocessor">#define DEBUG_DP(message)</span></div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160; </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="keyword">namespace </span>bg = boost::geometry;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>bgi = boost::geometry::index;</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>bgm = boost::geometry::model;</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// 2-D point with coordinate type of double in cartesian</span></div>
-<div class="line"><a name="l00028"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">   28</a></span>&#160;<span class="keyword">typedef</span> bg::model::point&lt;double, 2, bg::cs::cartesian&gt; <a class="code" href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">Point</a>;</div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// Define a Point with an ID:</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">   31</a></span>&#160;<span class="keyword">typedef</span> std::pair&lt;Point, int&gt; <a class="code" href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">PointWithID</a>;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160; </div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="comment">// The R-tree stores PointWithID elements and uses a quadratic split algorithm for node splitting</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">   34</a></span>&#160;<span class="keyword">typedef</span> bgi::rtree&lt;PointWithID, bgi::quadratic&lt;P_PER_NODE&gt;&gt; <a class="code" href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">RTree</a>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;<span class="keyword">class </span><a class="code" href="classNode.html">Node</a>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">class </span><a class="code" href="classLegalizer.html">Legalizer</a>;</div>
-<div class="line"><a name="l00038"></a><span class="lineno"><a class="line" href="classDetailPlacement.html">   38</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDetailPlacement.html">DetailPlacement</a>{</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <a class="code" href="classManager.html">Manager</a> &amp;mgr;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classLegalizer.html">Legalizer</a> *legalizer;</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    std::unordered_map&lt;Cell *, RTree&gt; RtreeMaps;</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::set&lt;Cell *&gt; cellSet;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="classRandom.html">Random</a> randomNumberGenerator;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classDetailPlacement.html#a421493529e524827c2de60ec12e8640a">DetailPlacement</a>(<a class="code" href="classManager.html">Manager</a> &amp;mgr);</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="classDetailPlacement.html#a43bd965da55fc85111a68a6fe038f1ef">~DetailPlacement</a>();</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDetailPlacement.html#a010be9c5e97045ba3c99d3402b5d5ca6">run</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    <span class="keywordtype">void</span> BuildGlobalRtreeMaps();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keywordtype">void</span> BuildLocalRtreeMaps(<a class="code" href="classNode.html">Node</a> *ff);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">void</span> CheckSwapSanity();</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="comment">// 3 main methods for detail placement</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keywordtype">void</span> GlobalSwap();</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> LocalSwap();</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;};</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="Hungarian_8h.html">Hungarian.h</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &lt;iostream&gt;</span></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#ifdef ENABLE_DEBUG_DP</span></div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#define DEBUG_DP(message) std::cout &lt;&lt; &quot;[DetailPlacement] &quot;</span> &lt;&lt; message &lt;&lt; std::endl</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00021"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#a3130dbb317da3cc9d58c5daf6698f1ba">   21</a></span>&#160;<span class="preprocessor">#define DEBUG_DP(message)</span></div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">namespace </span>bg = boost::geometry;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keyword">namespace </span>bgi = boost::geometry::index;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">namespace </span>bgm = boost::geometry::model;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// 2-D point with coordinate type of double in cartesian</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">   29</a></span>&#160;<span class="keyword">typedef</span> bg::model::point&lt;double, 2, bg::cs::cartesian&gt; <a class="code" href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">Point</a>;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// Define a Point with an ID:</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">   32</a></span>&#160;<span class="keyword">typedef</span> std::pair&lt;Point, int&gt; <a class="code" href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">PointWithID</a>;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// The R-tree stores PointWithID elements and uses a quadratic split algorithm for node splitting</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">   35</a></span>&#160;<span class="keyword">typedef</span> bgi::rtree&lt;PointWithID, bgi::quadratic&lt;P_PER_NODE&gt;&gt; <a class="code" href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">RTree</a>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="keyword">class </span><a class="code" href="classNode.html">Node</a>;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="keyword">class </span><a class="code" href="classLegalizer.html">Legalizer</a>;</div>
+<div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="classDetailPlacement.html">   39</a></span>&#160;<span class="keyword">class </span><a class="code" href="classDetailPlacement.html">DetailPlacement</a>{</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <a class="code" href="classManager.html">Manager</a> &amp;mgr;</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="classLegalizer.html">Legalizer</a> *legalizer;</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    std::unordered_map&lt;Cell *, RTree&gt; RtreeMaps;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    std::set&lt;Cell *&gt; cellSet;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <a class="code" href="classRandom.html">Random</a> randomNumberGenerator;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classDetailPlacement.html#a421493529e524827c2de60ec12e8640a">DetailPlacement</a>(<a class="code" href="classManager.html">Manager</a> &amp;mgr);</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <a class="code" href="classDetailPlacement.html#a43bd965da55fc85111a68a6fe038f1ef">~DetailPlacement</a>();</div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classDetailPlacement.html#a010be9c5e97045ba3c99d3402b5d5ca6">run</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="keyword">private</span>:</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordtype">void</span> BuildGlobalRtreeMaps();</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <span class="keywordtype">void</span> BuildLocalRtreeMaps(<a class="code" href="classNode.html">Node</a> *ff);</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordtype">void</span> CheckSwapSanity();</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="comment">// 3 main methods for detail placement</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> GlobalSwap();</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    <span class="keywordtype">void</span> LocalSwap();</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aDetailPlacement_8h_html_a10d9bc271733781bc6c8e4efbb4928af"><div class="ttname"><a href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">Point</a></div><div class="ttdeci">bg::model::point&lt; double, 2, bg::cs::cartesian &gt; Point</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00028">DetailPlacement.h:28</a></div></div>
-<div class="ttc" id="aDetailPlacement_8h_html_ad967a5f862625faa51823d438fed9755"><div class="ttname"><a href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">PointWithID</a></div><div class="ttdeci">std::pair&lt; Point, int &gt; PointWithID</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00031">DetailPlacement.h:31</a></div></div>
-<div class="ttc" id="aDetailPlacement_8h_html_aee8947d46f0c6a915c32b75eb9149d35"><div class="ttname"><a href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">RTree</a></div><div class="ttdeci">bgi::rtree&lt; PointWithID, bgi::quadratic&lt; P_PER_NODE &gt; &gt; RTree</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00034">DetailPlacement.h:34</a></div></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="comment">// </span></div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">void</span> DetailAssignmentMBFF(); <span class="comment">// for same clk</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">void</span> ChangeCell();</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;};</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="aDetailPlacement_8h_html_a10d9bc271733781bc6c8e4efbb4928af"><div class="ttname"><a href="DetailPlacement_8h.html#a10d9bc271733781bc6c8e4efbb4928af">Point</a></div><div class="ttdeci">bg::model::point&lt; double, 2, bg::cs::cartesian &gt; Point</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00029">DetailPlacement.h:29</a></div></div>
+<div class="ttc" id="aDetailPlacement_8h_html_ad967a5f862625faa51823d438fed9755"><div class="ttname"><a href="DetailPlacement_8h.html#ad967a5f862625faa51823d438fed9755">PointWithID</a></div><div class="ttdeci">std::pair&lt; Point, int &gt; PointWithID</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00032">DetailPlacement.h:32</a></div></div>
+<div class="ttc" id="aDetailPlacement_8h_html_aee8947d46f0c6a915c32b75eb9149d35"><div class="ttname"><a href="DetailPlacement_8h.html#aee8947d46f0c6a915c32b75eb9149d35">RTree</a></div><div class="ttdeci">bgi::rtree&lt; PointWithID, bgi::quadratic&lt; P_PER_NODE &gt; &gt; RTree</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00035">DetailPlacement.h:35</a></div></div>
+<div class="ttc" id="aHungarian_8h_html"><div class="ttname"><a href="Hungarian_8h.html">Hungarian.h</a></div></div>
 <div class="ttc" id="aLegalizer_8h_html"><div class="ttname"><a href="Legalizer_8h.html">Legalizer.h</a></div></div>
 <div class="ttc" id="aManager_8h_html"><div class="ttname"><a href="Manager_8h.html">Manager.h</a></div></div>
 <div class="ttc" id="aRandom_8h_html"><div class="ttname"><a href="Random_8h.html">Random.h</a></div></div>
-<div class="ttc" id="aclassDetailPlacement_html"><div class="ttname"><a href="classDetailPlacement.html">DetailPlacement</a></div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00038">DetailPlacement.h:38</a></div></div>
+<div class="ttc" id="aclassDetailPlacement_html"><div class="ttname"><a href="classDetailPlacement.html">DetailPlacement</a></div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8h_source.html#l00039">DetailPlacement.h:39</a></div></div>
 <div class="ttc" id="aclassDetailPlacement_html_a010be9c5e97045ba3c99d3402b5d5ca6"><div class="ttname"><a href="classDetailPlacement.html#a010be9c5e97045ba3c99d3402b5d5ca6">DetailPlacement::run</a></div><div class="ttdeci">void run()</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8cpp_source.html#l00015">DetailPlacement.cpp:15</a></div></div>
 <div class="ttc" id="aclassDetailPlacement_html_a421493529e524827c2de60ec12e8640a"><div class="ttname"><a href="classDetailPlacement.html#a421493529e524827c2de60ec12e8640a">DetailPlacement::DetailPlacement</a></div><div class="ttdeci">DetailPlacement(Manager &amp;mgr)</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8cpp_source.html#l00003">DetailPlacement.cpp:3</a></div></div>
 <div class="ttc" id="aclassDetailPlacement_html_a43bd965da55fc85111a68a6fe038f1ef"><div class="ttname"><a href="classDetailPlacement.html#a43bd965da55fc85111a68a6fe038f1ef">DetailPlacement::~DetailPlacement</a></div><div class="ttdeci">~DetailPlacement()</div><div class="ttdef"><b>Definition:</b> <a href="DetailPlacement_8cpp_source.html#l00011">DetailPlacement.cpp:11</a></div></div>
-<div class="ttc" id="aclassLegalizer_html"><div class="ttname"><a href="classLegalizer.html">Legalizer</a></div><div class="ttdef"><b>Definition:</b> <a href="Legalizer_8h_source.html#l00024">Legalizer.h:24</a></div></div>
-<div class="ttc" id="aclassManager_html"><div class="ttname"><a href="classManager.html">Manager</a></div><div class="ttdef"><b>Definition:</b> <a href="Manager_8h_source.html#l00036">Manager.h:36</a></div></div>
+<div class="ttc" id="aclassLegalizer_html"><div class="ttname"><a href="classLegalizer.html">Legalizer</a></div><div class="ttdef"><b>Definition:</b> <a href="Legalizer_8h_source.html#l00025">Legalizer.h:25</a></div></div>
+<div class="ttc" id="aclassManager_html"><div class="ttname"><a href="classManager.html">Manager</a></div><div class="ttdef"><b>Definition:</b> <a href="Manager_8h_source.html#l00042">Manager.h:42</a></div></div>
 <div class="ttc" id="aclassNode_html"><div class="ttname"><a href="classNode.html">Node</a></div><div class="ttdef"><b>Definition:</b> <a href="Node_8h_source.html#l00013">Node.h:13</a></div></div>
 <div class="ttc" id="aclassRandom_html"><div class="ttname"><a href="classRandom.html">Random</a></div><div class="ttdef"><b>Definition:</b> <a href="Random_8h_source.html#l00008">Random.h:8</a></div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -7,7 +7,13 @@
 
 
 Collaboration diagram for Manager\+:
-% FIG 0
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{classManager__coll__graph}
+\end{center}
+\end{figure}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -21,6 +27,8 @@ void \mbox{\hyperlink{classManager_a45260873f6c6ee5143e9520e7c4a8afe}{preprocess
 \item 
 void \mbox{\hyperlink{classManager_a571bc9d89f8523bdff9edb1b781aef39}{meanshift}} ()
 \item 
+void \mbox{\hyperlink{classManager_a1993af80f8d2a896f4f5d31647284733}{pre\+Legalize}} ()
+\item 
 void \mbox{\hyperlink{classManager_ae58a37b64d93a773e3206be1e80c83d3}{banking}} ()
 \item 
 void \mbox{\hyperlink{classManager_a4c5f23e3d912987bbdfa58c0b9a71571}{post\+Banking\+Optimize}} ()
@@ -31,7 +39,7 @@ void \mbox{\hyperlink{classManager_a0592ce8f5dd59614a2b95553bca95d1c}{detailplac
 \item 
 void \mbox{\hyperlink{classManager_aca14fddbfc1cc732b33371a2e6dd56fb}{checker}} ()
 \item 
-void \mbox{\hyperlink{classManager_af3f4723a4b47b3570afb2981c9bb031d}{dump}} (const std\+::string \&filename)
+void \mbox{\hyperlink{classManager_a8560232214019fa44e2eb5dbf11eb90e}{dump}} (const std\+::string \&filename, double pre\+Place\+Cost, double final\+Cost)
 \item 
 void \mbox{\hyperlink{classManager_a830bf021119f64f29b23b09206a5afb8}{dump\+Visual}} (const std\+::string \&filename)
 \item 
@@ -145,7 +153,7 @@ class \mbox{\hyperlink{classManager_a42e74b7760f36154466246901e25398f}{Checker}}
 \doxysubsection{Detailed Description}
 
 
-Definition at line 36 of file Manager.\+h.
+Definition at line 42 of file Manager.\+h.
 
 
 
@@ -190,7 +198,7 @@ For merged MBFF, try to assign slot based on the slack, do stable matching.
 \end{DoxyParams}
 
 
-Definition at line 298 of file Manager.\+cpp.
+Definition at line 320 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_af8bcc75b832e50e3518a405433a9abf0}\label{classManager_af8bcc75b832e50e3518a405433a9abf0}} 
 \index{Manager@{Manager}!bankFF@{bankFF}}
@@ -218,7 +226,7 @@ FF$\ast$ The pointer point to the merged MBFF
 \item[\mbox{\hyperlink{todo__todo000001}{Todo}}]add incremental banking?? \end{DoxyRefDesc}
 
 
-Definition at line 244 of file Manager.\+cpp.
+Definition at line 266 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_ae58a37b64d93a773e3206be1e80c83d3}\label{classManager_ae58a37b64d93a773e3206be1e80c83d3}} 
 \index{Manager@{Manager}!banking@{banking}}
@@ -228,7 +236,7 @@ Definition at line 244 of file Manager.\+cpp.
 
 
 
-Definition at line 69 of file Manager.\+cpp.
+Definition at line 75 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_aca14fddbfc1cc732b33371a2e6dd56fb}\label{classManager_aca14fddbfc1cc732b33371a2e6dd56fb}} 
 \index{Manager@{Manager}!checker@{checker}}
@@ -238,7 +246,7 @@ Definition at line 69 of file Manager.\+cpp.
 
 
 
-Definition at line 89 of file Manager.\+cpp.
+Definition at line 96 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a8ce644e10cffa428d70a80e2146e74a2}\label{classManager_a8ce644e10cffa428d70a80e2146e74a2}} 
 \index{Manager@{Manager}!debankFF@{debankFF}}
@@ -264,7 +272,7 @@ std\+::vector$<$\+FF$\ast$$>$ The vector contains all signle bit \mbox{\hyperlin
 \item[\mbox{\hyperlink{todo__todo000002}{Todo}}]the incremental debanking \end{DoxyRefDesc}
 
 
-Definition at line 397 of file Manager.\+cpp.
+Definition at line 404 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a9fdf044d41fb7122c75b3721cb38f94f}\label{classManager_a9fdf044d41fb7122c75b3721cb38f94f}} 
 \index{Manager@{Manager}!deleteFF@{deleteFF}}
@@ -274,7 +282,7 @@ Definition at line 397 of file Manager.\+cpp.
 
 
 
-Definition at line 481 of file Manager.\+cpp.
+Definition at line 488 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a0592ce8f5dd59614a2b95553bca95d1c}\label{classManager_a0592ce8f5dd59614a2b95553bca95d1c}} 
 \index{Manager@{Manager}!detailplacement@{detailplacement}}
@@ -284,17 +292,17 @@ Definition at line 481 of file Manager.\+cpp.
 
 
 
-Definition at line 84 of file Manager.\+cpp.
+Definition at line 91 of file Manager.\+cpp.
 
-\mbox{\Hypertarget{classManager_af3f4723a4b47b3570afb2981c9bb031d}\label{classManager_af3f4723a4b47b3570afb2981c9bb031d}} 
+\mbox{\Hypertarget{classManager_a8560232214019fa44e2eb5dbf11eb90e}\label{classManager_a8560232214019fa44e2eb5dbf11eb90e}} 
 \index{Manager@{Manager}!dump@{dump}}
 \index{dump@{dump}!Manager@{Manager}}
 \doxysubsubsection{\texorpdfstring{dump()}{dump()}}
-{\footnotesize\ttfamily void Manager\+::dump (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Manager\+::dump (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{filename,  }\item[{double}]{pre\+Place\+Cost,  }\item[{double}]{final\+Cost }\end{DoxyParamCaption})}
 
 
 
-Definition at line 94 of file Manager.\+cpp.
+Definition at line 101 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a830bf021119f64f29b23b09206a5afb8}\label{classManager_a830bf021119f64f29b23b09206a5afb8}} 
 \index{Manager@{Manager}!dumpVisual@{dumpVisual}}
@@ -304,7 +312,7 @@ Definition at line 94 of file Manager.\+cpp.
 
 
 
-Definition at line 99 of file Manager.\+cpp.
+Definition at line 124 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a62819d71fb2513461283a7ebb8570726}\label{classManager_a62819d71fb2513461283a7ebb8570726}} 
 \index{Manager@{Manager}!getCostDiff@{getCostDiff}}
@@ -330,7 +338,7 @@ double (new cost -\/ original cost)
 \end{DoxyReturn}
 
 
-Definition at line 614 of file Manager.\+cpp.
+Definition at line 618 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_af2ba9e2601f5bba4c8b5f14447d3dfa8}\label{classManager_af2ba9e2601f5bba4c8b5f14447d3dfa8}} 
 \index{Manager@{Manager}!getNewFF@{getNewFF}}
@@ -340,7 +348,7 @@ Definition at line 614 of file Manager.\+cpp.
 
 
 
-Definition at line 469 of file Manager.\+cpp.
+Definition at line 476 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a8aa68d8824f14432b20b9c665d0e9100}\label{classManager_a8aa68d8824f14432b20b9c665d0e9100}} 
 \index{Manager@{Manager}!getNewFFName@{getNewFFName}}
@@ -350,7 +358,7 @@ Definition at line 469 of file Manager.\+cpp.
 
 
 
-Definition at line 221 of file Manager.\+cpp.
+Definition at line 243 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a7fa6cc1944b740bad0ae3b0771724c5c}\label{classManager_a7fa6cc1944b740bad0ae3b0771724c5c}} 
 \index{Manager@{Manager}!getNS@{getNS}}
@@ -360,7 +368,7 @@ Definition at line 221 of file Manager.\+cpp.
 
 
 
-Definition at line 428 of file Manager.\+cpp.
+Definition at line 435 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_abe3a0bc65dd38e6bd0fe2f89e9d05261}\label{classManager_abe3a0bc65dd38e6bd0fe2f89e9d05261}} 
 \index{Manager@{Manager}!getOverallCost@{getOverallCost}}
@@ -382,7 +390,7 @@ double overall cost
 \end{DoxyReturn}
 
 
-Definition at line 492 of file Manager.\+cpp.
+Definition at line 499 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a1a84a25f2ced9d4a11e8d6f7001a54fc}\label{classManager_a1a84a25f2ced9d4a11e8d6f7001a54fc}} 
 \index{Manager@{Manager}!getTNS@{getTNS}}
@@ -399,7 +407,7 @@ double return the total negative slack value (+\+: has negative slack, 0\+: no n
 \end{DoxyReturn}
 
 
-Definition at line 448 of file Manager.\+cpp.
+Definition at line 455 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a92f1b863779bbcb3f60d5c553b57c80e}\label{classManager_a92f1b863779bbcb3f60d5c553b57c80e}} 
 \index{Manager@{Manager}!getWNS@{getWNS}}
@@ -409,7 +417,7 @@ Definition at line 448 of file Manager.\+cpp.
 
 
 
-Definition at line 456 of file Manager.\+cpp.
+Definition at line 463 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a71e35036835e9236ceaa20c2b35d93fe}\label{classManager_a71e35036835e9236ceaa20c2b35d93fe}} 
 \index{Manager@{Manager}!legalize@{legalize}}
@@ -419,7 +427,7 @@ Definition at line 456 of file Manager.\+cpp.
 
 
 
-Definition at line 79 of file Manager.\+cpp.
+Definition at line 87 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_ad87ff167bbc163fb4affa576c4d49e46}\label{classManager_ad87ff167bbc163fb4affa576c4d49e46}} 
 \index{Manager@{Manager}!libScoring@{libScoring}}
@@ -436,7 +444,7 @@ cheng119 help confirm this score What is this?? alpha$\ast$cell\+\_\+vector\mbox
 \end{DoxyAuthor}
 
 
-Definition at line 576 of file Manager.\+cpp.
+Definition at line 580 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a571bc9d89f8523bdff9edb1b781aef39}\label{classManager_a571bc9d89f8523bdff9edb1b781aef39}} 
 \index{Manager@{Manager}!meanshift@{meanshift}}
@@ -466,7 +474,17 @@ Definition at line 29 of file Manager.\+cpp.
 
 
 
-Definition at line 74 of file Manager.\+cpp.
+Definition at line 82 of file Manager.\+cpp.
+
+\mbox{\Hypertarget{classManager_a1993af80f8d2a896f4f5d31647284733}\label{classManager_a1993af80f8d2a896f4f5d31647284733}} 
+\index{Manager@{Manager}!preLegalize@{preLegalize}}
+\index{preLegalize@{preLegalize}!Manager@{Manager}}
+\doxysubsubsection{\texorpdfstring{preLegalize()}{preLegalize()}}
+{\footnotesize\ttfamily void Manager\+::pre\+Legalize (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 69 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a45260873f6c6ee5143e9520e7c4a8afe}\label{classManager_a45260873f6c6ee5143e9520e7c4a8afe}} 
 \index{Manager@{Manager}!preprocess@{preprocess}}
@@ -486,7 +504,7 @@ Definition at line 34 of file Manager.\+cpp.
 
 
 
-Definition at line 178 of file Manager.\+cpp.
+Definition at line 200 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a5c511f80b580711686db89a36cd0a976}\label{classManager_a5c511f80b580711686db89a36cd0a976}} 
 \index{Manager@{Manager}!showNS@{showNS}}
@@ -496,7 +514,7 @@ Definition at line 178 of file Manager.\+cpp.
 
 
 
-Definition at line 464 of file Manager.\+cpp.
+Definition at line 471 of file Manager.\+cpp.
 
 \mbox{\Hypertarget{classManager_a5e2d36e51b550b9c97dac8799aed2353}\label{classManager_a5e2d36e51b550b9c97dac8799aed2353}} 
 \index{Manager@{Manager}!sortCell@{sortCell}}
@@ -506,7 +524,7 @@ Definition at line 464 of file Manager.\+cpp.
 
 
 
-Definition at line 598 of file Manager.\+cpp.
+Definition at line 602 of file Manager.\+cpp.
 
 
 
@@ -519,7 +537,7 @@ Definition at line 598 of file Manager.\+cpp.
 
 
 
-Definition at line 131 of file Manager.\+h.
+Definition at line 138 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a42e74b7760f36154466246901e25398f}\label{classManager_a42e74b7760f36154466246901e25398f}} 
 \index{Manager@{Manager}!Checker@{Checker}}
@@ -529,7 +547,7 @@ Definition at line 131 of file Manager.\+h.
 
 
 
-Definition at line 134 of file Manager.\+h.
+Definition at line 141 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_aa937e6f673bf21f19659aa2aaec530a1}\label{classManager_aa937e6f673bf21f19659aa2aaec530a1}} 
 \index{Manager@{Manager}!DetailPlacement@{DetailPlacement}}
@@ -539,7 +557,7 @@ Definition at line 134 of file Manager.\+h.
 
 
 
-Definition at line 133 of file Manager.\+h.
+Definition at line 140 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a643d78f19e93a6d60ad102f9342c123c}\label{classManager_a643d78f19e93a6d60ad102f9342c123c}} 
 \index{Manager@{Manager}!Dumper@{Dumper}}
@@ -549,7 +567,7 @@ Definition at line 133 of file Manager.\+h.
 
 
 
-Definition at line 128 of file Manager.\+h.
+Definition at line 135 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_ae297680ced647d9c3849e975db328fae}\label{classManager_ae297680ced647d9c3849e975db328fae}} 
 \index{Manager@{Manager}!Legalizer@{Legalizer}}
@@ -559,7 +577,7 @@ Definition at line 128 of file Manager.\+h.
 
 
 
-Definition at line 132 of file Manager.\+h.
+Definition at line 139 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a5dcccc00f94b868536e64958126422eb}\label{classManager_a5dcccc00f94b868536e64958126422eb}} 
 \index{Manager@{Manager}!MeanShift@{MeanShift}}
@@ -569,7 +587,7 @@ Definition at line 132 of file Manager.\+h.
 
 
 
-Definition at line 129 of file Manager.\+h.
+Definition at line 136 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_ab80291af9c262f63b83fa9c16f12014d}\label{classManager_ab80291af9c262f63b83fa9c16f12014d}} 
 \index{Manager@{Manager}!Parser@{Parser}}
@@ -579,7 +597,7 @@ Definition at line 129 of file Manager.\+h.
 
 
 
-Definition at line 127 of file Manager.\+h.
+Definition at line 134 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_ae06c7ba5e5a67662e10e34706f9433ed}\label{classManager_ae06c7ba5e5a67662e10e34706f9433ed}} 
 \index{Manager@{Manager}!Preprocess@{Preprocess}}
@@ -589,7 +607,7 @@ Definition at line 127 of file Manager.\+h.
 
 
 
-Definition at line 130 of file Manager.\+h.
+Definition at line 137 of file Manager.\+h.
 
 
 
@@ -602,7 +620,7 @@ Definition at line 130 of file Manager.\+h.
 
 
 
-Definition at line 39 of file Manager.\+h.
+Definition at line 45 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a4813fc6fa653a0a8c365ca70629aa10a}\label{classManager_a4813fc6fa653a0a8c365ca70629aa10a}} 
 \index{Manager@{Manager}!beta@{beta}}
@@ -612,7 +630,7 @@ Definition at line 39 of file Manager.\+h.
 
 
 
-Definition at line 40 of file Manager.\+h.
+Definition at line 46 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a6e2e7bd3b346ded7f2d2912fc621be71}\label{classManager_a6e2e7bd3b346ded7f2d2912fc621be71}} 
 \index{Manager@{Manager}!Bit\_FF\_Map@{Bit\_FF\_Map}}
@@ -622,7 +640,7 @@ Definition at line 40 of file Manager.\+h.
 
 
 
-Definition at line 57 of file Manager.\+h.
+Definition at line 63 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a24d574aab0d4a77c9ec3c7250c45c814}\label{classManager_a24d574aab0d4a77c9ec3c7250c45c814}} 
 \index{Manager@{Manager}!cell\_library@{cell\_library}}
@@ -632,7 +650,7 @@ Definition at line 57 of file Manager.\+h.
 
 
 
-Definition at line 56 of file Manager.\+h.
+Definition at line 62 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_ab3c640c54936a7bb206a12671df82dd6}\label{classManager_ab3c640c54936a7bb206a12671df82dd6}} 
 \index{Manager@{Manager}!die@{die}}
@@ -642,7 +660,7 @@ Definition at line 56 of file Manager.\+h.
 
 
 
-Definition at line 46 of file Manager.\+h.
+Definition at line 52 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a9daa26922d61dc01950deb8346a4f98d}\label{classManager_a9daa26922d61dc01950deb8346a4f98d}} 
 \index{Manager@{Manager}!DisplacementDelay@{DisplacementDelay}}
@@ -652,7 +670,7 @@ Definition at line 46 of file Manager.\+h.
 
 
 
-Definition at line 43 of file Manager.\+h.
+Definition at line 49 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_aa97c291b3a4e84d757bbfec4942da718}\label{classManager_aa97c291b3a4e84d757bbfec4942da718}} 
 \index{Manager@{Manager}!FF\_Map@{FF\_Map}}
@@ -662,7 +680,7 @@ Definition at line 43 of file Manager.\+h.
 
 
 
-Definition at line 62 of file Manager.\+h.
+Definition at line 68 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a53f8662b5e7cac10d7889968a15c4058}\label{classManager_a53f8662b5e7cac10d7889968a15c4058}} 
 \index{Manager@{Manager}!FFGarbageCollector@{FFGarbageCollector}}
@@ -672,7 +690,7 @@ Definition at line 62 of file Manager.\+h.
 
 
 
-Definition at line 84 of file Manager.\+h.
+Definition at line 90 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a16cefad9348a6c610027abfba14b8e4f}\label{classManager_a16cefad9348a6c610027abfba14b8e4f}} 
 \index{Manager@{Manager}!gamma@{gamma}}
@@ -682,7 +700,7 @@ Definition at line 84 of file Manager.\+h.
 
 
 
-Definition at line 41 of file Manager.\+h.
+Definition at line 47 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a9ed46786c7fc64ecbf3e74ba9bcc624e}\label{classManager_a9ed46786c7fc64ecbf3e74ba9bcc624e}} 
 \index{Manager@{Manager}!Gate\_Map@{Gate\_Map}}
@@ -692,7 +710,7 @@ Definition at line 41 of file Manager.\+h.
 
 
 
-Definition at line 64 of file Manager.\+h.
+Definition at line 70 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a2f1931c87f073eda399ec46d12b76794}\label{classManager_a2f1931c87f073eda399ec46d12b76794}} 
 \index{Manager@{Manager}!Input\_Map@{Input\_Map}}
@@ -702,7 +720,7 @@ Definition at line 64 of file Manager.\+h.
 
 
 
-Definition at line 51 of file Manager.\+h.
+Definition at line 57 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a47c190314bfcb987f12130f83ea2d735}\label{classManager_a47c190314bfcb987f12130f83ea2d735}} 
 \index{Manager@{Manager}!IO\_Map@{IO\_Map}}
@@ -712,7 +730,7 @@ Definition at line 51 of file Manager.\+h.
 
 
 
-Definition at line 53 of file Manager.\+h.
+Definition at line 59 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a0ffb3f6c264eef92b038a3c231231df8}\label{classManager_a0ffb3f6c264eef92b038a3c231231df8}} 
 \index{Manager@{Manager}!lambda@{lambda}}
@@ -722,7 +740,7 @@ Definition at line 53 of file Manager.\+h.
 
 
 
-Definition at line 42 of file Manager.\+h.
+Definition at line 48 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_aaba56dad0c17171c99ea0f208ece9780}\label{classManager_aaba56dad0c17171c99ea0f208ece9780}} 
 \index{Manager@{Manager}!legalizer@{legalizer}}
@@ -732,7 +750,7 @@ Definition at line 42 of file Manager.\+h.
 
 
 
-Definition at line 78 of file Manager.\+h.
+Definition at line 84 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a785b8bfe4c64cbb751a3a65a4e4f1b00}\label{classManager_a785b8bfe4c64cbb751a3a65a4e4f1b00}} 
 \index{Manager@{Manager}!MaxBit@{MaxBit}}
@@ -742,7 +760,7 @@ Definition at line 78 of file Manager.\+h.
 
 
 
-Definition at line 58 of file Manager.\+h.
+Definition at line 64 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a8ca2594c434949e99ce93959be700f31}\label{classManager_a8ca2594c434949e99ce93959be700f31}} 
 \index{Manager@{Manager}!name\_record@{name\_record}}
@@ -752,7 +770,7 @@ Definition at line 58 of file Manager.\+h.
 
 
 
-Definition at line 72 of file Manager.\+h.
+Definition at line 78 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a31c68548d90fc0c60e611e8971d62a68}\label{classManager_a31c68548d90fc0c60e611e8971d62a68}} 
 \index{Manager@{Manager}!Net\_Map@{Net\_Map}}
@@ -762,7 +780,7 @@ Definition at line 72 of file Manager.\+h.
 
 
 
-Definition at line 69 of file Manager.\+h.
+Definition at line 75 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_acf0d65d6aae1cf7481c7c8dc90380b0f}\label{classManager_acf0d65d6aae1cf7481c7c8dc90380b0f}} 
 \index{Manager@{Manager}!NumInput@{NumInput}}
@@ -772,7 +790,7 @@ Definition at line 69 of file Manager.\+h.
 
 
 
-Definition at line 49 of file Manager.\+h.
+Definition at line 55 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a362af7b400ef280ea463c3005b7fcf5a}\label{classManager_a362af7b400ef280ea463c3005b7fcf5a}} 
 \index{Manager@{Manager}!NumInstances@{NumInstances}}
@@ -782,7 +800,7 @@ Definition at line 49 of file Manager.\+h.
 
 
 
-Definition at line 61 of file Manager.\+h.
+Definition at line 67 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a0afd042bdf8e0586fedfabdc9ab0bb88}\label{classManager_a0afd042bdf8e0586fedfabdc9ab0bb88}} 
 \index{Manager@{Manager}!NumNets@{NumNets}}
@@ -792,7 +810,7 @@ Definition at line 61 of file Manager.\+h.
 
 
 
-Definition at line 68 of file Manager.\+h.
+Definition at line 74 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a103395be1b980752d889e2753ea75335}\label{classManager_a103395be1b980752d889e2753ea75335}} 
 \index{Manager@{Manager}!NumOutput@{NumOutput}}
@@ -802,7 +820,7 @@ Definition at line 68 of file Manager.\+h.
 
 
 
-Definition at line 50 of file Manager.\+h.
+Definition at line 56 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a469e85cf6fb5cd89a0ce8d05d85f4178}\label{classManager_a469e85cf6fb5cd89a0ce8d05d85f4178}} 
 \index{Manager@{Manager}!originalFF\_Map@{originalFF\_Map}}
@@ -812,7 +830,7 @@ Definition at line 50 of file Manager.\+h.
 
 
 
-Definition at line 63 of file Manager.\+h.
+Definition at line 69 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_ac88fe46296a6235ee34d878cbc91a578}\label{classManager_ac88fe46296a6235ee34d878cbc91a578}} 
 \index{Manager@{Manager}!Output\_Map@{Output\_Map}}
@@ -822,7 +840,7 @@ Definition at line 63 of file Manager.\+h.
 
 
 
-Definition at line 52 of file Manager.\+h.
+Definition at line 58 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a8cd668464d45a06f5587164960e2ebae}\label{classManager_a8cd668464d45a06f5587164960e2ebae}} 
 \index{Manager@{Manager}!param@{param}}
@@ -832,7 +850,7 @@ Definition at line 52 of file Manager.\+h.
 
 
 
-Definition at line 81 of file Manager.\+h.
+Definition at line 87 of file Manager.\+h.
 
 \mbox{\Hypertarget{classManager_a1aa7e7c2fa059950456ab8ccc00f7567}\label{classManager_a1aa7e7c2fa059950456ab8ccc00f7567}} 
 \index{Manager@{Manager}!preprocessor@{preprocessor}}
@@ -842,7 +860,7 @@ Definition at line 81 of file Manager.\+h.
 
 
 
-Definition at line 75 of file Manager.\+h.
+Definition at line 81 of file Manager.\+h.
 
 
 

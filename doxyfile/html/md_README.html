@@ -65,73 +65,52 @@ $(function() {
 <div class="title">2024 ICCAD Problem B </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><ul>
-<li>think how to setup netlist structure</li>
-<li>need to refactor net class(also create a pin class?)</li>
-<li>input preplace <a class="el" href="classFF.html">FF</a> may also be a multi-bit ff(not single-bit only), appropriate debanking algorithm is needed...</li>
-</ul>
-<p>Current Process:</p>
-<ol type="1">
-<li>Eliminate possible negative slack The preplace <a class="el" href="classFF.html">FF(MBFF)</a> may also have negative slack, however, most of the algorithm on <a class="el" href="classFF.html">FF</a> clustering are mainly focus on min timing degradation(min displacement). Should we first model the timing path(2 HPWL with 1 Qpin delay) for the <a class="el" href="classFF.html">FF</a> as the differential expression(eg: ntuplace wirelength log sum exponential model), and run gradient method to move the <a class="el" href="classFF.html">FF</a> to eliminate the negative slack?</li>
-<li>Run any kind of cluster algorithm(min displacement) For graceful cluster:<ul>
-<li>For each <a class="el" href="classFF.html">FF</a>, construct a gaussain kernal function</li>
-<li>For each comb cell, construct a quick down-stream function -&gt; avoid <a class="el" href="classFF.html">FF</a> move to there</li>
-<li>Run gradient-ascent method to cluster the <a class="el" href="classFF.html">FF</a> (with displacement small)</li>
-</ul>
-</li>
-<li><a class="el" href="classLegalizer.html">Legalizer</a> + Placer to determine the <a class="el" href="classFF.html">FF</a> or debanking the <a class="el" href="classFF.html">FF</a></li>
-</ol>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md1"></a>
+Flow Brief</h1>
 <ul>
-<li>Add Boost Package <div class="fragment"><div class="line">$ sudo apt-get install libboost-all-dev</div>
+<li>1. <a class="el" href="classCell.html">Cell</a> Library Scoring</li>
+<li>2. Debanking</li>
+<li>3. GlobalPlacement with slack-driven conjugate-gradient placer</li>
+<li>4. Legalize Single bit flops</li>
+<li>5. Bank flops with graceful meanshift algorithm</li>
+<li>6. GlobalPlacement with slack-driven conjugate-gradient placer</li>
+<li>7. Legalize all MBFF</li>
+<li>8. <a class="el" href="classDetailPlacement.html">DetailPlacement</a></li>
+</ul>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Flow Chart</h1>
+<p>Should install Markdown Preview Mermaid Support in vscode</p>
+<div class="fragment"><div class="line">graph TD;</div>
+<div class="line">    Start--&gt;Parser;</div>
+<div class="line">    Parser--&gt;Cell_library_Scoring;</div>
+<div class="line">    Cell_library_Scoring--&gt;Debanking_All_MBFF;</div>
+<div class="line">    Debanking_All_MBFF--&gt;Pre-GlobalPlacement;</div>
+<div class="line">    Pre-GlobalPlacement--&gt;Legalize_All_single-bit_FF;</div>
+<div class="line">    Legalize_All_single-bit_FF--&gt;MeanShift_Clustering;</div>
+<div class="line">    MeanShift_Clustering--&gt;Post-GlobalPlacement;</div>
+<div class="line">    Post-GlobalPlacement--&gt;Legalize;</div>
+<div class="line">    Legalize--&gt;DetailPlacement;</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+Usage</h1>
+<p>Install Boost Package </p><div class="fragment"><div class="line">$ sudo apt-get install libboost-all-dev</div>
 <div class="line">$ make boost</div>
-</div><!-- fragment --></li>
-<li>Compile <div class="fragment"><div class="line">$ make or make -j</div>
-</div><!-- fragment --></li>
-<li>Run <div class="fragment"><div class="line">$ make run1</div>
+</div><!-- fragment --><p>Compile </p><div class="fragment"><div class="line">$ make or make -j</div>
+</div><!-- fragment --><p>Run testcase </p><div class="fragment"><div class="line">$ make run1</div>
 <div class="line">$ make run2</div>
 <div class="line">$ make run3</div>
 <div class="line">$ make run4</div>
-</div><!-- fragment --></li>
-<li>Valgrind <div class="fragment"><div class="line">$ make check</div>
-</div><!-- fragment --></li>
-<li>Cppcheck <div class="fragment"><div class="line">$ make cppcheck</div>
-</div><!-- fragment --></li>
-<li>Discussion Log: 0515:<ul>
-<li><a class="el" href="classNet.html">Net</a> structure? Should be convenient &amp; efficient for calculating the slack</li>
-<li>Negative slack elimination??</li>
-</ul>
-</li>
-<li>update log:<ul>
-<li>Finish debanking, but need logic <a class="el" href="classFF.html">FF</a> naming rule(?). -&gt; solved</li>
-<li>Get name function. (in util using counter, prefix = "FF_"). -&gt; solved</li>
-<li>prev <a class="el" href="classFF.html">FF</a> pointer currently fixed point to largest initial HPWL. -&gt; solved</li>
-<li><a class="el" href="classParser.html">Parser</a> check whether to run preprocessing. (gradient to get all slack positive).</li>
-</ul>
-</li>
-<li>log 06/17:<ul>
-<li>Output floating problem.</li>
-<li><a class="el" href="classFF.html">FF</a> input doesn't come from IO or other <a class="el" href="classFF.html">FF</a>, ie come from std cell and this std cell is floating input.</li>
-</ul>
-</li>
-<li>log 0625 init cluster and add script to download boost, run $ make boost first before compile the code...<ul>
-<li>Cheng help to check if the newest testcase still have output floating problem...</li>
-<li><a class="el" href="classMeanShift.html">MeanShift</a>: buildRtree &gt; KNN &gt; shiftFF</li>
-<li>compile flags, all program should be static-link, otherwise, the program can't be run on TSRI server, see detailed in makefile</li>
-</ul>
-</li>
-<li>log 0706<ul>
-<li>still have floating input/output in testcase1_0614</li>
-<li>the result after gradient to find optimal location is worse, the cell assignment after debank is important.</li>
-</ul>
-</li>
-</ul>
-<p>Assign c119cheng:</p><ul>
-<li>Debanking, finish</li>
-<li>Update <a class="el" href="classInstance.html#a725371da2335a65476b1803e328a7861">Instance::coor</a> for OptimalLocation.</li>
-</ul>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<div class="line">$ make run5</div>
+</div><!-- fragment --><p>Valgrind </p><div class="fragment"><div class="line">$ make check</div>
+</div><!-- fragment --><p>Cppcheck </p><div class="fragment"><div class="line">$ make cppcheck</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
 Doxygen</h1>
-<p>$ doxygen -s -g $ doxygen Doxyfile </p>
+<div class="fragment"><div class="line">$ doxygen -s -g</div>
+<div class="line">$ doxygen Doxyfile</div>
+</div><!-- fragment --><p> VScode Extension:</p><ul>
+<li>Install Live Server to open the index.html</li>
+<li>right click on doxyfile/index.html</li>
+<li>open with live server </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['legalizer_580',['Legalizer',['../classLegalizer.html',1,'']]]
+  ['legalizer_610',['Legalizer',['../classLegalizer.html',1,'']]]
 ];

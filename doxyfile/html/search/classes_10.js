@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xtour_604',['XTour',['../structXTour.html',1,'']]]
+  ['xtour_635',['XTour',['../structXTour.html',1,'']]]
 ];

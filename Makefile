@@ -75,7 +75,7 @@ setup:
 
 # Pattern rule for running tests
 define RUN_TEST
-./$(BIN) $1 $1.out
+time ./$(BIN) $1 $1.out
 ./$(SANITY_CHECKER) $1 $1.out
 ./$(PLACEMENT_CHECKER) $1 $1.out
 endef
@@ -107,7 +107,7 @@ drawALL:
 	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
 
 draw:
-	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
+	./drawDie/drawDie -i DetailPlacement.out -m 6_DetailPlacement.png -t DetailPlacement -g -p -nl -o
 
 valgrind:
 	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out

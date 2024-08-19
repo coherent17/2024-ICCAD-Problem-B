@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['instance_2ecpp_629',['Instance.cpp',['../Instance_8cpp.html',1,'']]],
-  ['instance_2eh_630',['Instance.h',['../Instance_8h.html',1,'']]]
+  ['hungarian_2ecpp_661',['Hungarian.cpp',['../Hungarian_8cpp.html',1,'']]],
+  ['hungarian_2eh_662',['Hungarian.h',['../Hungarian_8h.html',1,'']]]
 ];

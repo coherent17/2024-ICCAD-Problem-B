@@ -77,6 +77,14 @@ $(function() {
 Collaboration diagram for Manager:</div>
 <div class="dyncontent">
 <div class="center"><img src="classManager__coll__graph.png" border="0" usemap="#aManager_coll__map" alt="Collaboration graph"/></div>
+<map name="aManager_coll__map" id="aManager_coll__map">
+<area shape="rect" title=" " alt="" coords="255,95,334,121"/>
+<area shape="rect" href="classCell__Library.html" title=" " alt="" coords="5,5,104,32"/>
+<area shape="rect" href="classPreprocess.html" title=" " alt="" coords="128,5,221,32"/>
+<area shape="rect" href="classParam.html" title=" " alt="" coords="263,5,326,32"/>
+<area shape="rect" href="classDie.html" title=" " alt="" coords="350,5,394,32"/>
+<area shape="rect" href="classLegalizer.html" title=" " alt="" coords="418,5,499,32"/>
+</map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
@@ -91,6 +99,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a45260873f6c6ee5143e9520e7c4a8afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a571bc9d89f8523bdff9edb1b781aef39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a571bc9d89f8523bdff9edb1b781aef39">meanshift</a> ()</td></tr>
 <tr class="separator:a571bc9d89f8523bdff9edb1b781aef39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1993af80f8d2a896f4f5d31647284733"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a1993af80f8d2a896f4f5d31647284733">preLegalize</a> ()</td></tr>
+<tr class="separator:a1993af80f8d2a896f4f5d31647284733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae58a37b64d93a773e3206be1e80c83d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#ae58a37b64d93a773e3206be1e80c83d3">banking</a> ()</td></tr>
 <tr class="separator:ae58a37b64d93a773e3206be1e80c83d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c5f23e3d912987bbdfa58c0b9a71571"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a4c5f23e3d912987bbdfa58c0b9a71571">postBankingOptimize</a> ()</td></tr>
@@ -101,8 +111,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0592ce8f5dd59614a2b95553bca95d1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca14fddbfc1cc732b33371a2e6dd56fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#aca14fddbfc1cc732b33371a2e6dd56fb">checker</a> ()</td></tr>
 <tr class="separator:aca14fddbfc1cc732b33371a2e6dd56fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3f4723a4b47b3570afb2981c9bb031d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#af3f4723a4b47b3570afb2981c9bb031d">dump</a> (const std::string &amp;filename)</td></tr>
-<tr class="separator:af3f4723a4b47b3570afb2981c9bb031d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8560232214019fa44e2eb5dbf11eb90e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a8560232214019fa44e2eb5dbf11eb90e">dump</a> (const std::string &amp;filename, double prePlaceCost, double finalCost)</td></tr>
+<tr class="separator:a8560232214019fa44e2eb5dbf11eb90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a830bf021119f64f29b23b09206a5afb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a830bf021119f64f29b23b09206a5afb8">dumpVisual</a> (const std::string &amp;filename)</td></tr>
 <tr class="separator:a830bf021119f64f29b23b09206a5afb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a896cda20fdb54000ede191ce59f5b825"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classManager.html#a896cda20fdb54000ede191ce59f5b825">print</a> ()</td></tr>
@@ -220,7 +230,7 @@ Friends</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock">
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00036">36</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00042">42</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1658ff9f18e38ccd9cb8b0b371b9c20b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1658ff9f18e38ccd9cb8b0b371b9c20b">&#9670;&nbsp;</a></span>Manager()</h2>
@@ -285,7 +295,7 @@ Friends</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00298">298</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00320">320</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -333,7 +343,7 @@ Friends</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>FF* The pointer point to the merged MBFF </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>add incremental banking?? </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00244">244</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00266">266</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -352,7 +362,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00069">69</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00075">75</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -371,7 +381,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00089">89</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00096">96</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -412,7 +422,7 @@ Friends</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>std::vector&lt;FF*&gt; The vector contains all signle bit <a class="el" href="classFF.html">FF</a> </dd></dl>
 <dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>the incremental debanking </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00397">397</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00404">404</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -432,7 +442,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00481">481</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00488">488</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -451,12 +461,12 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00084">84</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00091">91</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
-<a id="af3f4723a4b47b3570afb2981c9bb031d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af3f4723a4b47b3570afb2981c9bb031d">&#9670;&nbsp;</a></span>dump()</h2>
+<a id="a8560232214019fa44e2eb5dbf11eb90e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8560232214019fa44e2eb5dbf11eb90e">&#9670;&nbsp;</a></span>dump()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -465,13 +475,29 @@ Friends</h2></td></tr>
           <td class="memname">void Manager::dump </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&#160;</td>
-          <td class="paramname"><em>filename</em></td><td>)</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>prePlaceCost</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>finalCost</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00094">94</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00101">101</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -491,7 +517,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00099">99</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00124">124</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -538,7 +564,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double (new cost - original cost) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00614">614</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00618">618</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -557,7 +583,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00469">469</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00476">476</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -577,7 +603,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00221">221</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00243">243</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -613,7 +639,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00428">428</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00435">435</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -642,7 +668,7 @@ Friends</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double overall cost </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00492">492</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00499">499</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -664,7 +690,7 @@ Friends</h2></td></tr>
 <p>get TNS </p>
 <dl class="section return"><dt>Returns</dt><dd>double return the total negative slack value (+: has negative slack, 0: no negative slack) </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00448">448</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00455">455</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -683,7 +709,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00456">456</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00463">463</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -702,7 +728,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00079">79</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00087">87</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -724,7 +750,7 @@ Friends</h2></td></tr>
 <p>score each cell based on ????? </p>
 <dl class="section author"><dt>Author</dt><dd>cheng119 help confirm this score What is this?? alpha*cell_vector[i]-&gt;getQpinDelay() * (cell_vector[i]-&gt;getW() + cell_vector[i]-&gt;getH()) does (cell_vector[i]-&gt;getW() + cell_vector[i]-&gt;getH()) to approximate HPWL??? </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00576">576</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00580">580</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -782,7 +808,26 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00074">74</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00082">82</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+
+</div>
+</div>
+<a id="a1993af80f8d2a896f4f5d31647284733"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1993af80f8d2a896f4f5d31647284733">&#9670;&nbsp;</a></span>preLegalize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Manager::preLegalize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00069">69</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -820,7 +865,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00178">178</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00200">200</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -839,7 +884,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00464">464</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00471">471</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -867,7 +912,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00598">598</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8cpp_source.html#l00602">602</a> of file <a class="el" href="Manager_8cpp_source.html">Manager.cpp</a>.</p>
 
 </div>
 </div>
@@ -892,7 +937,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00131">131</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00138">138</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -916,7 +961,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00134">134</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00141">141</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -940,7 +985,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00133">133</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00140">140</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -964,7 +1009,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00128">128</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00135">135</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -988,7 +1033,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00132">132</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00139">139</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1012,7 +1057,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00129">129</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00136">136</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1036,7 +1081,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00127">127</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00134">134</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1060,7 +1105,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00130">130</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00137">137</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1077,7 +1122,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00039">39</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00045">45</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1093,7 +1138,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00040">40</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00046">46</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1109,7 +1154,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00057">57</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00063">63</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1125,7 +1170,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00056">56</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00062">62</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1141,7 +1186,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00046">46</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00052">52</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1157,7 +1202,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00043">43</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00049">49</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1173,7 +1218,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00062">62</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00068">68</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1189,7 +1234,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00084">84</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00090">90</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1205,7 +1250,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00041">41</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00047">47</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1221,7 +1266,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00064">64</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00070">70</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1237,7 +1282,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00051">51</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00057">57</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1253,7 +1298,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00053">53</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00059">59</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1269,7 +1314,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00042">42</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00048">48</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1285,7 +1330,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00078">78</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00084">84</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1301,7 +1346,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00058">58</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00064">64</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1317,7 +1362,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00072">72</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00078">78</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1333,7 +1378,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00069">69</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00075">75</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1349,7 +1394,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00049">49</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00055">55</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1365,7 +1410,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00061">61</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00067">67</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1381,7 +1426,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00068">68</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00074">74</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1397,7 +1442,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00050">50</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00056">56</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1413,7 +1458,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00063">63</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00069">69</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1429,7 +1474,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00052">52</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00058">58</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1445,7 +1490,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00081">81</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00087">87</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
@@ -1461,7 +1506,7 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00075">75</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
+<p class="definition">Definition at line <a class="el" href="Manager_8h_source.html#l00081">81</a> of file <a class="el" href="Manager_8h_source.html">Manager.h</a>.</p>
 
 </div>
 </div>
