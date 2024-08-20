@@ -96,12 +96,30 @@ run4: setup
 run5: setup
 	$(call RUN_TEST,testcase/testcase2_MBFF.txt)
 
+run6: setup
+	$(call RUN_TEST,testcase/testcase1_MBFF_ALL0.txt)
+
+run7: setup
+	$(call RUN_TEST,testcase/testcase2_MBFF_ALL0.txt)
+
+run8: setup
+	$(call RUN_TEST,testcase/testcase1_ALL0.txt)
+
+run9: setup
+	$(call RUN_TEST,testcase/testcase2_ALL0.txt)
+
+run10: setup
+	$(call RUN_TEST,testcase/testcase1_NEG.txt)
+
+run11: setup
+	$(call RUN_TEST,testcase/testcase2_NEG.txt)
+
 # Target to run all tests
 runall: run1 run2 run3 run4 run5
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
-	./drawDie/drawDie -i Meanshift.out -m 2_Meanshift.png -t Meanshift -g -p -nl -o
+	./drawDie/drawDie -i PreLegalize.out -m PreLegalize.png -t PreLegalize -g -p -nl -o
 	./drawDie/drawDie -i Banking.out -m 3_Banking.png -t Banking -g -p -nl -o
 	./drawDie/drawDie -i PostCG.out -m 4_PostCG.png -t PostCG -g -p -nl -o
 	./drawDie/drawDie -i Legalize.out -m 5_Legalize.png -t Legalize -g -p -nl -o
