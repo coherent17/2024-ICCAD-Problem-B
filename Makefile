@@ -75,9 +75,9 @@ setup:
 
 # Pattern rule for running tests
 define RUN_TEST
-time ./$(BIN) $1 $1.out
-./$(SANITY_CHECKER) $1 $1.out
-./$(PLACEMENT_CHECKER) $1 $1.out
+time ./$(BIN) $1 $1.out 2>&1 | tee $1.log
+./$(SANITY_CHECKER) $1 $1.out 2>&1 | tee $1.sanity
+./$(PLACEMENT_CHECKER) $1 $1.out 2>&1 | tee $1.placement_checker
 endef
 
 # Targets for each test case
@@ -115,7 +115,7 @@ run11: setup
 	$(call RUN_TEST,testcase/testcase2_NEG.txt)
 
 # Target to run all tests
-runall: run1 run2 run3 run4 run5
+runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
@@ -146,7 +146,7 @@ gitlog:
 	git log --graph --decorate --oneline
 
 clean:
-	rm -rf $(OBJDIR) $(BIN) testcase/*.out *.log *.out *.png
+	rm -rf $(OBJDIR) $(BIN) testcase/*.out testcase/*.log testcase/*.sanity testcase/*.placement_checker *.log *.out *.png
 
 
 # TODO, make release to compile with static-linking

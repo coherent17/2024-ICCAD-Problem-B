@@ -16,7 +16,6 @@ int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.libScoring();
-    double prePlaceCost = mgr.getOverallCost(cost_verbose);
     mgr.preprocess();
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Preprocessor.out");
@@ -26,7 +25,7 @@ int main(int argc, char *argv[]){
     // mgr.dumpVisual("Meanshift.out");
 
     mgr.preLegalize();
-    mgr.getOverallCost(cost_verbose);
+    double prePlaceCost = mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("PreLegalize.out");
 
     mgr.banking();
