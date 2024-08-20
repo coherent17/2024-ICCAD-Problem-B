@@ -213,11 +213,14 @@ void Legalizer::Tetris(){
             return a->getTNS() > b->getTNS();
     });
 
-    // [TODO]: enlarge the window and try to find 
+    // start to legalize all ff
+    size_t total = ffs.size();
+    size_t quarter = ffs.size() / 4; 
     for(size_t i = 0; i < ffs.size(); i++){
-        #ifdef ENABLE_DEBUG_LGZ
-        update_bar((int) (i  * 100) / ffs.size() + 1);
-        #endif
+        if(i == quarter || i == 2 * quarter || i == 3 * quarter || i == total - 1) {
+            DEBUG_LGZ("Progress: " + std::to_string((i + 1) * 100 / total) + "% completed");
+        }
+        
         if(ffs[i]->getIsPlace()) continue;
         Node *ff = ffs[i];
         int numBits = ff->getCell()->getBits();
@@ -277,7 +280,6 @@ void Legalizer::Tetris(){
 
         }
     }
-    DEBUG_LGZ("\n");
 }
 
 void Legalizer::LegalizeWriteBack(){

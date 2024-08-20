@@ -103,7 +103,7 @@ void Manager::dump(const std::string &filename, double prePlaceCost, double fina
     DEBUG_MGR("Input cost : " + std::to_string(prePlaceCost));
     DEBUG_MGR("Final cost : " + std::to_string(finalCost));
     Dumper dumper(filename);
-    if(finalCost < prePlaceCost)
+    if(finalCost <= prePlaceCost)
         dumper.dump(*this);
     else{
         DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
