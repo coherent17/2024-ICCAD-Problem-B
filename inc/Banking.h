@@ -42,6 +42,7 @@ public:
     Cell* chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
     Cell* chooseCellLib(int bitNum);
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
+    Coor getBankingCoor(std::vector<PointWithID>& toRemoveFFs);
     void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();
     void restoreUnclusterFFCoor();

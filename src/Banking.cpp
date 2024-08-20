@@ -96,6 +96,31 @@ Coor Banking::getMedian(std::vector<PointWithID>& toRemoveFFs){
     return Coor(x,y);
 }
 
+Coor Banking::getBankingCoor(std::vector<PointWithID>& toRemoveFFs){
+    double x = 0;
+    double y = 0;
+    double weight = 0;
+    for(size_t i = 0; i < toRemoveFFs.size(); i++){
+        FF* ff = FFs[toRemoveFFs[i].second];
+        weight += ff->getTNS();
+        x += ff->getTNS() * (ff->getNewCoor().x);
+        y += ff->getTNS() * (ff->getNewCoor().y);
+    }
+    if(weight != 0){
+        x = x/weight;
+        y = y/weight;
+        // std::cout << Coor(x,y) << std::endl;
+    }else{
+        Coor medianCoor = getMedian(toRemoveFFs);
+        // std::cout <<"weight0:"<< medianCoor << std::endl;
+        x = medianCoor.x;
+        y = medianCoor.y;
+    }
+    
+    return Coor(x,y);
+}
+
+
 
 void Banking::sortFFs(std::vector<std::pair<int, double>> &nearFFs){
     auto FFcmp = [](const std::pair<int, double> &neighbor1, const std::pair<int, double> &neighbor2){
@@ -119,6 +144,12 @@ void Banking::doClustering(){
                 FFs.push_back(pair.second);
             }
         }
+        // slack worst prior to cluster 
+        // auto FFscmp = [](FF* ff1, FF* ff2){
+        //     return ff1->getTNS() > ff2->getTNS();
+        // };
+        // std::sort(FFs.begin(), FFs.end(), FFscmp);
+
         std::vector<PointWithID> points;
         points.reserve(FFs.size());
 
