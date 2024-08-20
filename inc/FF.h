@@ -48,6 +48,7 @@ private:
     // pair<other ffId, euclidean distance>, store the neighbor ff with their Id and the distance to this FF
     std::vector<std::pair<int, double>> NeighborFFs;
     int clkIdx;
+    bool isLegalize;
 
     // ######################################### used in Preprocessing ########################################################
     PrevStage prevStage; // {prev stage FF/INPUT, {prevFF's output cell on critical path, output cell pin}}
@@ -85,6 +86,7 @@ public:
     void setPhysicalFF(FF* targetFF, int slot);
     void setClusterSize(int);
     void setFixed(bool fixed);
+    void setIsLegalize(bool isLegalize);
     // Getter
     double getTimingSlack(const std::string &pinName)const;
     std::vector<FF*>& getClusterFF();
@@ -106,6 +108,7 @@ public:
     FF* getPhysicalFF()const;
     int getSlot()const;
     bool getFixed()const;
+    bool getIsLegalize()const;
     std::string getPhysicalPinName();
     std::vector<std::pair<Coor, double>> getCriticalCoor(); // return the relative coor on critical path
     size_t getCriticalSize(); // return the size of all critical path both Q and D pin

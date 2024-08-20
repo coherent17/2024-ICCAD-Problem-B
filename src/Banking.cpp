@@ -150,6 +150,7 @@ void Banking::doClustering(){
                     
                 FF* newFF = mgr.bankFF(clusterCoor, chooseCell, FFToBank);
                 mgr.legalizer->UpdateRows(newFF);
+                newFF->setIsLegalize(true);
                 for (size_t j = 0; j < toRemoveFFs.size(); j++)
                 {
                     isClustered[toRemoveFFs[j].second] = true;

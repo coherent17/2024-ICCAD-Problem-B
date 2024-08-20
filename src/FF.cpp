@@ -10,6 +10,7 @@ FF::FF() : Instance(){
     bandwidth = 0;
     isShifting = true;
     clkIdx = UNSET_IDX;
+    isLegalize = false;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, CellType::IO, ""};
     fixed = true;
@@ -22,6 +23,7 @@ FF::FF(int size) : Instance(), clusterFF(size, nullptr){
     bandwidth = 0;
     isShifting = true;
     clkIdx = UNSET_IDX;
+    isLegalize = false;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, CellType::IO, ""};
     fixed = true;
@@ -48,6 +50,10 @@ void FF::setClusterIdx(int clusterIdx){
 
 void FF::setClkIdx(int clkIdx){
     this->clkIdx = clkIdx;
+}
+
+void FF::setIsLegalize(bool isLegalize){
+    this->isLegalize = isLegalize;
 }
 
 void FF::setNewCoor(const Coor &coor){
@@ -146,6 +152,10 @@ int FF::getClusterIdx()const{
 
 int FF::getClkIdx()const{
     return clkIdx;
+}
+
+bool FF::getIsLegalize()const{
+    return isLegalize;
 }
 
 Coor FF::getNewCoor()const{

@@ -37,7 +37,7 @@ void Legalizer::run(){
 void Legalizer::LoadFF(){
     DEBUG_LGZ("Load FF to Databse");
     for(const auto &pair : mgr.FF_Map){
-        if(pair.second->getCell()->getBits() == 1){
+        if(!pair.second->getIsLegalize()){
             Node *ff = new Node();
             ff->setName(pair.second->getInstanceName());
             ff->setGPCoor(pair.second->getNewCoor());
