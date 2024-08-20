@@ -29,8 +29,12 @@ void DetailPlacement::run(){
     t.start();
     DetailAssignmentMBFF(); // for same clk
     t.stop();
+    Timer tt = Timer();
+    
     mgr.getOverallCost(true);
+    tt.start();
     ChangeCell();
+    tt.stop();
 }
 
 void DetailPlacement::BuildGlobalRtreeMaps(){
@@ -210,6 +214,7 @@ void DetailPlacement::LocalSwap(){
 
 void DetailPlacement::DetailAssignmentMBFF(){
     DEBUG_DP("DetailAssignmentMBFF");
+    srand(2001);
     size_t max_clk_idx = 0;
     for(const auto &pair : mgr.FF_Map){
         max_clk_idx = std::max((int)max_clk_idx, pair.second->getClkIdx());
@@ -232,20 +237,23 @@ void DetailPlacement::DetailAssignmentMBFF(){
                 FFcount++;
             }
         }
-        const size_t querySize = 100;
+        
+        size_t querySize = 100;
+        // if(sameCLKFFs.size() < 100){
+        //     querySize = sameCLKFFs.size();
+        // }
 
+        vector<FF*> FFs(querySize);
+        RTree rtree = RTree();
+        // Using rtree to do Hungarain for nearest FF
+        for(size_t i = 0; i <sameCLKFFs.size(); i++){
+            FF *ff = sameCLKFFs[i];
+            PointWithID pointwithid;
+            pointwithid = std::make_pair(Point(ff->getPhysicalFF()->getNewCoor().x, ff->getPhysicalFF()->getNewCoor().y), i);
+            rtree.insert(pointwithid);
+        }
 
         for(size_t repeatTime = 0; repeatTime < sameCLKFFs.size()/querySize * 2; repeatTime++){
-            vector<FF*> FFs(querySize);
-            RTree rtree = RTree();
-            // Using rtree to do Hungarain for nearest FF
-            for(size_t i = 0; i <sameCLKFFs.size(); i++){
-                FF *ff = sameCLKFFs[i];
-                PointWithID pointwithid;
-                pointwithid = std::make_pair(Point(ff->getPhysicalFF()->getNewCoor().x, ff->getPhysicalFF()->getNewCoor().y), i);
-                rtree.insert(pointwithid);
-            }
-
             FF* centorFF = sameCLKFFs[rand() % sameCLKFFs.size()];
             Point queryPoint(centorFF->getPhysicalFF()->getNewCoor().x, centorFF->getPhysicalFF()->getNewCoor().y);
             std::vector<PointWithID> nearestResults;
@@ -329,11 +337,19 @@ void DetailPlacement::DetailAssignmentMBFF(){
                 FF* newFF = MBFFs[slotMap[FFsMap[assignment[i]]].first];
                 size_t curSlot = slotMap[FFsMap[assignment[i]]].second;
                 FF* curFF = FFs[i];
+                Coor oldCoor = curFF->getPhysicalFF()->getNewCoor();
                 curFF->setPhysicalFF(newFF, curSlot);
                 newFF->addClusterFF(curFF, curSlot);
 
                 // maintain slotMap
                 newSlotMap[i] = slotMap[FFsMap[assignment[i]]];
+
+                // maintain rtree
+                PointWithID pointwithid;
+                pointwithid = std::make_pair(Point(curFF->getPhysicalFF()->getNewCoor().x, curFF->getPhysicalFF()->getNewCoor().y), FFsMap[i]);
+                rtree.insert(pointwithid);
+                pointwithid = std::make_pair(Point(oldCoor.x, oldCoor.y), FFsMap[i]);
+                rtree.remove(pointwithid);
             }
             
             // update slotMap
@@ -363,13 +379,15 @@ void DetailPlacement::ChangeCell(){
         // iterate through all cell type
         for(size_t j=0;j<bitMapSize;j++){
             Cell* targetCell = mgr.Bit_FF_Map[bit][j];
-            curFF->setCell(targetCell);
-            double totalCost = curFF->getCost();
-            curFF->setCell(originalCell);
-            // hard constraint for using smaller cell, for easier legalize, need reconsider
-            if(totalCost < bestCost && (targetCell->getW() <= originalCell->getW() && targetCell->getH() <= originalCell->getH())){
-                bestCost = totalCost;
-                bestCell = targetCell;
+            if(targetCell->getW() <= originalCell->getW() && targetCell->getH() <= originalCell->getH()){
+                curFF->setCell(targetCell);
+                double totalCost = curFF->getCost();
+                curFF->setCell(originalCell);
+                // hard constraint for using smaller cell, for easier legalize, need reconsider
+                if(totalCost < bestCost){
+                    bestCost = totalCost;
+                    bestCell = targetCell;
+                }
             }
         }
 
