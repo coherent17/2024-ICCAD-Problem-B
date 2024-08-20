@@ -110,6 +110,7 @@ int main(int argc, char** argv){
     //----------------------------
     // on site check
     //----------------------------
+    bool onSite = true;
     cout << "[PLACEMENT CHECKER] start on site check ... " << endl;
     for(size_t i=0;i<FFList.size();i++){
         if(site.count({FFList[i][0], FFList[i][1]})){
@@ -117,29 +118,38 @@ int main(int argc, char** argv){
         }
         else{
             cout << "FF : " << FFName[i] << " is not on site!!!" << endl;
+            onSite = false;
         }
     }
-    cout << "[PLACEMENT CHECKER] All FF are on site!!!" << endl; 
+    if(onSite)
+        cout << "[PLACEMENT CHECKER] All FF are on site!!!" << endl; 
 
     //----------------------------
     // overlap check
-    //----------------------------
+    //---------------------------- 
+    bool nonOverlap = true;
     cout << "[PLACEMENT CHECKER] start overlap check ... " << endl;
     for(size_t i=0;i<FFList.size();i++){
         // check with std cell
         for(size_t j=0;j<gateList.size();j++){
             if(doOverlap(FFList[i], gateList[j])){
                 cout << FFName[i] << " is overlap with " << gateName[j] << endl;
+                nonOverlap = false;
             }
         }
         // check with FF
         for(size_t j=0;j<FFList.size();j++){
             if(i!=j && doOverlap(FFList[i], FFList[j])){
                 cout << FFName[i] << " is overlap with " << FFName[j] << endl;
+                nonOverlap = false;
             }
         }
     }
-    cout << "[PLACEMENT CHECKER] All instance are not overlapped!!!" << endl;
-    cout << "[PLACEMENT CHECKER] Pass placement checker!!!" << endl;
+    if(nonOverlap)
+        cout << "[PLACEMENT CHECKER] All instance are not overlapped!!!" << endl;
+    if(onSite && nonOverlap)
+        cout << "[PLACEMENT CHECKER] Pass placement checker!!!" << endl;
+    else
+        cout << "[PLACEMENT CHECKER] Fail !!! pls check your result" << endl;
     return 0;
 }
