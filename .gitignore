@@ -4,5 +4,8 @@ obj/
 boost_1_84_0/
 *.log
 testcase/*.out
+testcase/*.log
+testcase/*.sanity
+testcase/*.placement_checker
 *.png
 *.out
