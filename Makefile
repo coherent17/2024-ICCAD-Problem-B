@@ -114,6 +114,12 @@ run10: setup
 run11: setup
 	$(call RUN_TEST,testcase/testcase2_NEG.txt)
 
+run12: setup
+	$(call RUN_TEST,testcase/testcase1_reverseNEG.txt)
+
+run13: setup
+	$(call RUN_TEST,testcase/testcase2_reverseNEG.txt)
+	
 # Target to run all tests
 runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11
 
