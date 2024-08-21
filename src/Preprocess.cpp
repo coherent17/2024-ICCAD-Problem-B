@@ -98,8 +98,15 @@ void Preprocess::Debank(){
  * 
  */
 void Preprocess::Build_Circuit_Gragh(){
+    vector<Net*> NetList(mgr.Net_Map.size());
+    size_t NetIDX = 0;
     for(auto& n_m : mgr.Net_Map){
-        const Net& n = n_m.second;
+        NetList[NetIDX] = &n_m.second;
+        NetIDX++;
+    }
+    #pragma omp parallel for num_threads(MAX_THREADS)
+    for(size_t i=0;i<NetIDX;i++){
+        const Net& n = *NetList[i];
         std::string driving_cell;
         std::string driving_pin;
         bool is_CLK = false; // ignore clock net (maybe can done in parser)
@@ -114,16 +121,17 @@ void Preprocess::Build_Circuit_Gragh(){
         connectNet(n, driving_cell, driving_pin);
     }
 
+    // 08/21 : delete as input design will not contain floating FF
     // deal with the open circuit??
-    vector<std::string> deleteFF;
-    for(auto& ff : FF_list_Map){
-        if(FF_list[ff.second]->getInputInstances().size() == 0)
-            deleteFF.push_back(ff.first);
-    }
-    for(size_t i=0;i<deleteFF.size();i++){
-        FF_list.erase(FF_list_Map[deleteFF[i]]);
-        FF_list_Map.erase(deleteFF[i]);
-    }
+    // vector<std::string> deleteFF;
+    // for(auto& ff : FF_list_Map){
+    //     if(FF_list[ff.second]->getInputInstances().size() == 0 && FF_list[ff.second]->getOutputInstances().size() == 0)
+    //         deleteFF.push_back(ff.first);
+    // }
+    // for(size_t i=0;i<deleteFF.size();i++){
+    //     FF_list.erase(FF_list_Map[deleteFF[i]]);
+    //     FF_list_Map.erase(deleteFF[i]);
+    // }
     // go study STA
     DelayPropagation();
 }
@@ -385,25 +393,18 @@ void Preprocess::DelayPropagation(){
     }
 
     // propagation
-    std::unordered_map<std::string, bool> visitedGate;
+    // std::unordered_map<std::string, bool> visitedGate;
     while(!q.empty()){
         Instance* curInst = q.front();
         q.pop();
-        visitedGate[curInst->getInstanceName()] = true;
-        if(mgr.Gate_Map.count(curInst->getInstanceName())){
-            propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
-        }
-        else{
-            assert(0 && "Something wrong!!!");
-            // should never go here
-        }
+        propagaGate(q, mgr.Gate_Map[curInst->getInstanceName()]);
     }
 
-    for(auto& gate : mgr.Gate_Map){
-        if(!visitedGate.count(gate.first)){
-            // std::cout << "[WARNING] Gate " + gate.first + " didn't visited!!!" << std::endl;
-        }
-    }
+    // for(auto& gate : mgr.Gate_Map){
+    //     if(!visitedGate.count(gate.first)){
+    //         // std::cout << "[WARNING] Gate " + gate.first + " didn't visited!!!" << std::endl;
+    //     }
+    // }
 }
 
 /**
