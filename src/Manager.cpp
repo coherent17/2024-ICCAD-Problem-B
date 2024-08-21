@@ -98,27 +98,10 @@ void Manager::checker(){
     checker.run();
 }
 
-void Manager::dump(const std::string &filename, double prePlaceCost, double finalCost){
+void Manager::dump(const std::string &filename){
     DEBUG_MGR("Dump result ...");
-    DEBUG_MGR("Input cost : " + std::to_string(prePlaceCost));
-    DEBUG_MGR("Final cost : " + std::to_string(finalCost));
     Dumper dumper(filename);
-    if(finalCost <= prePlaceCost)
-        dumper.dump(*this);
-    else{
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        FF_Map = originalFF_Map;    // retrieve input FF
-        for(auto& ff : FF_Map){
-            ff.second->setNewCoor(ff.second->getCoor());    
-        }
-        legalizer = new Legalizer(*this); // make sure result is legal
-        legalizer->initial();
-        legalizer->run();           
-        this->getOverallCost(true); 
-        dumper.dumpPrePlace(*this); // write result
-    }
+    dumper.dump(*this);
 }
 
 void Manager::dumpVisual(const std::string &filename){
