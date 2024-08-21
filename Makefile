@@ -119,7 +119,7 @@ run12: setup
 
 run13: setup
 	$(call RUN_TEST,testcase/testcase2_reverseNEG.txt)
-	
+  
 run14: setup
 	$(call RUN_TEST,testcase/testcase2_upright.txt)
 
