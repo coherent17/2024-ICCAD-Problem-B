@@ -103,7 +103,7 @@ public:
     void detailplacement();
     void checker();
 
-    void dump(const std::string &filename, double prePlaceCost, double finalCost);
+    void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
     

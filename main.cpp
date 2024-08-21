@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
     // mgr.dumpVisual("Meanshift.out");
 
     mgr.preLegalize();
-    double prePlaceCost = mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("PreLegalize.out");
 
     mgr.banking();
@@ -42,10 +42,10 @@ int main(int argc, char *argv[]){
     mgr.checker();
 
     mgr.detailplacement();
-    double finalCost = mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("DetailPlacement.out");
     mgr.checker();
 
-    mgr.dump(argv[2], prePlaceCost, finalCost);
+    mgr.dump(argv[2]);
     return 0;
 }
