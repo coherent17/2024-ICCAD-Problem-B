@@ -17,6 +17,7 @@ CPPCHECKFLAGS = --enable=all --inconclusive --std=c++11 --language=c++ --suppres
 # Checker
 SANITY_CHECKER := checker/sanity
 PLACEMENT_CHECKER := checker/placement_checker
+EVALUATOR := evaluator/preliminary-evaluator
 
 # Test cases
 TEST_CASES := \
@@ -78,6 +79,7 @@ define RUN_TEST
 time ./$(BIN) $1 $1.out 2>&1 | tee $1.log
 ./$(SANITY_CHECKER) $1 $1.out 2>&1 | tee $1.sanity
 ./$(PLACEMENT_CHECKER) $1 $1.out 2>&1 | tee $1.placement_checker
+./$(EVALUATOR) $1 $1.out 2>&1 | tee $1.evaluator
 endef
 
 # Targets for each test case
@@ -91,40 +93,43 @@ run3: setup
 	$(call RUN_TEST,testcase/testcase2_0812.txt)
 
 run4: setup
-	$(call RUN_TEST,testcase/testcase1_MBFF.txt)
+	$(call RUN_TEST,testcase/testcase3.txt)
 
 run5: setup
-	$(call RUN_TEST,testcase/testcase2_MBFF.txt)
+	$(call RUN_TEST,testcase/testcase1_MBFF.txt)
 
 run6: setup
-	$(call RUN_TEST,testcase/testcase1_MBFF_ALL0.txt)
+	$(call RUN_TEST,testcase/testcase2_MBFF.txt)
 
 run7: setup
-	$(call RUN_TEST,testcase/testcase2_MBFF_ALL0.txt)
+	$(call RUN_TEST,testcase/testcase1_MBFF_ALL0.txt)
 
 run8: setup
-	$(call RUN_TEST,testcase/testcase1_ALL0.txt)
+	$(call RUN_TEST,testcase/testcase2_MBFF_ALL0.txt)
 
 run9: setup
-	$(call RUN_TEST,testcase/testcase2_ALL0.txt)
+	$(call RUN_TEST,testcase/testcase1_ALL0.txt)
 
 run10: setup
-	$(call RUN_TEST,testcase/testcase1_NEG.txt)
+	$(call RUN_TEST,testcase/testcase2_ALL0.txt)
 
 run11: setup
-	$(call RUN_TEST,testcase/testcase2_NEG.txt)
+	$(call RUN_TEST,testcase/testcase1_NEG.txt)
 
 run12: setup
-	$(call RUN_TEST,testcase/testcase1_reverseNEG.txt)
+	$(call RUN_TEST,testcase/testcase2_NEG.txt)
 
 run13: setup
+	$(call RUN_TEST,testcase/testcase1_reverseNEG.txt)
+
+run14: setup
 	$(call RUN_TEST,testcase/testcase2_reverseNEG.txt)
   
-run14: setup
+run15: setup
 	$(call RUN_TEST,testcase/testcase2_upright.txt)
 
 # Target to run all tests
-runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11 run12 run13 run14
+runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11 run12 run13 run14 run15
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
