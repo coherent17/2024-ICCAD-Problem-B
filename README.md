@@ -57,12 +57,7 @@ Cppcheck
 $ make cppcheck
 ```
 
-# Doxygen
+## Doxygen
 ```
-$ doxygen -s -g
-$ doxygen Doxyfile
+$ make view_doxygen
 ```
-VScode Extension:
-*   Install Live Server to open the index.html
-*   right click on doxyfile/index.html
-*   open with live server

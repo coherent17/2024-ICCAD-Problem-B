@@ -27,6 +27,7 @@ Manager::~Manager(){
 }
 
 void Manager::parse(const std::string &filename){
+    this->input_filename = filename;
     Parser parser(filename);
     parser.parse(*this);
 }
@@ -479,7 +480,7 @@ void Manager::deleteFF(FF* in){
  * @param verbose whether to print out the pretty table
  * @return double overall cost
  */
-double Manager::getOverallCost(bool verbose){
+double Manager::getOverallCost(bool verbose, bool runEvaluator){
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -534,6 +535,7 @@ double Manager::getOverallCost(bool verbose){
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
         if(SKIP_BIN_CALC) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
+        if(runEvaluator) std::cout << "[EVALUATOR] Score: " + std::to_string(getEvaluatorCost()) << std::endl;
         size_t numAfterDot = 4;
         std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
         std::vector<std::vector<std::string>> rows = {
@@ -587,6 +589,38 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
         return cell1->getScore() < cell2->getScore();
     };
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
+}
+
+double Manager::getEvaluatorCost(){
+    Manager::dump("temp.out");
+    std::string binaryPath = "evaluator/preliminary-evaluator";
+    std::string command = binaryPath + " " + this->input_filename + " " + "temp.out > evaluator.out";
+    
+    // execute the binary and redirect output
+    int result = system(command.c_str());
+
+    if (result != 0) {
+        DEBUG_MGR("Evaluator execution failed");
+        return DBL_MAX;
+    }
+
+    // get the score
+    std::string sedCommand = "sed -n 's/.*Final score:[[:space:]]*\\([0-9]*\\.[0-9]*\\).*/\\1/p' evaluator.out > score.out";
+    int sed_result = system(sedCommand.c_str());
+    if (sed_result != 0) {
+        DEBUG_MGR("SED execution failed");
+        return DBL_MAX;
+    }
+
+    std::ifstream fin("score.out");
+    double score;
+    fin >> score;
+    fin.close();
+
+    std::remove("temp.out");
+    std::remove("evaluator.out");
+    std::remove("score.out");
+    return score;
 }
 
 /**

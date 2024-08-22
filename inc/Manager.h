@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <unordered_map>
@@ -90,6 +91,9 @@ public:
     // pointer recycle
     std::queue<FF*> FFGarbageCollector;
 
+    // IO filename
+    std::string input_filename;
+
 public:
     Manager();
     ~Manager();
@@ -131,7 +135,8 @@ public:
     void deleteFF(FF*);
     
     double getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank); // > 0 -> after bank cost will be larger
-    double getOverallCost(bool verbose);
+    double getEvaluatorCost();
+    double getOverallCost(bool verbose, bool runEvaluator);
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

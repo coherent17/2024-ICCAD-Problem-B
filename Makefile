@@ -44,6 +44,9 @@ else
     VECHO = @printf
 endif
 
+# directory for regression
+REGDIR = regression
+
 .PHONY: all check clean calc
 
 # Name of the executable
@@ -159,9 +162,14 @@ boost:
 gitlog:
 	git log --graph --decorate --oneline
 
-clean:
-	rm -rf $(OBJDIR) $(BIN) testcase/*.out testcase/*.log testcase/*.sanity testcase/*.placement_checker testcase/*.evaluator *.log *.out *.png
+doxygen: Doxyfile
+	doxygen Doxyfile
 
+view_doxygen: doxygen
+	cd doxyfile/html/; python3 -m http.server 8000;
+
+clean:
+	rm -rf $(OBJDIR) $(BIN) doxyfile testcase/*.out testcase/*.log testcase/*.sanity testcase/*.placement_checker testcase/*.evaluator *.log *.out *.png
 
 # TODO, make release to compile with static-linking
 # ref: https://github.com/fbacchus/MaxHS/issues/3 valgrind error when using valgrind
