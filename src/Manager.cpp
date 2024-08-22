@@ -475,12 +475,14 @@ void Manager::deleteFF(FF* in){
 }
 
 /**
- * @brief the cost function without evaluate the bin density
+ * @brief The cost function of the problem
  * 
- * @param verbose whether to print out the pretty table
- * @return double overall cost
+ * @param verbose whether to print the pretty table
+ * @param skipBinDensity whether to skip the bin density calculation
+ * @param runEvaluator whether to run evaluator to get the real cost
+ * @return double the weighted overall cost
  */
-double Manager::getOverallCost(bool verbose, bool runEvaluator){
+double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvaluator){
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -493,7 +495,7 @@ double Manager::getOverallCost(bool verbose, bool runEvaluator){
     }
 
     // check for the bin density
-    if(!SKIP_BIN_CALC){
+    if(!skipBinDensity){
         int numBins = 0;
         int numViolationBins = 0;
         int DieStartX = die.getDieOrigin().x;
@@ -540,9 +542,9 @@ double Manager::getOverallCost(bool verbose, bool runEvaluator){
     double Area_percentage = Area_cost / cost * 100;
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
-        if(SKIP_BIN_CALC) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
+        if(skipBinDensity) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
         if(runEvaluator) std::cout << "[EVALUATOR] Score: " + std::to_string(getEvaluatorCost()) << std::endl;
-        size_t numAfterDot = 4;
+        size_t numAfterDot = 6;
         std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
         std::vector<std::vector<std::string>> rows = {
             {"TNS", toStringWithPrecision(alpha, numAfterDot), toStringWithPrecision(TNS_cost, numAfterDot), toStringWithPrecision(TNS_percentage, numAfterDot) + "(%)"},
