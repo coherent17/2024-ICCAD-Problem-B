@@ -494,8 +494,8 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
         Area_cost += gamma * (ff_pair.second->getCell()->getArea());
     }
 
-    // check for the bin density
-    if(!skipBinDensity){
+    // Check for the bin density
+    if (!skipBinDensity) {
         int numBins = 0;
         int numViolationBins = 0;
         int DieStartX = die.getDieOrigin().x;
@@ -504,35 +504,73 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
         int DieEndY = die.getDieBorder().y;
         int BinW = die.getBinWidth();
         int BinH = die.getBinHeight();
-        #pragma omp parallel for reduction(+:numBins, numViolationBins) collapse(2)
-        for(int _x = DieStartX; _x < DieEndX; _x += BinW){
-            for(int _y = DieStartY; _y < DieEndY; _y += BinH){
-                numBins++;
-                double area = 0;
-                for(const auto &ff : FF_Map){
-                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
-                        // Calculate overlap dimensions
-                        double overlapW = std::min(_x + die.getBinWidth(), ff.second->getNewCoor().x + ff.second->getW()) - std::max((int)_x, (int)ff.second->getNewCoor().x);
-                        double overlapH = std::min(_y + die.getBinHeight(), ff.second->getNewCoor().y + ff.second->getH()) - std::max((int)_y, (int)ff.second->getNewCoor().y);
-                        area += overlapW * overlapH;
-                    }
-                }
+        double maxUtil = die.getBinMaxUtil() / 100.0;
 
-                for(const auto &gate : Gate_Map){
-                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
-                        // Calculate overlap dimensions
-                        double overlapW = std::min(_x + die.getBinWidth(), gate.second->getCoor().x + gate.second->getW()) - std::max((int)_x, (int)gate.second->getCoor().x);
-                        double overlapH = std::min(_y + die.getBinHeight(), gate.second->getCoor().y + gate.second->getH()) - std::max((int)_y, (int)gate.second->getCoor().y);
-                        area += overlapW * overlapH;
-                    }
+        // Calculate number of bins along X and Y axes
+        int numBinsX = (DieEndX - DieStartX + BinW - 1) / BinW; // Round up
+        int numBinsY = (DieEndY - DieStartY + BinH - 1) / BinH; // Round up
+
+        // 2D array to store area contributions for each bin
+        std::vector<std::vector<double>> binAreas(numBinsX, std::vector<double>(numBinsY, 0.0));
+
+        // Iterate over FFs and accumulate area contributions to bins
+        for (const auto &ff : FF_Map) {
+            int ffStartX = ff.second->getNewCoor().x;
+            int ffStartY = ff.second->getNewCoor().y;
+            int ffEndX = ffStartX + ff.second->getW();
+            int ffEndY = ffStartY + ff.second->getH();
+
+            // Calculate the range of bins that the FF overlaps
+            int startBinX = (ffStartX - DieStartX) / BinW;
+            int startBinY = (ffStartY - DieStartY) / BinH;
+            int endBinX = (ffEndX - DieStartX) / BinW;
+            int endBinY = (ffEndY - DieStartY) / BinH;
+
+            for (int binX = startBinX; binX <= endBinX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY; ++binY) {
+                    // Calculate overlap dimensions
+                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, ffEndX) - std::max(DieStartX + binX * BinW, ffStartX);
+                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, ffEndY) - std::max(DieStartY + binY * BinH, ffStartY);
+                    binAreas[binX][binY] += overlapW * overlapH;
                 }
-                
-                // check if over bin max util
-                if(area / (die.getBinWidth() * die.getBinHeight()) * 100 > die.getBinMaxUtil()){
+            }
+        }
+
+        // Iterate over Gates and accumulate area contributions to bins
+        for (const auto &gate : Gate_Map) {
+            int gateStartX = gate.second->getCoor().x;
+            int gateStartY = gate.second->getCoor().y;
+            int gateEndX = gateStartX + gate.second->getW();
+            int gateEndY = gateStartY + gate.second->getH();
+
+            // Calculate the range of bins that the Gate overlaps
+            int startBinX = (gateStartX - DieStartX) / BinW;
+            int startBinY = (gateStartY - DieStartY) / BinH;
+            int endBinX = (gateEndX - DieStartX) / BinW;
+            int endBinY = (gateEndY - DieStartY) / BinH;
+
+            for (int binX = startBinX; binX <= endBinX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY; ++binY) {
+                    // Calculate overlap dimensions
+                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, gateEndX) - std::max(DieStartX + binX * BinW, gateStartX);
+                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, gateEndY) - std::max(DieStartY + binY * BinH, gateStartY);
+                    binAreas[binX][binY] += overlapW * overlapH;
+                }
+            }
+        }
+
+        // Check each bin for violations
+        for (int binX = 0; binX < numBinsX; ++binX) {
+            for (int binY = 0; binY < numBinsY; ++binY) {
+                numBins++;
+                double area = binAreas[binX][binY];
+                double binArea = BinW * BinH;
+                if (area / binArea > maxUtil) {
                     numViolationBins++;
                 }
             }
         }
+
         Bin_cost = lambda * numViolationBins;
     }
 
