@@ -27,7 +27,7 @@
 #include "PostBankingOptimizer.h"
 #include "Checker.h"
 
-#define SKIP_BIN_CALC true
+#define SKIP_BIN_CALC false
 
 #ifdef ENABLE_DEBUG_MGR
 #define DEBUG_MGR(message) std::cout << "[MANAGER] " << message << std::endl

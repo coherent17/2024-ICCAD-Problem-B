@@ -509,18 +509,24 @@ double Manager::getOverallCost(bool verbose, bool runEvaluator){
                 double area = 0;
                 for(const auto &ff : FF_Map){
                     if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
-                        area += ff.second->getW() * ff.second->getH();
+                        // Calculate overlap dimensions
+                        double overlapW = std::min(_x + die.getBinWidth(), ff.second->getNewCoor().x + ff.second->getW()) - std::max((int)_x, (int)ff.second->getNewCoor().x);
+                        double overlapH = std::min(_y + die.getBinHeight(), ff.second->getNewCoor().y + ff.second->getH()) - std::max((int)_y, (int)ff.second->getNewCoor().y);
+                        area += overlapW * overlapH;
                     }
                 }
 
                 for(const auto &gate : Gate_Map){
                     if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
-                        area += gate.second->getW() * gate.second->getH();
+                        // Calculate overlap dimensions
+                        double overlapW = std::min(_x + die.getBinWidth(), gate.second->getCoor().x + gate.second->getW()) - std::max((int)_x, (int)gate.second->getCoor().x);
+                        double overlapH = std::min(_y + die.getBinHeight(), gate.second->getCoor().y + gate.second->getH()) - std::max((int)_y, (int)gate.second->getCoor().y);
+                        area += overlapW * overlapH;
                     }
                 }
                 
                 // check if over bin max util
-                if(area / (die.getBinWidth() * die.getBinHeight()) > die.getBinMaxUtil()){
+                if(area / (die.getBinWidth() * die.getBinHeight()) * 100 > die.getBinMaxUtil()){
                     numViolationBins++;
                 }
             }
