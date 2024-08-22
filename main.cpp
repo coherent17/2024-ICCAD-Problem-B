@@ -16,6 +16,7 @@ int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.libScoring();
+    mgr.getOverallCost(cost_verbose);
     mgr.preprocess();
     mgr.getOverallCost(cost_verbose);
     mgr.dumpVisual("Preprocessor.out");

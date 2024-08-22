@@ -2,6 +2,7 @@
 #define _MANAGER_H_
 
 #include <iostream>
+#include <cstdlib>
 #include <fstream>
 #include <string>
 #include <unordered_map>
@@ -25,7 +26,7 @@
 #include "PostBankingOptimizer.h"
 #include "Checker.h"
 
-#define SKIP_BIN_CALC false
+#define SKIP_BIN_CALC true
 
 #ifdef ENABLE_DEBUG_MGR
 #define DEBUG_MGR(message) std::cout << "[MANAGER] " << message << std::endl
