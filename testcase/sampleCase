@@ -18,31 +18,20 @@ Pin CLK 95 30
 Pin Q0 665 30 
 Pin D1 494 510 
 Pin Q1 665 750 
-Gate G12 4590 2100 3
-Pin OUT1 2640 980
-Pin IN1 90 1260
-Pin IN2 90 700
-NumInstances 5
+NumInstances 4
 Inst reg1 SVT_FF_1 5952 3600 
 Inst reg2 SVT_FF_1 1278 3600 
 Inst reg3 SVT_FF_1 1278 6000 
 Inst reg4 SVT_FF_1 3615 3600 
-Inst g1 G12 6000 6000
-NumNets 8
+NumNets 6
 Net p0 2
 Pin reg1/Q
 Pin reg2/D
 Net p1 2
 Pin reg2/Q
-Pin g1/IN1
-Net p2 2
 Pin reg3/D
-Pin reg1/Q
-Net p3 2
+Net p2 2
 Pin reg3/Q
-Pin g1/IN2
-Net p4 2
-Pin g1/OUT1
 Pin reg4/D
 Net out 2
 Pin reg4/Q
