@@ -203,27 +203,30 @@ double postBankingObjFunction::forward(){
         for(size_t j=0;j<bit;j++){
             FF* cur_ff = MBFF->getClusterFF()[j];
             // input net
-            assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
-            std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
-            std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
-            Coor inputCoor;
-            if(mgr.IO_Map.count(inputInstanceName)){
-                inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+            Coor curCoor(0, 0);
+            if(cur_ff->getInputInstances().size() >= 1){
+                assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
+                std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
+                std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
+                Coor inputCoor;
+                if(mgr.IO_Map.count(inputInstanceName)){
+                    inputCoor = mgr.IO_Map[inputInstanceName].getCoor();
+                }
+                else if(mgr.Gate_Map.count(inputInstanceName)){
+                    inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
+                }
+                else{
+                    FF* inputFF = mgr.preprocessor->getFFList()[inputInstanceName];
+                    inputCoor = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
+                }
+                curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());
+                x_pos[i][net] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
+                x_neg[i][net] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
+                y_pos[i][net] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
+                y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
+                loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
+                net++;
             }
-            else if(mgr.Gate_Map.count(inputInstanceName)){
-                inputCoor = mgr.Gate_Map[inputInstanceName]->getCoor() + mgr.Gate_Map[inputInstanceName]->getPinCoor(inputPinName);
-            }
-            else{
-                FF* inputFF = mgr.preprocessor->getFFList()[inputInstanceName];
-                inputCoor = inputFF->physicalFF->getNewCoor() + inputFF->physicalFF->getPinCoor("Q" + inputFF->getPhysicalPinName());
-            }
-            Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());
-            x_pos[i][net] = exp( inputCoor.x / gamma) + exp( curCoor.x / gamma);
-            x_neg[i][net] = exp(-inputCoor.x / gamma) + exp(-curCoor.x / gamma);
-            y_pos[i][net] = exp( inputCoor.y / gamma) + exp( curCoor.y / gamma);
-            y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
-            loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
-            net++;
             // output net (only for the ff output to IO, to avoid double calculation)
             const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
             if(nextStage.size()){

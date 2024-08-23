@@ -9,3 +9,4 @@ testcase/*.sanity
 testcase/*.placement_checker
 *.png
 *.out
+doxyfile/

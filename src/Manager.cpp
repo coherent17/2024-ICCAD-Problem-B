@@ -27,6 +27,7 @@ Manager::~Manager(){
 }
 
 void Manager::parse(const std::string &filename){
+    this->input_filename = filename;
     Parser parser(filename);
     parser.parse(*this);
 }
@@ -98,27 +99,10 @@ void Manager::checker(){
     checker.run();
 }
 
-void Manager::dump(const std::string &filename, double prePlaceCost, double finalCost){
+void Manager::dump(const std::string &filename){
     DEBUG_MGR("Dump result ...");
-    DEBUG_MGR("Input cost : " + std::to_string(prePlaceCost));
-    DEBUG_MGR("Final cost : " + std::to_string(finalCost));
     Dumper dumper(filename);
-    if(finalCost <= prePlaceCost)
-        dumper.dump(*this);
-    else{
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        DEBUG_MGR("[WARNING] worse performance after optimize, dump pre-place FF");
-        FF_Map = originalFF_Map;    // retrieve input FF
-        for(auto& ff : FF_Map){
-            ff.second->setNewCoor(ff.second->getCoor());    
-        }
-        legalizer = new Legalizer(*this); // make sure result is legal
-        legalizer->initial();
-        legalizer->run();           
-        this->getOverallCost(true); 
-        dumper.dumpPrePlace(*this); // write result
-    }
+    dumper.dump(*this);
 }
 
 void Manager::dumpVisual(const std::string &filename){
@@ -491,12 +475,14 @@ void Manager::deleteFF(FF* in){
 }
 
 /**
- * @brief the cost function without evaluate the bin density
+ * @brief The cost function of the problem
  * 
- * @param verbose whether to print out the pretty table
- * @return double overall cost
+ * @param verbose whether to print the pretty table
+ * @param skipBinDensity whether to skip the bin density calculation
+ * @param runEvaluator whether to run evaluator to get the real cost
+ * @return double the weighted overall cost
  */
-double Manager::getOverallCost(bool verbose){
+double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvaluator){
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -508,8 +494,8 @@ double Manager::getOverallCost(bool verbose){
         Area_cost += gamma * (ff_pair.second->getCell()->getArea());
     }
 
-    // check for the bin density
-    if(!SKIP_BIN_CALC){
+    // Check for the bin density
+    if (!skipBinDensity) {
         int numBins = 0;
         int numViolationBins = 0;
         int DieStartX = die.getDieOrigin().x;
@@ -518,29 +504,73 @@ double Manager::getOverallCost(bool verbose){
         int DieEndY = die.getDieBorder().y;
         int BinW = die.getBinWidth();
         int BinH = die.getBinHeight();
-        #pragma omp parallel for reduction(+:numBins, numViolationBins) collapse(2)
-        for(int _x = DieStartX; _x < DieEndX; _x += BinW){
-            for(int _y = DieStartY; _y < DieEndY; _y += BinH){
-                numBins++;
-                double area = 0;
-                for(const auto &ff : FF_Map){
-                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), ff.second->getNewCoor(), ff.second->getW(), ff.second->getH())){
-                        area += ff.second->getW() * ff.second->getH();
-                    }
-                }
+        double maxUtil = die.getBinMaxUtil() / 100.0;
 
-                for(const auto &gate : Gate_Map){
-                    if(IsOverlap(Coor(_x, _y), die.getBinWidth(), die.getBinHeight(), gate.second->getCoor(), gate.second->getW(), gate.second->getH())){
-                        area += gate.second->getW() * gate.second->getH();
-                    }
+        // Calculate number of bins along X and Y axes
+        int numBinsX = (DieEndX - DieStartX + BinW - 1) / BinW; // Round up
+        int numBinsY = (DieEndY - DieStartY + BinH - 1) / BinH; // Round up
+
+        // 2D array to store area contributions for each bin
+        std::vector<std::vector<double>> binAreas(numBinsX, std::vector<double>(numBinsY, 0.0));
+
+        // Iterate over FFs and accumulate area contributions to bins
+        for (const auto &ff : FF_Map) {
+            int ffStartX = ff.second->getNewCoor().x;
+            int ffStartY = ff.second->getNewCoor().y;
+            int ffEndX = ffStartX + ff.second->getW();
+            int ffEndY = ffStartY + ff.second->getH();
+
+            // Calculate the range of bins that the FF overlaps
+            int startBinX = (ffStartX - DieStartX) / BinW;
+            int startBinY = (ffStartY - DieStartY) / BinH;
+            int endBinX = (ffEndX - DieStartX) / BinW;
+            int endBinY = (ffEndY - DieStartY) / BinH;
+
+            for (int binX = startBinX; binX <= endBinX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY; ++binY) {
+                    // Calculate overlap dimensions
+                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, ffEndX) - std::max(DieStartX + binX * BinW, ffStartX);
+                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, ffEndY) - std::max(DieStartY + binY * BinH, ffStartY);
+                    binAreas[binX][binY] += overlapW * overlapH;
                 }
-                
-                // check if over bin max util
-                if(area / (die.getBinWidth() * die.getBinHeight()) > die.getBinMaxUtil()){
+            }
+        }
+
+        // Iterate over Gates and accumulate area contributions to bins
+        for (const auto &gate : Gate_Map) {
+            int gateStartX = gate.second->getCoor().x;
+            int gateStartY = gate.second->getCoor().y;
+            int gateEndX = gateStartX + gate.second->getW();
+            int gateEndY = gateStartY + gate.second->getH();
+
+            // Calculate the range of bins that the Gate overlaps
+            int startBinX = (gateStartX - DieStartX) / BinW;
+            int startBinY = (gateStartY - DieStartY) / BinH;
+            int endBinX = (gateEndX - DieStartX) / BinW;
+            int endBinY = (gateEndY - DieStartY) / BinH;
+
+            for (int binX = startBinX; binX <= endBinX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY; ++binY) {
+                    // Calculate overlap dimensions
+                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, gateEndX) - std::max(DieStartX + binX * BinW, gateStartX);
+                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, gateEndY) - std::max(DieStartY + binY * BinH, gateStartY);
+                    binAreas[binX][binY] += overlapW * overlapH;
+                }
+            }
+        }
+
+        // Check each bin for violations
+        for (int binX = 0; binX < numBinsX; ++binX) {
+            for (int binY = 0; binY < numBinsY; ++binY) {
+                numBins++;
+                double area = binAreas[binX][binY];
+                double binArea = BinW * BinH;
+                if (area / binArea > maxUtil) {
                     numViolationBins++;
                 }
             }
         }
+
         Bin_cost = lambda * numViolationBins;
     }
 
@@ -550,8 +580,9 @@ double Manager::getOverallCost(bool verbose){
     double Area_percentage = Area_cost / cost * 100;
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
-        if(SKIP_BIN_CALC) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
-        size_t numAfterDot = 4;
+        if(skipBinDensity) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
+        if(runEvaluator) std::cout << "[EVALUATOR] Score: " + std::to_string(getEvaluatorCost()) << std::endl;
+        size_t numAfterDot = 6;
         std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
         std::vector<std::vector<std::string>> rows = {
             {"TNS", toStringWithPrecision(alpha, numAfterDot), toStringWithPrecision(TNS_cost, numAfterDot), toStringWithPrecision(TNS_percentage, numAfterDot) + "(%)"},
@@ -604,6 +635,38 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
         return cell1->getScore() < cell2->getScore();
     };
     std::sort(cell_vector.begin(), cell_vector.end(), scoreCmp);
+}
+
+double Manager::getEvaluatorCost(){
+    Manager::dump("temp.out");
+    std::string binaryPath = "evaluator/preliminary-evaluator";
+    std::string command = binaryPath + " " + this->input_filename + " " + "temp.out > evaluator.out";
+    
+    // execute the binary and redirect output
+    int result = system(command.c_str());
+
+    if (result != 0) {
+        DEBUG_MGR("Evaluator execution failed");
+        return DBL_MAX;
+    }
+
+    // get the score
+    std::string sedCommand = "sed -n 's/.*Final score:[[:space:]]*\\([0-9]*\\.[0-9]*\\).*/\\1/p' evaluator.out > score.out";
+    int sed_result = system(sedCommand.c_str());
+    if (sed_result != 0) {
+        DEBUG_MGR("SED execution failed");
+        return DBL_MAX;
+    }
+
+    std::ifstream fin("score.out");
+    double score;
+    fin >> score;
+    fin.close();
+
+    std::remove("temp.out");
+    std::remove("evaluator.out");
+    std::remove("score.out");
+    return score;
 }
 
 /**

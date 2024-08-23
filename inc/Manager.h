@@ -2,6 +2,8 @@
 #define _MANAGER_H_
 
 #include <iostream>
+#include <cstdlib>
+#include <cstdio>
 #include <fstream>
 #include <string>
 #include <unordered_map>
@@ -24,8 +26,6 @@
 #include "PrettyTable.h"
 #include "PostBankingOptimizer.h"
 #include "Checker.h"
-
-#define SKIP_BIN_CALC true
 
 #ifdef ENABLE_DEBUG_MGR
 #define DEBUG_MGR(message) std::cout << "[MANAGER] " << message << std::endl
@@ -89,6 +89,9 @@ public:
     // pointer recycle
     std::queue<FF*> FFGarbageCollector;
 
+    // IO filename
+    std::string input_filename;
+
 public:
     Manager();
     ~Manager();
@@ -103,7 +106,7 @@ public:
     void detailplacement();
     void checker();
 
-    void dump(const std::string &filename, double prePlaceCost, double finalCost);
+    void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
     void print();
     
@@ -130,7 +133,8 @@ public:
     void deleteFF(FF*);
     
     double getCostDiff(Coor newbankCoor, Cell* bankCellType, std::vector<FF*>& FFToBank); // > 0 -> after bank cost will be larger
-    double getOverallCost(bool verbose);
+    double getEvaluatorCost();
+    double getOverallCost(bool verbose, bool skipBinDensity, bool runEvaluator);
     friend class Parser;
     friend class Dumper;
     friend class MeanShift;

@@ -19,7 +19,6 @@ public:
     explicit Dumper(const std::string &filename);
     ~Dumper();
     void dump(Manager &mgr);
-    void dumpPrePlace(Manager &mgr);
     static const std::string GenNewInstanceName(const std::string &instanceName);
 };
 

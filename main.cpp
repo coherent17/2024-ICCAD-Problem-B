@@ -16,8 +16,9 @@ int main(int argc, char *argv[]){
     Manager mgr;
     mgr.parse(argv[1]);
     mgr.libScoring();
+    mgr.getOverallCost(cost_verbose, 0, 0);
     mgr.preprocess();
-    mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 0);
     mgr.dumpVisual("Preprocessor.out");
 
     // mgr.meanshift();
@@ -25,27 +26,27 @@ int main(int argc, char *argv[]){
     // mgr.dumpVisual("Meanshift.out");
 
     mgr.preLegalize();
-    double prePlaceCost = mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 1);
     mgr.dumpVisual("PreLegalize.out");
 
     mgr.banking();
-    mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 1);
     mgr.dumpVisual("Banking.out");
 
     mgr.postBankingOptimize();
-    mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 0);
     mgr.dumpVisual("PostCG.out");
 
     mgr.legalize();
-    mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 1);
     mgr.dumpVisual("Legalize.out");
     mgr.checker();
 
     mgr.detailplacement();
-    double finalCost = mgr.getOverallCost(cost_verbose);
+    mgr.getOverallCost(cost_verbose, 0, 1);
     mgr.dumpVisual("DetailPlacement.out");
     mgr.checker();
 
-    mgr.dump(argv[2], prePlaceCost, finalCost);
+    mgr.dump(argv[2]);
     return 0;
 }
