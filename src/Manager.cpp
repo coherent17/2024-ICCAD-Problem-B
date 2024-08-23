@@ -474,15 +474,96 @@ void Manager::deleteFF(FF* in){
     FFGarbageCollector.push(in);
 }
 
+double Manager::calculateBinDensityCost(){
+    int numBins = 0;
+    int numViolationBins = 0;
+    int DieStartX = die.getDieOrigin().x;
+    int DieStartY = die.getDieOrigin().y;
+    int DieEndX = die.getDieBorder().x;
+    int DieEndY = die.getDieBorder().y;
+    int BinW = die.getBinWidth();
+    int BinH = die.getBinHeight();
+    double maxUtil = die.getBinMaxUtil() / 100.0;
+
+    // Calculate number of bins along X and Y axes
+    int numBinsX = (DieEndX - DieStartX + BinW - 1) / BinW; // Round up
+    int numBinsY = (DieEndY - DieStartY + BinH - 1) / BinH; // Round up
+
+    // 2D array to store area contributions for each bin
+    std::vector<std::vector<double>> binAreas(numBinsX, std::vector<double>(numBinsY, 0.0));
+
+    // Iterate over FFs and accumulate area contributions to bins
+    for (const auto &ff : FF_Map) {
+        int ffStartX = ff.second->getNewCoor().x;
+        int ffStartY = ff.second->getNewCoor().y;
+        int ffEndX = ffStartX + ff.second->getW();
+        int ffEndY = ffStartY + ff.second->getH();
+
+        // Calculate the range of bins that the FF overlaps
+        int startBinX = (ffStartX - DieStartX) / BinW;
+        startBinX = (startBinX < 0) ? 0 : startBinX;
+        int startBinY = (ffStartY - DieStartY) / BinH;
+        startBinY = (startBinY < 0) ? 0 : startBinY;
+        int endBinX = (ffEndX - DieStartX) / BinW;
+        int endBinY = (ffEndY - DieStartY) / BinH;
+
+        for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
+            for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
+                // Calculate overlap dimensions
+                double overlapW = std::min(DieStartX + (binX + 1) * BinW, ffEndX) - std::max(DieStartX + binX * BinW, ffStartX);
+                double overlapH = std::min(DieStartY + (binY + 1) * BinH, ffEndY) - std::max(DieStartY + binY * BinH, ffStartY);
+                binAreas[binX][binY] += overlapW * overlapH;
+            }
+        }
+    }
+
+    // Iterate over Gates and accumulate area contributions to bins
+    for (const auto &gate : Gate_Map) {
+        int gateStartX = gate.second->getCoor().x;
+        int gateStartY = gate.second->getCoor().y;
+        int gateEndX = gateStartX + gate.second->getW();
+        int gateEndY = gateStartY + gate.second->getH();
+
+        // Calculate the range of bins that the Gate overlaps
+        int startBinX = (gateStartX - DieStartX) / BinW;
+        startBinX = (startBinX < 0) ? 0 : startBinX;
+        int startBinY = (gateStartY - DieStartY) / BinH;
+        startBinY = (startBinY < 0) ? 0 : startBinY;
+        int endBinX = (gateEndX - DieStartX) / BinW;
+        int endBinY = (gateEndY - DieStartY) / BinH;
+
+        for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
+            for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
+                // Calculate overlap dimensions
+                double overlapW = std::min(DieStartX + (binX + 1) * BinW, gateEndX) - std::max(DieStartX + binX * BinW, gateStartX);
+                double overlapH = std::min(DieStartY + (binY + 1) * BinH, gateEndY) - std::max(DieStartY + binY * BinH, gateStartY);
+                binAreas[binX][binY] += overlapW * overlapH;
+            }
+        }
+    }
+
+    // Check each bin for violations
+    for (int binX = 0; binX < numBinsX; ++binX) {
+        for (int binY = 0; binY < numBinsY; ++binY) {
+            numBins++;
+            double area = binAreas[binX][binY];
+            double binArea = BinW * BinH;
+            if (area / binArea > maxUtil) {
+                numViolationBins++;
+            }
+        }
+    }
+    return lambda * numViolationBins;
+}
+
 /**
  * @brief The cost function of the problem
  * 
  * @param verbose whether to print the pretty table
- * @param skipBinDensity whether to skip the bin density calculation
  * @param runEvaluator whether to run evaluator to get the real cost
  * @return double the weighted overall cost
  */
-double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvaluator){
+double Manager::getOverallCost(bool verbose, bool runEvaluator){
     double TNS_cost = 0;
     double Power_cost = 0;
     double Area_cost = 0;
@@ -495,88 +576,7 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
     }
 
     // Check for the bin density
-    if (!skipBinDensity) {
-        int numBins = 0;
-        int numViolationBins = 0;
-        int DieStartX = die.getDieOrigin().x;
-        int DieStartY = die.getDieOrigin().y;
-        int DieEndX = die.getDieBorder().x;
-        int DieEndY = die.getDieBorder().y;
-        int BinW = die.getBinWidth();
-        int BinH = die.getBinHeight();
-        double maxUtil = die.getBinMaxUtil() / 100.0;
-
-        // Calculate number of bins along X and Y axes
-        int numBinsX = (DieEndX - DieStartX + BinW - 1) / BinW; // Round up
-        int numBinsY = (DieEndY - DieStartY + BinH - 1) / BinH; // Round up
-
-        // 2D array to store area contributions for each bin
-        std::vector<std::vector<double>> binAreas(numBinsX, std::vector<double>(numBinsY, 0.0));
-
-        // Iterate over FFs and accumulate area contributions to bins
-        for (const auto &ff : FF_Map) {
-            int ffStartX = ff.second->getNewCoor().x;
-            int ffStartY = ff.second->getNewCoor().y;
-            int ffEndX = ffStartX + ff.second->getW();
-            int ffEndY = ffStartY + ff.second->getH();
-
-            // Calculate the range of bins that the FF overlaps
-            int startBinX = (ffStartX - DieStartX) / BinW;
-            startBinX = (startBinX < 0) ? 0 : startBinX;
-            int startBinY = (ffStartY - DieStartY) / BinH;
-            startBinY = (startBinY < 0) ? 0 : startBinY;
-            int endBinX = (ffEndX - DieStartX) / BinW;
-            int endBinY = (ffEndY - DieStartY) / BinH;
-
-            for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
-                for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
-                    // Calculate overlap dimensions
-                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, ffEndX) - std::max(DieStartX + binX * BinW, ffStartX);
-                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, ffEndY) - std::max(DieStartY + binY * BinH, ffStartY);
-                    binAreas[binX][binY] += overlapW * overlapH;
-                }
-            }
-        }
-
-        // Iterate over Gates and accumulate area contributions to bins
-        for (const auto &gate : Gate_Map) {
-            int gateStartX = gate.second->getCoor().x;
-            int gateStartY = gate.second->getCoor().y;
-            int gateEndX = gateStartX + gate.second->getW();
-            int gateEndY = gateStartY + gate.second->getH();
-
-            // Calculate the range of bins that the Gate overlaps
-            int startBinX = (gateStartX - DieStartX) / BinW;
-            startBinX = (startBinX < 0) ? 0 : startBinX;
-            int startBinY = (gateStartY - DieStartY) / BinH;
-            startBinY = (startBinY < 0) ? 0 : startBinY;
-            int endBinX = (gateEndX - DieStartX) / BinW;
-            int endBinY = (gateEndY - DieStartY) / BinH;
-
-            for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
-                for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
-                    // Calculate overlap dimensions
-                    double overlapW = std::min(DieStartX + (binX + 1) * BinW, gateEndX) - std::max(DieStartX + binX * BinW, gateStartX);
-                    double overlapH = std::min(DieStartY + (binY + 1) * BinH, gateEndY) - std::max(DieStartY + binY * BinH, gateStartY);
-                    binAreas[binX][binY] += overlapW * overlapH;
-                }
-            }
-        }
-
-        // Check each bin for violations
-        for (int binX = 0; binX < numBinsX; ++binX) {
-            for (int binY = 0; binY < numBinsY; ++binY) {
-                numBins++;
-                double area = binAreas[binX][binY];
-                double binArea = BinW * BinH;
-                if (area / binArea > maxUtil) {
-                    numViolationBins++;
-                }
-            }
-        }
-
-        Bin_cost = lambda * numViolationBins;
-    }
+    Bin_cost = calculateBinDensityCost();
 
     double cost = TNS_cost + Power_cost + Area_cost + Bin_cost;
     double TNS_percentage = TNS_cost / cost * 100;
@@ -584,7 +584,6 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
     double Area_percentage = Area_cost / cost * 100;
     double Bin_percentage = Bin_cost / cost * 100;
     if(verbose){
-        if(skipBinDensity) std::cout << "[Warning] Skip bin density calculation!" << std::endl;
         if(runEvaluator) std::cout << "[EVALUATOR] Score: " + std::to_string(getEvaluatorCost()) << std::endl;
         size_t numAfterDot = 6;
         std::vector<std::string> header = {"Cost", "Weight", "Value", "Percentage(%)"};
@@ -642,6 +641,7 @@ void Manager::sortCell(std::vector<Cell *> &cell_vector){
 }
 
 double Manager::getEvaluatorCost(){
+    DEBUG_MGR("Run Evaluator...");
     Manager::dump("temp.out");
     std::string binaryPath = "evaluator/preliminary-evaluator";
     std::string command = binaryPath + " " + this->input_filename + " " + "temp.out > evaluator.out";

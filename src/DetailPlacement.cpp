@@ -22,14 +22,14 @@ void DetailPlacement::run(){
     GlobalSwap();
 
     // by c119cheng
-    mgr.getOverallCost(true, 0, 1);
+    mgr.getOverallCost(true, 1);
     Timer t = Timer();
     t.start();
     DetailAssignmentMBFF(); // for same clk
     t.stop();
     Timer tt = Timer();
     
-    mgr.getOverallCost(true, 0, 1);
+    mgr.getOverallCost(true, 1);
     tt.start();
     ChangeCell();
     tt.stop();
