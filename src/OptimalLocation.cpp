@@ -59,6 +59,14 @@ double preprocessObjFunction::forward(){
             loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
             net++;
         }
+        else{
+            x_pos[i][net] = 0;
+            x_neg[i][net] = 0;
+            y_pos[i][net] = 0;
+            y_neg[i][net] = 0;
+            loss += 0;
+            net++;  
+        }
         // output net
         const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
         if(nextStage.size()){
@@ -115,8 +123,10 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
 
         // net of D pin
         Coor curCoor = cur_ff->getOriginalD();
-        grad_[i].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
-        grad_[i].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+        if(cur_ff->getInputInstances().size() >= 1){
+            grad_[i].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+            grad_[i].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));  
+        } 
         net++;
         // net of Q pin
         curCoor = cur_ff->getOriginalQ();
@@ -227,6 +237,14 @@ double postBankingObjFunction::forward(){
                 loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
                 net++;
             }
+            else{
+                x_pos[i][net] = 0;
+                x_neg[i][net] = 0;
+                y_pos[i][net] = 0;
+                y_neg[i][net] = 0;
+                loss += 0;
+                net++;  
+            }
             // output net (only for the ff output to IO, to avoid double calculation)
             const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
             if(nextStage.size()){
@@ -283,9 +301,11 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
         for(size_t j=0;j<bit;j++){
             FF* cur_ff = MBFF->getClusterFF()[j];
             // net of D pin
-            Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());;
-            grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
-            grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+            Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());
+            if(cur_ff->getInputInstances().size() >= 1){
+                grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+                grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+            }
             net++;
             curWeight++;
             // net of Q pin
