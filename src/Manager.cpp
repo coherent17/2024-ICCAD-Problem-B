@@ -176,7 +176,7 @@ void Manager::dumpVisual(const std::string &filename){
     fout << "BinMaxUtil " << die.getBinMaxUtil() << std::endl;
     std::vector<PlacementRow> pr = die.getPlacementRows();
     for(size_t i = 0; i < pr.size(); i++){
-        fout << "PlacementRows " << pr[i].startCoor.x << " " << pr[i].startCoor.y << " " << pr[i].siteWidth << " " << pr[i].siteHeight << " " << pr[i].NumOfSites << std::endl;
+        fout << "PlacementRows " << std::setprecision(10)<< pr[i].startCoor.x << " " << pr[i].startCoor.y << " " << pr[i].siteWidth << " " << pr[i].siteHeight << " " << pr[i].NumOfSites << std::endl;
     }
     fout.close();
 }
@@ -522,12 +522,14 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
 
             // Calculate the range of bins that the FF overlaps
             int startBinX = (ffStartX - DieStartX) / BinW;
+            startBinX = (startBinX < 0) ? 0 : startBinX;
             int startBinY = (ffStartY - DieStartY) / BinH;
+            startBinY = (startBinY < 0) ? 0 : startBinY;
             int endBinX = (ffEndX - DieStartX) / BinW;
             int endBinY = (ffEndY - DieStartY) / BinH;
 
-            for (int binX = startBinX; binX <= endBinX; ++binX) {
-                for (int binY = startBinY; binY <= endBinY; ++binY) {
+            for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
                     // Calculate overlap dimensions
                     double overlapW = std::min(DieStartX + (binX + 1) * BinW, ffEndX) - std::max(DieStartX + binX * BinW, ffStartX);
                     double overlapH = std::min(DieStartY + (binY + 1) * BinH, ffEndY) - std::max(DieStartY + binY * BinH, ffStartY);
@@ -545,12 +547,14 @@ double Manager::getOverallCost(bool verbose, bool skipBinDensity, bool runEvalua
 
             // Calculate the range of bins that the Gate overlaps
             int startBinX = (gateStartX - DieStartX) / BinW;
+            startBinX = (startBinX < 0) ? 0 : startBinX;
             int startBinY = (gateStartY - DieStartY) / BinH;
+            startBinY = (startBinY < 0) ? 0 : startBinY;
             int endBinX = (gateEndX - DieStartX) / BinW;
             int endBinY = (gateEndY - DieStartY) / BinH;
 
-            for (int binX = startBinX; binX <= endBinX; ++binX) {
-                for (int binY = startBinY; binY <= endBinY; ++binY) {
+            for (int binX = startBinX; binX <= endBinX && binX < numBinsX; ++binX) {
+                for (int binY = startBinY; binY <= endBinY && binY < numBinsY; ++binY) {
                     // Calculate overlap dimensions
                     double overlapW = std::min(DieStartX + (binX + 1) * BinW, gateEndX) - std::max(DieStartX + binX * BinW, gateStartX);
                     double overlapH = std::min(DieStartY + (binY + 1) * BinH, gateEndY) - std::max(DieStartY + binY * BinH, gateStartY);
