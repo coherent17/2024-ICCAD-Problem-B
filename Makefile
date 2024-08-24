@@ -145,7 +145,7 @@ draw:
 	./drawDie/drawDie -i DetailPlacement.out -m 6_DetailPlacement.png -t DetailPlacement -g -p -nl -o
 
 valgrind:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0812.txt testcase/testcase1_0812.txt.out
 	cat valgrind.log
 
 cppcheck:
