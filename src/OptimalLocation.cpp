@@ -178,7 +178,7 @@ void preprocessObjFunction::getWeight(FF* cur_ff, std::vector<double>& weight){
     }
     else{
         for(size_t i=0;i<weight.size();i++)
-            weight[i] = 0.1/weight.size();
+            weight[i] = 0;
     }
 }
 
@@ -363,7 +363,7 @@ void postBankingObjFunction::getWeight(FF* MBFF, std::vector<double>& weight){
     }
     if(!hasNegative){
         for(size_t i=0;i<weight.size();i++)
-            weight[i] = 0.1/weight.size();
+            weight[i] = 0;
     }
 }
 
