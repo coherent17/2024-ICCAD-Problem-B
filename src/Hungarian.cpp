@@ -59,7 +59,7 @@ double HungarianAlgorithm::Solve(std::vector<std::vector<double>>& DistMatrix, s
 //********************************************************//
 void HungarianAlgorithm::assignmentoptimal(int *assignment, double *cost, double *distMatrixIn, int nOfRows, int nOfColumns)
 {
-	double *distMatrix, *distMatrixTemp, *distMatrixEnd, *columnEnd, value, minValue;
+	double *distMatrix, *distMatrixTemp, *distMatrixEnd, value, minValue;
 	bool *coveredColumns, *coveredRows, *starMatrix, *newStarMatrix, *primeMatrix;
 	int nOfElements, minDim, row, col;
 
@@ -133,6 +133,7 @@ void HungarianAlgorithm::assignmentoptimal(int *assignment, double *cost, double
 
 		for (col = 0; col<nOfColumns; col++)
 		{
+			double *columnEnd;
 			/* find the smallest element in the column */
 			distMatrixTemp = distMatrix + nOfRows*col;
 			columnEnd = distMatrixTemp + nOfRows;
@@ -205,10 +206,11 @@ void HungarianAlgorithm::buildassignmentvector(int *assignment, bool *starMatrix
 /********************************************************/
 void HungarianAlgorithm::computeassignmentcost(const int *assignment, double *cost, const double *distMatrix, int nOfRows)
 {
-	int row, col;
+	int row;
 
 	for (row = 0; row<nOfRows; row++)
 	{
+		int col;
 		col = assignment[row];
 		if (col >= 0)
 			*cost += distMatrix[row + nOfRows*col];
@@ -218,12 +220,13 @@ void HungarianAlgorithm::computeassignmentcost(const int *assignment, double *co
 /********************************************************/
 void HungarianAlgorithm::step2a(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim)
 {
-	bool *starMatrixTemp, *columnEnd;
+	bool *starMatrixTemp;
 	int col;
 
 	/* cover every column containing a starred zero */
 	for (col = 0; col<nOfColumns; col++)
 	{
+		bool *columnEnd;
 		starMatrixTemp = starMatrix + nOfRows*col;
 		columnEnd = starMatrixTemp + nOfRows;
 		while (starMatrixTemp < columnEnd){
@@ -309,7 +312,7 @@ void HungarianAlgorithm::step3(int *assignment, double *distMatrix, bool *starMa
 /********************************************************/
 void HungarianAlgorithm::step4(int *assignment, double *distMatrix, bool *starMatrix, bool *newStarMatrix, bool *primeMatrix, bool *coveredColumns, bool *coveredRows, int nOfRows, int nOfColumns, int minDim, int row, int col)
 {
-	int n, starRow, starCol, primeRow, primeCol;
+	int n, starRow, starCol, primeCol;
 	int nOfElements = nOfRows*nOfColumns;
 
 	/* generate temporary copy of starMatrix */
@@ -327,6 +330,7 @@ void HungarianAlgorithm::step4(int *assignment, double *distMatrix, bool *starMa
 
 	while (starRow<nOfRows)
 	{
+		int primeRow;
 		/* unstar the starred zero */
 		newStarMatrix[starRow + nOfRows*starCol] = false;
 

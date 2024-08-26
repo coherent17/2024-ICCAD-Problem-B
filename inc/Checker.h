@@ -34,8 +34,8 @@ private:
     void checkOnSite();
     void checkOverlap();
     void checkDieBoundary();
-    bool overlap(Rect rect1, Rect rect2);
-    void sortRects(std::vector<Rect> &rect);
+    static bool overlap(Rect rect1, Rect rect2);
+    static void sortRects(std::vector<Rect> &rect);
 };
 
 #endif

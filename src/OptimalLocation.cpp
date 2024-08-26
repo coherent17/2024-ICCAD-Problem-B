@@ -398,10 +398,9 @@ void Gradient::Step(bool onlyNegative) {
     obj_.forward();
     obj_.backward(step_, onlyNegative);
     // Compute the Polak-Ribiere coefficient and conjugate directions
-    double beta;                                  // Polak-Ribiere coefficient
+
     if (step_ == 0) {
         // For the first step, we will set beta = 0 and d_0 = -g_0
-        beta = 0.;
         for (size_t i = 0; i < kNumModule; ++i) {
             dir[i].x = -obj_.grad().at(i).x;
             dir[i].y = -obj_.grad().at(i).y;
@@ -420,7 +419,7 @@ void Gradient::Step(bool onlyNegative) {
             t1 += t3.x + t3.y;
             t2 += std::abs(g.x) + std::abs(g.y);
         }
-        beta = t1 / (t2 * t2 + 0.00001);
+        double beta = t1 / (t2 * t2 + 0.00001); // Polak-Ribiere coefficient
         #pragma omp parallel for num_threads(MAX_THREADS)
         for (size_t i = 0; i < kNumModule; ++i) {
             dir[i].x = -obj_.grad().at(i).x + beta * dir_prev_.at(i).x;

@@ -50,7 +50,7 @@ void Checker::initialChecker(){
 void Checker::checkOnSite(){
     DEBUG_CHECKER("Check On Site");
     std::vector<PlacementRow> PlacementRows = mgr.die.getPlacementRows();
-    std::sort(PlacementRows.begin(), PlacementRows.end(), [](const PlacementRow a, const PlacementRow b){
+    std::sort(PlacementRows.begin(), PlacementRows.end(), [](const PlacementRow& a, const PlacementRow& b){
         if(a.startCoor.y == b.startCoor.y)
             return a.startCoor.x < b.startCoor.y;
         else
@@ -106,13 +106,13 @@ void Checker::checkOverlap(){
 }
 
 bool Checker::overlap(Rect rect1, Rect rect2){
-    Rect &rectUp = (rect1.startY > rect2.startY) ? rect1 : rect2;
-    Rect &rectLow = (rect1.startY > rect2.startY) ? rect2 : rect1;
+    const Rect &rectUp = (rect1.startY > rect2.startY) ? rect1 : rect2;
+    const Rect &rectLow = (rect1.startY > rect2.startY) ? rect2 : rect1;
     if(rectUp.startY >= rectLow.endY){
         return false;
     }
-    Rect &rectLeft = (rect1.startX < rect2.startX) ? rect1 : rect2;
-    Rect &rectRight = (rect1.startX < rect2.startX) ? rect2 : rect1;
+    const Rect &rectLeft = (rect1.startX < rect2.startX) ? rect1 : rect2;
+    const Rect &rectRight = (rect1.startX < rect2.startX) ? rect2 : rect1;
     if(rectRight.startX >= rectLeft.endX){
         return false;
     }
