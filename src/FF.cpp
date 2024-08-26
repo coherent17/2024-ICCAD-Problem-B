@@ -3,29 +3,45 @@ double FF::DisplacementDelay = 0;
 double FF::alpha = 0;
 double FF::beta = 0;
 double FF::gamma = 0;
-FF::FF() : Instance(){
-    ffIdx = UNSET_IDX;
-    clusterIdx = UNSET_IDX;
-    coor = {0, 0};
-    bandwidth = 0;
-    isShifting = true;
-    clkIdx = UNSET_IDX;
-    isLegalize = false;
-    prevStage = {nullptr, nullptr, ""};
-    prevInstance = {nullptr, CellType::IO, ""};
-    fixed = true;
+FF::FF() : 
+    Instance(),
+    ffIdx(UNSET_IDX),
+    clusterIdx(UNSET_IDX),
+    newCoor({0, 0}),
+    bandwidth(0),
+    isShifting(true),
+    clkIdx(UNSET_IDX),
+    isLegalize(false),
+    prevStage({nullptr, nullptr, ""}),
+    prevInstance({nullptr, CellType::IO, ""}),
+    originalD({0, 0}),
+    originalQ({0, 0}),
+    originalQpinDelay(0),
+    physicalFF(nullptr),
+    slot(0),
+    fixed(true){
 }
 
 FF::FF(int size) : Instance(), clusterFF(size, nullptr){
+    TimingSlack.clear();
+    clusterFF.clear();
     ffIdx = UNSET_IDX;
     clusterIdx = UNSET_IDX;
+    newCoor = {0, 0};
     coor = {0, 0};
     bandwidth = 0;
     isShifting = true;
+    NeighborFFs.clear();
     clkIdx = UNSET_IDX;
     isLegalize = false;
     prevStage = {nullptr, nullptr, ""};
     prevInstance = {nullptr, CellType::IO, ""};
+    nextStage.clear();
+    originalD = {0, 0};
+    originalQ = {0, 0};
+    originalQpinDelay = 0;
+    physicalFF = nullptr;
+    slot = -1;
     fixed = true;
 }
 
@@ -84,15 +100,15 @@ void FF::setIsShifting(bool shift){
     this->isShifting = shift;
 }
 
-void FF::setPrevStage(PrevStage inputStage){
+void FF::setPrevStage(const PrevStage& inputStage){
     this->prevStage = inputStage;
 }
 
-void FF::setPrevInstance(PrevInstance inputInstance){
+void FF::setPrevInstance(const PrevInstance& inputInstance){
     this->prevInstance = inputInstance;
 }
 
-void FF::addNextStage(NextStage input){
+void FF::addNextStage(const NextStage& input){
     this->nextStage.push_back(input);
 }
 
@@ -221,7 +237,7 @@ void FF::sortNeighbors(){
     std::sort(NeighborFFs.begin(), NeighborFFs.end(), FFcmp);
 }
 
-double FF::shift(std::vector<FF *> &FFs){
+double FF::shift(const std::vector<FF *> &FFs){
     double x_shift = 0;
     double y_shift = 0;
     double scale_factor = 0;

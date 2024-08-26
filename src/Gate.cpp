@@ -1,7 +1,6 @@
 #include "Gate.h"
 
-Gate::Gate() : visitedTime(0){
-    maxInput = {nullptr, nullptr, "", 0};
+Gate::Gate() : visitedTime(0),  maxInput({nullptr, nullptr, "", 0}){
 }
 
 Gate::~Gate(){}

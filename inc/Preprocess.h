@@ -18,7 +18,7 @@ class Preprocess{
 
         bool changed;
     public:
-        Preprocess(Manager& mgr);
+        explicit Preprocess(Manager& mgr);
         ~Preprocess();
         void run();
         // get function

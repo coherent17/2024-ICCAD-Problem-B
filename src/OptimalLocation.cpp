@@ -1,11 +1,10 @@
 #include "OptimalLocation.h"
 
 objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
-    : mgr(mgr), FF_list(FF_list), idx_map(idx_map),
+    : mgr(mgr), FF_list(FF_list), idx_map(idx_map), loss(0), gamma((mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01),
     x_pos(totalFF), x_neg(totalFF), 
     y_pos(totalFF), y_neg(totalFF),
     FFs(FFs){
-    gamma = (mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01;
 }
 
 preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
@@ -39,7 +38,6 @@ double preprocessObjFunction::forward(){
         Coor curCoor = cur_ff->getOriginalD();
         // input net
         if(cur_ff->getInputInstances().size() >= 1){
-            assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
             std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
             std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
             Coor inputCoor;
@@ -58,6 +56,14 @@ double preprocessObjFunction::forward(){
             y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
             loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
             net++;
+        }
+        else{
+            x_pos[i][net] = 0;
+            x_neg[i][net] = 0;
+            y_pos[i][net] = 0;
+            y_neg[i][net] = 0;
+            loss += 0;
+            net++;  
         }
         // output net
         const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
@@ -115,8 +121,10 @@ vector<Coor>& preprocessObjFunction::backward(int step, bool onlyNegative){
 
         // net of D pin
         Coor curCoor = cur_ff->getOriginalD();
-        grad_[i].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
-        grad_[i].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+        if(cur_ff->getInputInstances().size() >= 1){
+            grad_[i].x += weight[0] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+            grad_[i].y += weight[0] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));  
+        } 
         net++;
         // net of Q pin
         curCoor = cur_ff->getOriginalQ();
@@ -168,7 +176,7 @@ void preprocessObjFunction::getWeight(FF* cur_ff, std::vector<double>& weight){
     }
     else{
         for(size_t i=0;i<weight.size();i++)
-            weight[i] = 0.1/weight.size();
+            weight[i] = 0;
     }
 }
 
@@ -205,7 +213,6 @@ double postBankingObjFunction::forward(){
             // input net
             Coor curCoor(0, 0);
             if(cur_ff->getInputInstances().size() >= 1){
-                assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
                 std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
                 std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
                 Coor inputCoor;
@@ -226,6 +233,14 @@ double postBankingObjFunction::forward(){
                 y_neg[i][net] = exp(-inputCoor.y / gamma) + exp(-curCoor.y / gamma);
                 loss += log(x_pos[i][net]) + log(x_neg[i][net]) + log(y_pos[i][net]) + log(y_neg[i][net]);
                 net++;
+            }
+            else{
+                x_pos[i][net] = 0;
+                x_neg[i][net] = 0;
+                y_pos[i][net] = 0;
+                y_neg[i][net] = 0;
+                loss += 0;
+                net++;  
             }
             // output net (only for the ff output to IO, to avoid double calculation)
             const std::vector<NextStage>& nextStage = cur_ff->getNextStage();
@@ -283,9 +298,11 @@ vector<Coor>& postBankingObjFunction::backward(int step, bool onlyNegative){
         for(size_t j=0;j<bit;j++){
             FF* cur_ff = MBFF->getClusterFF()[j];
             // net of D pin
-            Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());;
-            grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
-            grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+            Coor curCoor = cur_ff->physicalFF->getNewCoor() + cur_ff->physicalFF->getPinCoor("D" + cur_ff->getPhysicalPinName());
+            if(cur_ff->getInputInstances().size() >= 1){
+                grad_[i].x += weight[curWeight] * ((exp(curCoor.x / gamma) / x_pos[i][net]) - (exp(-curCoor.x / gamma) / x_neg[i][net]));
+                grad_[i].y += weight[curWeight] * ((exp(curCoor.y / gamma) / y_pos[i][net]) - (exp(-curCoor.y / gamma) / y_neg[i][net]));   
+            }
             net++;
             curWeight++;
             // net of Q pin
@@ -343,7 +360,7 @@ void postBankingObjFunction::getWeight(FF* MBFF, std::vector<double>& weight){
     }
     if(!hasNegative){
         for(size_t i=0;i<weight.size();i++)
-            weight[i] = 0.1/weight.size();
+            weight[i] = 0;
     }
 }
 
@@ -365,7 +382,6 @@ Gradient::Gradient( Manager &mgr,
       mgr(mgr),
       FF_list(FF_list),
       FFs(FFs){
-    Initialize(alpha);
 }
 
 Gradient::~Gradient(){

@@ -228,7 +228,6 @@ void DetailPlacement::DetailAssignmentMBFF(){
                             delta_hpwl = old_hpwl - new_hpwl;
                         }
                         else{
-                            Coor newCoorD;
                             newCoorD = nextFF.ff->getPhysicalFF()->getNewCoor() + nextFF.ff->getPhysicalFF()->getPinCoor("D" + nextFF.ff->getPhysicalPinName());
                             double old_hpwl = HPWL(nextFF.ff->getOriginalD(), originalInput);
                             double new_hpwl = HPWL(newCoorD, newInput);

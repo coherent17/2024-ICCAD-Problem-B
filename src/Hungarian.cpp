@@ -203,7 +203,7 @@ void HungarianAlgorithm::buildassignmentvector(int *assignment, bool *starMatrix
 }
 
 /********************************************************/
-void HungarianAlgorithm::computeassignmentcost(int *assignment, double *cost, double *distMatrix, int nOfRows)
+void HungarianAlgorithm::computeassignmentcost(const int *assignment, double *cost, const double *distMatrix, int nOfRows)
 {
 	int row, col;
 

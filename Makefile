@@ -8,7 +8,7 @@ WARNINGS = -g -Wall -static
 
 # Valgrind for memory issue
 CHECKCC = valgrind
-CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes
+CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes --log-file="valgrind.log"
 
 # Cppcheck for static analysis
 CPPCHECKCC = cppcheck
@@ -149,7 +149,7 @@ draw:
 	./drawDie/drawDie -i DetailPlacement.out -m 6_DetailPlacement.png -t DetailPlacement -g -p -nl -o
 
 valgrind:
-	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase1_0614.txt testcase/testcase1_0614.txt.out
+	$(CHECKCC) $(CHECKFLAGS) ./$(BIN) testcase/testcase3.txt testcase/testcase3.txt.out
 	cat valgrind.log
 
 cppcheck:

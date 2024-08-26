@@ -28,9 +28,9 @@ class preprocessObjFunction : public objFunction{
         preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
                             std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
         ~preprocessObjFunction();
-        double forward();
-        vector<Coor>& backward(int step, bool onlyNegative);
-        void getWeight(FF* cur_ff, vector<double>& weight);
+        double forward() override;
+        vector<Coor>& backward(int step, bool onlyNegative) override;
+        void getWeight(FF* cur_ff, vector<double>& weight) override;
 };
 
 class postBankingObjFunction : public objFunction{
@@ -38,9 +38,9 @@ class postBankingObjFunction : public objFunction{
         postBankingObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, 
                             std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs);
         ~postBankingObjFunction();
-        double forward();
-        vector<Coor>& backward(int step, bool onlyNegative);
-        void getWeight(FF* cur_ff, vector<double>& weight);
+        double forward() override;
+        vector<Coor>& backward(int step, bool onlyNegative) override;
+        void getWeight(FF* MBFF, vector<double>& weight) override;
 };
 
 class Gradient{

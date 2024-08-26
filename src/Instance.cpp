@@ -2,7 +2,7 @@
 
 Instance::Instance() : 
     instanceName(""),
-    coor(0, 0),
+    coor({0, 0}),
     cell(nullptr)
     {}
 

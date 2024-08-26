@@ -7,7 +7,7 @@ class postBankingOptimizer{
     private:
         Manager& mgr;
     public:
-        postBankingOptimizer(Manager&);
+        explicit postBankingOptimizer(Manager&);
         ~postBankingOptimizer();
         void run();
 

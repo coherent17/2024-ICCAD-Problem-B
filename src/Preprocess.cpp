@@ -1,8 +1,7 @@
 #include "Preprocess.h"
 #include "OptimalLocation.h"
 
-Preprocess::Preprocess(Manager& mgr) : mgr(mgr){
-
+Preprocess::Preprocess(Manager& mgr) : mgr(mgr), changed(false){
 }
 
 Preprocess::~Preprocess(){
