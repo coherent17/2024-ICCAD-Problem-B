@@ -50,13 +50,13 @@ private:
     
 
     // Helper Function
-    void UpdateXList(double start, double end, std::list<XTour> & xList);
+    static void UpdateXList(double start, double end, std::list<XTour> & xList);
     size_t FindClosestRow(const Coor &coor);
-    int FindClosestSubrow(Node *ff, Row *row);
+    static int FindClosestSubrow(Node *ff, Row *row);
     void PredictFFLGPlace(const Coor &coor, Cell* cell, size_t row_idx, bool &placeable, double &minDisplacement, Coor &newCoor);
     double PlaceFF(Node *ff, size_t row_idx, bool& placeable);
     bool ContinousAndEmpty(double startX, double startY, double w, double h, int row_idx);
-    double getDisplacement(const Coor &Coor1, const Coor &Coor2)const;
+    static double getDisplacement(const Coor &Coor1, const Coor &Coor2);
     
     friend class DetailPlacement;
 };
