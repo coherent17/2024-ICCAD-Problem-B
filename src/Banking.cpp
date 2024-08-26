@@ -112,10 +112,10 @@ void Banking::doClustering(){
         max_clk_idx = std::max((int)max_clk_idx, pair.second->getClkIdx());
     }
 
-    for(size_t i = 0; i <= max_clk_idx; i++){
+    for(size_t clkIDX = 0; clkIDX <= max_clk_idx; clkIDX++){
         FFs.clear();
         for(const auto &pair : mgr.FF_Map){
-            if((size_t)pair.second->getClkIdx() == i){
+            if((size_t)pair.second->getClkIdx() == clkIDX){
                 FFs.push_back(pair.second);
             }
         }

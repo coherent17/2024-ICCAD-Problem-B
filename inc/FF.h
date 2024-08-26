@@ -78,9 +78,9 @@ public:
     void setBandwidth(const Manager &mgr);
     void addNeighbor(int ffIdx, double euclidean_distance);
     void setIsShifting(bool shift);
-    void setPrevStage(PrevStage);
-    void setPrevInstance(PrevInstance);
-    void addNextStage(NextStage);
+    void setPrevStage(const PrevStage&);
+    void setPrevInstance(const PrevInstance&);
+    void addNextStage(const NextStage&);
     void setOriginalCoor(const Coor& coorD, const Coor& coorQ);
     void setOriginalQpinDelay(double);
     void setPhysicalFF(FF* targetFF, int slot);
@@ -116,7 +116,7 @@ public:
     double getCost(); // return overall cost of MBFF(can be 1 bit), include TNS of Q pin (next stage FFs)
     // ######################################### used in cluster ########################################################
     void sortNeighbors();
-    double shift(std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
+    double shift(const std::vector<FF *> &FFs);     // shift the ff and return the euclidean distance from origin coordinate
     // ######################################### used in cluster ########################################################
 
     void getNS(double& TNS, double& WNS); // getNS, getTNS, getWNS will call updateSlack

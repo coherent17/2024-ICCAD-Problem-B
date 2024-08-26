@@ -1,11 +1,10 @@
 #include "OptimalLocation.h"
 
 objFunction::objFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
-    : mgr(mgr), FF_list(FF_list), idx_map(idx_map),
+    : mgr(mgr), FF_list(FF_list), idx_map(idx_map), loss(0), gamma((mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01),
     x_pos(totalFF), x_neg(totalFF), 
     y_pos(totalFF), y_neg(totalFF),
     FFs(FFs){
-    gamma = (mgr.die.getDieBorder().x - mgr.die.getDieOrigin().x) * 0.01;
 }
 
 preprocessObjFunction::preprocessObjFunction(Manager&mgr, std::unordered_map<std::string, FF*>& FF_list, std::unordered_map<string, int>& idx_map, int totalFF, std::vector<FF*>& FFs)
@@ -39,7 +38,6 @@ double preprocessObjFunction::forward(){
         Coor curCoor = cur_ff->getOriginalD();
         // input net
         if(cur_ff->getInputInstances().size() >= 1){
-            assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
             std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
             std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
             Coor inputCoor;
@@ -215,7 +213,6 @@ double postBankingObjFunction::forward(){
             // input net
             Coor curCoor(0, 0);
             if(cur_ff->getInputInstances().size() >= 1){
-                assert(cur_ff->getInputInstances().size() == 1 && "FF input should only drive by one instance");
                 std::string inputInstanceName = cur_ff->getInputInstances()["D"][0].first;
                 std::string inputPinName = cur_ff->getInputInstances()["D"][0].second;
                 Coor inputCoor;
@@ -385,7 +382,6 @@ Gradient::Gradient( Manager &mgr,
       mgr(mgr),
       FF_list(FF_list),
       FFs(FFs){
-    Initialize(alpha);
 }
 
 Gradient::~Gradient(){

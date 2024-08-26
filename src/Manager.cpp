@@ -9,7 +9,9 @@ Manager::Manager():
     NumOutput(0),
     MaxBit(0),
     NumInstances(0),
-    NumNets(0)
+    NumNets(0),
+    preprocessor(nullptr),
+    legalizer(nullptr)
     {}
 
 Manager::~Manager(){
@@ -354,7 +356,6 @@ void Manager::assignSlot(FF* newFF){
                     delta_hpwl = old_hpwl - new_hpwl;
                 }
                 else{
-                    Coor newCoorD;
                     newCoorD = nextFF.ff->getPhysicalFF()->getNewCoor() + nextFF.ff->getPhysicalFF()->getPinCoor("D" + nextFF.ff->getPhysicalPinName());
                     double old_hpwl = HPWL(nextFF.ff->getOriginalD(), originalInput);
                     double new_hpwl = HPWL(newCoorD, newInput);
