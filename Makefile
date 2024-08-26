@@ -12,7 +12,11 @@ CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes
 
 # Cppcheck for static analysis
 CPPCHECKCC = cppcheck
-CPPCHECKFLAGS = --enable=all --inconclusive --std=c++11 --language=c++ --suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction --suppress=unreadVariable --suppress=unmatchedSuppression --suppress=unusedStructMember --suppress=functionConst
+CPPCHECKFLAGS = --enable=all --inconclusive --std=c++11 --language=c++ \
+				--suppress=missingIncludeSystem --suppress=style --suppress=unusedFunction \
+				--suppress=unreadVariable --suppress=unmatchedSuppression \
+				--suppress=unusedStructMember --suppress=functionConst \
+				#--output-file=cppcheck_log.txt
 
 # Checker
 SANITY_CHECKER := checker/sanity

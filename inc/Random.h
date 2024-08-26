@@ -11,10 +11,10 @@ public:
     ~Random();
 
     // Generate a random integer between 0 and n (inclusive)
-    int getRandomInt(int n);
+    static int getRandomInt(int n);
 
     // Generate a random floating-point number between 0 and 1
-    double getRandomDouble();
+    static double getRandomDouble();
 };
 
 #endif

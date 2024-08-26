@@ -7,6 +7,8 @@ Node::Node() :name(""), gpCoor(0, 0), lgCoor(DBL_MAX, DBL_MAX){
     h = 0;
     isPlace = false;
     TNS = 0;
+    closest_rowidx = 0;
+    place_rowidx = 0;
     ffptr = nullptr;
 }
 

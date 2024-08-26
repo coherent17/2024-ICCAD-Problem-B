@@ -20,7 +20,7 @@ public:
     ~Timer();
     void start();
     void stop();
-    void stop(std::string block);
+    void stop(const std::string &block);
     double elapsed()const;
 };
 

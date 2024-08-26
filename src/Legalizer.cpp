@@ -495,7 +495,7 @@ double Legalizer::PlaceFF(Node *ff, size_t row_idx, bool &placeable){
 }
 
 
-double Legalizer::getDisplacement(const Coor &Coor1, const Coor &Coor2)const{
+double Legalizer::getDisplacement(const Coor &Coor1, const Coor &Coor2){
     return std::sqrt(std::pow(Coor1.x - Coor2.x, 2) + std::pow(Coor1.y - Coor2.y, 2));
 } 
     
