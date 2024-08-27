@@ -136,8 +136,11 @@ run14: setup
 run15: setup
 	$(call RUN_TEST,testcase/testcase2_upright.txt)
 
+run16: setup
+	$(call RUN_TEST,testcase/testcase1_MBFF_LIB.txt)
+
 # Target to run all tests
-runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11 run12 run13 run14 run15
+runall: run1 run2 run3 run4 run5 run6 run7 run8 run9 run10 run11 run12 run13 run14 run15 run16
 
 drawALL:
 	./drawDie/drawDie -i Preprocessor.out -m 1_Preprocessor.png -t Preprocessor -g -p -nl -o
