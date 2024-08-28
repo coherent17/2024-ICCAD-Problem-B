@@ -46,6 +46,7 @@ public:
     void doClustering();
     void restoreUnclusterFFCoor();
     void ClusterResult();
+    double CostCompare(const Coor clusterCoor, Cell* chooseCell, std::vector<FF*> FFToBank);
 
 };
 
