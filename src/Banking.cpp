@@ -104,6 +104,29 @@ void Banking::sortFFs(std::vector<std::pair<int, double>> &nearFFs){
     std::sort(nearFFs.begin(), nearFFs.end(), FFcmp);
 }
 
+double Banking::CostCompare(const Coor clusterCoor, Cell* chooseCell, std::vector<FF*> FFToBank){
+    double costOptimize = 0;
+    for(size_t i = 0; i < FFToBank.size(); i++){
+        FF* ff = FFToBank[i];
+        costOptimize += mgr.alpha * (ff->getCell()->getQpinDelay());
+        costOptimize += mgr.beta * (ff->getCell()->getGatePower());
+        costOptimize += mgr.gamma * (ff->getCell()->getArea());
+    }
+    costOptimize -= mgr.alpha * (chooseCell->getQpinDelay()) + mgr.beta * (chooseCell->getGatePower()) + mgr.gamma * (chooseCell->getArea());
+    double increaseTNS = 0;
+    for(size_t i = 0; i < FFToBank.size(); i++){
+        FF* ff = FFToBank[i];
+        int affectNum = 1;
+        for(const auto & clusterFF : ff->getClusterFF()){
+            affectNum += clusterFF->getNextStage().size();
+        }
+        double displacementAffect = mgr.DisplacementDelay * HPWL(ff->getNewCoor(), clusterCoor) * affectNum;
+        increaseTNS += displacementAffect;
+    }
+    costOptimize -= mgr.alpha * increaseTNS;
+    return costOptimize;
+}
+
 void Banking::doClustering(){
     int clusterTotalNum = 0;
     // make unique id for the flipflop
@@ -144,8 +167,11 @@ void Banking::doClustering(){
                 Coor medianCoor = getMedian(toRemoveFFs);
                 Coor clusterCoor = mgr.legalizer->FindPlace(medianCoor, chooseCell);
                 if(clusterCoor.x == DBL_MAX && clusterCoor.y == DBL_MAX) 
-                    continue; 
-                if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
+                    continue;
+                
+                // if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
+                //     continue;
+                if(CostCompare(clusterCoor, chooseCell, FFToBank) < 0)
                     continue;
                     
                 FF* newFF = mgr.bankFF(clusterCoor, chooseCell, FFToBank);
