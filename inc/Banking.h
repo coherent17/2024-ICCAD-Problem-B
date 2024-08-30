@@ -12,6 +12,7 @@
 #include "Manager.h"
 #include "Util.h"
 #include "FF.h"
+#include "Legalizer.h"
 
 namespace bg = boost::geometry;
 
@@ -24,6 +25,7 @@ typedef std::pair<Point, int> PointWithID;
 class Manager;
 class Cluster;
 class FF;
+class Legalizer;
 
 class Banking{
 private:
@@ -39,8 +41,8 @@ public:
     void run();
 
     void bitOrdering();
-    Cell* chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank);
-    Cell* chooseCellLib(int bitNum);
+    bool chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, std::vector<PointWithID>& toRemoveFFs, std::vector<FF*> &FFToBank, const int &bit);
+    // Cell* chooseCellLib(int bitNum);
     Coor getMedian(std::vector<PointWithID>& toRemoveFFs);
     static void sortFFs(std::vector<std::pair<int, double>> &nearFFs);
     void doClustering();

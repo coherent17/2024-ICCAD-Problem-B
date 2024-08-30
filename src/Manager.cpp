@@ -76,8 +76,6 @@ void Manager::preLegalize(){
 }
 
 void Manager::banking(){
-    legalizer = new Legalizer(*this);
-    legalizer->initial();
     Banking banking(*this);
     banking.run();
 }
