@@ -29,9 +29,12 @@ void Legalizer::initial(){
 
 void Legalizer::run(){
     // CheckIfMBFFMove();
+    Timer t = Timer();
+    t.start();
     LoadFF();
     Tetris();
     LegalizeWriteBack();
+    t.stop();
     // timer.stop();
 }
 

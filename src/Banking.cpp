@@ -11,9 +11,12 @@ Banking::~Banking(){}
 void Banking::run(){
     DEBUG_BAN("Running cluster...");
     bitOrdering();
+    Timer t = Timer();
+    t.start();
     if(bitOrder[0] != 1){
         doClustering();
     }
+    t.stop();
     restoreUnclusterFFCoor();
     ClusterResult();
 }
