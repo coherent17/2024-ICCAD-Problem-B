@@ -19,6 +19,7 @@ Legalizer::~Legalizer(){
 }
 
 void Legalizer::initial(){
+    DEBUG_LGZ("Initial Legalizer");
     // LoadFF();
     LoadGate();
     LoadPlacementRow();
@@ -69,7 +70,7 @@ void Legalizer::LoadFF(){
 // }
 
 void Legalizer::LoadGate(){
-    DEBUG_LGZ("Load Gate to Databse");
+    // DEBUG_LGZ("Load Gate to Databse");
     for(const auto &pair: mgr.Gate_Map){
         Node *gate = new Node();
         gate->setName(pair.second->getInstanceName());
@@ -84,7 +85,7 @@ void Legalizer::LoadGate(){
 }
 
 void Legalizer::LoadPlacementRow(){
-    DEBUG_LGZ("Load Placement Row to Databse");
+    // DEBUG_LGZ("Load Placement Row to Databse");
     std::vector<PlacementRow> PlacementRows = mgr.die.getPlacementRows();
     for(size_t i = 0; i < PlacementRows.size(); i++){
         Row *row = new Row();
@@ -137,7 +138,7 @@ void Legalizer::SliceRowsByRows(){
 }
 
 void Legalizer::SliceRowsByGate(){
-    DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
+    // DEBUG_LGZ("Seperate PlacementRows by Gate Cell");
     for(const auto &gate : gates){
         for(auto &row : rows){
             if(row->getStartCoor().y > gate->getGPCoor().y + gate->getH()) break;

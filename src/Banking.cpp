@@ -40,16 +40,14 @@ bool Banking::chooseCandidateFF(FF* nowFF, std::vector<PointWithID>& resultFFs, 
     PointWithID curFF;
     for(int i = 0; i < (int)resultFFs.size(); i++){
         FF* ff = FFs[resultFFs[i].second];
-        double dis = SquareEuclideanDistance (nowFF->getNewCoor(), ff->getNewCoor());
+        double dis = HPWL(nowFF->getNewCoor(), ff->getNewCoor());
         if(dis == 0){
             curFF = resultFFs[i];
         }
-        else{   
-            ff->updateSlack();            
-            //todo
+        else{          
+            // ff->updateSlack();     
             // double slack = FFs[resultFFs[i].second]->getTimingSlack("D") - std::sqrt(dis)*mgr.DisplacementDelay;
-            double slack = std::sqrt(dis)*mgr.DisplacementDelay;
-            nearFFs.push_back ({i, slack});
+            nearFFs.push_back ({i, dis});
         }
     }
 
@@ -151,7 +149,7 @@ void Banking::doClustering(){
         Cell* chooseCell = bitLib.second[0];
         int targetBit =  chooseCell->getBits();
         if(targetBit == 1) continue;
-        std::cout << targetBit << std::endl;
+        DEBUG_BAN("Cluster " + std::to_string(targetBit) + " Bit MBFF");
         //every bit library use one legalizer
         mgr.legalizer = new Legalizer(mgr);
         mgr.legalizer->initial();
