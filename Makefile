@@ -55,7 +55,7 @@ REGDIR = regression
 .PHONY: all check clean calc
 
 # Name of the executable
-BIN = cadb0015
+BIN = cadb_0015_final
 
 all: $(BIN)
 
@@ -76,7 +76,7 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR) Makefile
 
 release: 
 	rm -rf $(OBJDIR)
-	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb0015
+	$(MAKE) DEBUGFLAGS="$(RELEASEFLAGS)" BIN=cadb_0015_final
 
 setup:
 	chmod +x $(SANITY_CHECKER)

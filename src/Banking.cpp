@@ -119,17 +119,18 @@ double Banking::CostCompare(const Coor clusterCoor, Cell* chooseCell, std::vecto
     double costOptimize = 0;
     for(size_t i = 0; i < FFToBank.size(); i++){
         FF* ff = FFToBank[i];
-        costOptimize += mgr.alpha * (ff->getCell()->getQpinDelay());
+        //costOptimize += mgr.alpha * (ff->getCell()->getQpinDelay());
         costOptimize += mgr.beta * (ff->getCell()->getGatePower());
         costOptimize += mgr.gamma * (ff->getCell()->getArea());
     }
-    costOptimize -= mgr.alpha * (chooseCell->getQpinDelay()) + mgr.beta * (chooseCell->getGatePower()) + mgr.gamma * (chooseCell->getArea());
+    costOptimize -= mgr.beta * (chooseCell->getGatePower()) + mgr.gamma * (chooseCell->getArea());
     double increaseTNS = 0;
     for(size_t i = 0; i < FFToBank.size(); i++){
         FF* ff = FFToBank[i];
         int affectNum = 1;
         for(const auto & clusterFF : ff->getClusterFF()){
             affectNum += clusterFF->getNextStage().size();
+            costOptimize += (ff->getCell()->getQpinDelay() - chooseCell->getQpinDelay()) * clusterFF->getNextStage().size();
         }
         double displacementAffect = mgr.DisplacementDelay * HPWL(ff->getNewCoor(), clusterCoor) * affectNum;
         increaseTNS += displacementAffect;
