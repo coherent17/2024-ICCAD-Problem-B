@@ -20,6 +20,7 @@ int main(int argc, char *argv[]){
     mgr.preprocess();
     mgr.getOverallCost(cost_verbose, 0);
     mgr.dumpVisual("Preprocessor.out");
+    mgr.dumpTestcase(std::string(argv[1])+"_PDA_Lab3", 0.1, 0.2);
 
     // mgr.meanshift();
     // mgr.getOverallCost(cost_verbose);

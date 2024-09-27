@@ -181,6 +181,58 @@ void Manager::dumpVisual(const std::string &filename){
     fout.close();
 }
 
+void Manager::dumpTestcase(const std::string &filename, double alpha, double beta){
+    std::ofstream fout;
+    DEBUG_MGR(filename);
+    fout.open(filename.c_str());
+    assert(fout.good());
+
+    // Dump cost funciton parameter
+    fout << "Alpha " << alpha << std::endl;
+    fout << "Beta " << beta << std::endl;
+
+    // Dump die boundary
+    fout << "DieSize " << die.getDieOrigin().x << " " << die.getDieOrigin().y << " " << die.getDieBorder().x << " " << die.getDieBorder().y << std::endl;
+    
+    // Dump ff info
+    std::vector<FF *> FFs;
+    for(const auto &pair : FF_Map){
+        FFs.push_back(pair.second);
+    }
+    // Sort the FFs by instance name to make it reproduciable
+    std::sort(FFs.begin(), FFs.end(), [](FF *a, FF *b) {
+        return a->getInstanceName() < b->getInstanceName();
+    });
+
+    for (const auto &ff : FFs) {
+        // name, x, y, width, height
+        fout << ff->getInstanceName() << " " << ff->getNewCoor().x << " " << ff->getNewCoor().y << " " << ff->getCell()->getW() << " " << ff->getCell()->getH() << " NOTFIX" << std::endl;
+    }
+
+    // Dump gate info
+    std::vector<Gate *> gates;
+    for(const auto &pair : Gate_Map){
+        gates.push_back(pair.second);
+    }
+
+    std::sort(gates.begin(), gates.end(), [](Gate *a, Gate *b) {
+        return a->getInstanceName() < b->getInstanceName();
+    });
+
+    for (const auto &gate : gates) {
+        // name, x, y, width, height
+        fout << gate->getInstanceName() << " " << gate->getCoor().x << " " << gate->getCoor().y << " " << gate->getCell()->getW() << " " << gate->getCell()->getH() << " FIX" << std::endl;
+    }
+
+
+    // Dump placementrow info
+    std::vector<PlacementRow> placementRows = die.getPlacementRows();
+    for(const auto &placementRow : placementRows){
+        fout << "PlacementRows " << placementRow.startCoor.x << " " << placementRow.startCoor.y << " " << placementRow.siteWidth << " " << placementRow.siteHeight << " " << placementRow.NumOfSites << std::endl;
+    }
+    fout.close();
+}
+
 void Manager::print(){
     std::cout << alpha << " " << beta << " " << gamma << " " << lambda << std::endl;
     std::cout << "#################### Die Info ##################" << std::endl;

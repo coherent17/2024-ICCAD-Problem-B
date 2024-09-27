@@ -108,6 +108,7 @@ public:
 
     void dump(const std::string &filename);
     void dumpVisual(const std::string &filename);
+    void dumpTestcase(const std::string &filename, double alpha, double beta);
     void print();
     
     std::string getNewFFName(const std::string&); // using a prefix string to get new unique FF name
