@@ -141,6 +141,8 @@ double Banking::CostCompare(const Coor clusterCoor, Cell* chooseCell, std::vecto
 }
 
 void Banking::doClustering(){
+    std::ofstream fout("optimized_step");
+    fout << std::fixed << std::setprecision(0);
     int clusterTotalNum = 0;
     // make unique id for the flipflop
     size_t max_clk_idx = 0;
@@ -199,7 +201,18 @@ void Banking::doClustering(){
                     if(CostCompare(clusterCoor, chooseCell, FFToBank) < 0)
                         continue;
 
+
+                    // ######################## Generate testcase for PDA lab3 ###################################
+                    fout << "Banking_Cell: ";
+                    for(const auto &ff : FFToBank){
+                        fout << ff->getInstanceName() << " ";
+                    }
+                    fout << "--> ";
+
                     FF* newFF = mgr.bankFF(clusterCoor, chooseCell, FFToBank);
+                    fout << newFF->getInstanceName() << " " <<  medianCoor.x << " " << medianCoor.y << " " << newFF->getW() << " " << newFF->getH() << std::endl;
+                    // ######################## Generate testcase for PDA lab3 ###################################
+
                     mgr.legalizer->UpdateRows(newFF);
                     newFF->setIsLegalize(true);
                     for (size_t j = 0; j < toRemoveFFs.size(); j++)
@@ -215,6 +228,7 @@ void Banking::doClustering(){
             }
         }     
     }
+    fout.close();
 }
 
 void Banking::restoreUnclusterFFCoor(){

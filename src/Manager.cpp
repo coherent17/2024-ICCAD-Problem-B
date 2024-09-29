@@ -185,7 +185,7 @@ void Manager::dumpTestcase(const std::string &filename, double alpha, double bet
     std::ofstream fout;
     DEBUG_MGR(filename);
     fout.open(filename.c_str());
-    fout << std::fixed << std::setprecision(0) << std::endl;
+    fout << std::fixed << std::setprecision(0);
     assert(fout.good());
 
     // Dump cost funciton parameter
