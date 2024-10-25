@@ -229,7 +229,7 @@ void Manager::dumpTestcase(const std::string &filename, double alpha, double bet
     // Dump placementrow info
     std::vector<PlacementRow> placementRows = die.getPlacementRows();
     for(const auto &placementRow : placementRows){
-        fout << "PlacementRows " << placementRow.startCoor.x << " " << placementRow.startCoor.y << " " << placementRow.siteWidth << " " << placementRow.siteHeight << " " << placementRow.NumOfSites << std::endl;
+        fout << "PlacementRows " << placementRow.startCoor.x << " " << placementRow.startCoor.y << " 1 " << placementRow.siteHeight << " " << placementRow.siteWidth * placementRow.NumOfSites << std::endl;
     }
     fout.close();
 }

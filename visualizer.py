@@ -57,4 +57,4 @@ def plot_rectangles(file_path, output_path):
     plt.savefig(output_path, bbox_inches='tight', pad_inches=1, dpi=600)
 
 if __name__ == '__main__':
-    plot_rectangles("/home/coherent17/TEMP/2024-ICCAD-Problem-B/testcase/testcase1_0812.txt_PDA_Lab3", "test.png")
+    plot_rectangles("/home/coherent17/TEMP/2024-ICCAD-Problem-B/testcase/testcase1_MBFF_ALL0.txt_PDA_Lab3", "test.png")

@@ -198,7 +198,8 @@ void Banking::doClustering(){
 
                     // if(mgr.getCostDiff(clusterCoor, chooseCell, FFToBank) > 0)
                     //     continue;
-                    if(CostCompare(clusterCoor, chooseCell, FFToBank) < 0)
+                    std::cout << CostCompare(clusterCoor, chooseCell, FFToBank) << std::endl;
+                    if(CostCompare(clusterCoor, chooseCell, FFToBank) < 5000)
                         continue;
 
 

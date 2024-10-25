@@ -131,6 +131,7 @@ void Parser::readCellLibrary(Manager &mgr){
 }
 
 void Parser::readInstance(Manager &mgr){
+    srand(static_cast<unsigned int>(time(nullptr)));
     fin >> mgr.NumInstances;
     std::string _;
     std::string instanceName;
@@ -140,6 +141,7 @@ void Parser::readInstance(Manager &mgr){
     for(int i = 0; i < mgr.NumInstances; i++){
         fin >> _ >> instanceName >> cellType >> cell_coor_x >> cell_coor_y;
         coor = Coor(cell_coor_x, cell_coor_y);
+        int randomNum = rand() % 100;
         if(mgr.cell_library.isFF(cellType)){
             FF *ff = new FF();
             ff->setInstanceName(instanceName);

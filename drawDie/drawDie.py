@@ -205,11 +205,11 @@ def drawDie(DieSize, BinWidth, BinHeight, SiteRows, images_title, show_grid):
     labelY_pos = chipYHigh + chipYHigh/20
     plt.text(labelX_pos,   labelY_pos, "   ", size=12,       color='orange',         ha='center',  bbox=dict(boxstyle="square",fc='orange', ec='none'))
     labelX_pos = labelX_pos + chipWidth/20
-    plt.text(labelX_pos,   labelY_pos, " :FF", size=12,      color='black',          ha='center')
+    plt.text(labelX_pos,   labelY_pos, " :NOTFIX", size=12,      color='black',          ha='center')
     labelX_pos = labelX_pos + chipWidth/16
     plt.text(labelX_pos,   labelY_pos, "   ", size=12,       color='lightseagreen',  ha='center',  bbox=dict(boxstyle="square",fc='lightseagreen',        ec='none'))
     labelX_pos = labelX_pos + chipWidth/16
-    plt.text(labelX_pos,   labelY_pos, " :Gate", size=12,    color='black',          ha='center')
+    plt.text(labelX_pos,   labelY_pos, " :FIX", size=12,    color='black',          ha='center')
     
 
     
@@ -308,7 +308,7 @@ def drawBlocks( chipArea, IOList, FFCells, GateCells, FFPinList, GatePinList, In
         blockY = instInfo[2]
         blockW = block[0]
         blockH = block[1]
-        rect = patches.Rectangle((blockX, blockY),blockW, blockH, linewidth=0.3, ec = blockColor, fc = 'none', zorder=2)
+        rect = patches.Rectangle((blockX, blockY),blockW, blockH, linewidth=3, ec = blockColor, fc = 'none', zorder=2)
         ax.add_patch(rect)
 
         
